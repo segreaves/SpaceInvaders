@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+/.vs/SpaceInvaders
+/SpaceInvaders/x64/Debug
+/x64/Debug
+/assets
