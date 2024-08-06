@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{f165d583-f0be-4a02-8b27-5843bb39e24a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{52ba0d79-acf1-44d6-8d1c-3052c4026454}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\States">
+      <UniqueIdentifier>{98d4feaa-61cd-40dd-960d-914acdc10830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\States">
+      <UniqueIdentifier>{ea034341-442a-46e4-ab5e-b83d5986e7ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\ECS">
+      <UniqueIdentifier>{506d6d8d-b30a-4e81-8265-2456948cdb4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\ResourceManagers">
+      <UniqueIdentifier>{c72041c2-4681-4f38-ad7d-88ef00e9ba5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\ECS">
+      <UniqueIdentifier>{ca9a131b-20c3-4b5c-927a-48d8a0ed751b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\ECS\Components">
+      <UniqueIdentifier>{5adab8ec-7b01-4185-89e1-2222833ed5c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\ECS\Entities">
+      <UniqueIdentifier>{a6f1066c-f00f-41d1-9737-5fb7c0aad175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\ECS\Systems">
+      <UniqueIdentifier>{e4c9175e-e87a-4e98-8bb8-4e368d0c2a02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\ECS\Entities">
+      <UniqueIdentifier>{ce261925-d57b-4af1-b739-5be5bbfcf04b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\ECS\Systems">
+      <UniqueIdentifier>{ba44794e-3317-4d31-94d1-1ab2f6f30018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\ECS\Messaging">
+      <UniqueIdentifier>{35dbc663-da54-40e2-b217-b6c803ee9427}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SpaceInvaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="StateManager.cpp">
+      <Filter>Source Files\Core\States</Filter>
+    </ClCompile>
+    <ClCompile Include="State_Intro.cpp">
+      <Filter>Source Files\Core\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files\Core\ECS\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Source Files\Core\ECS\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="State_Menu.cpp">
+      <Filter>Source Files\Core\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemManager.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="S_Base.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="WindowManager.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="StateManager.h">
+      <Filter>Header Files\Core\States</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Header Files\Core\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Context.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="State_Intro.h">
+      <Filter>Header Files\Core\States</Filter>
+    </ClInclude>
+    <ClInclude Include="State_Menu.h">
+      <Filter>Header Files\Core\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files\Core\ResourceManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Base.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files\Core\ECS\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Header Files\Core\ECS\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="S_Base.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemManager.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Drawable.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Rectangle.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Header Files\Core\ECS\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="ISubscriber.h">
+      <Filter>Header Files\Core\ECS\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityEvent.h">
+      <Filter>Header Files\Core\ECS\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="S_Renderer.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Channel.h">
+      <Filter>Header Files\Core\ECS\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageHandler.h">
+      <Filter>Header Files\Core\ECS\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityMessage.h">
+      <Filter>Header Files\Core\ECS\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS_Params.h">
+      <Filter>Header Files\Core\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="EventQueue.h">
+      <Filter>Header Files\Core\ECS\Messaging</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

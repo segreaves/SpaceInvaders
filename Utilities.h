@@ -1,0 +1,33 @@
+#pragma once
+#define RUNNING_WINDOWS
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+namespace Utilities
+{
+#ifdef RUNNING_WINDOWS
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <Shlwapi.h>
+	inline std::string getWorkingDirectory() {
+		HMODULE hModule = GetModuleHandle(nullptr);
+		if (hModule) {
+			char path[256];
+			GetModuleFileName(hModule, path, sizeof(path));
+			PathRemoveFileSpec(path);
+			strcat_s(path, "\\");
+			return std::string(path);
+		}
+		return "";
+	}
+#elif defined RUNNING_LINUX
+#include <unistd.h>
+	inline std::string getWorkingDirectory()
+	{
+		char cwd[1024];
+		if (getcwd(cwd, sizeof(cwd)) != nullptr) return std::string(cwd) + std::string("/");
+		return "";
+	}
+#endif
+}
