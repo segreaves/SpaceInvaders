@@ -10,7 +10,6 @@ public:
 
 	void update(const float& deltaTime);
 	void draw();
-
 	void onCreate();
 	void onDestroy();
 	void activate();

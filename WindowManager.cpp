@@ -68,6 +68,13 @@ sf::Vector2u WindowManager::getWindowSize()
 	return m_windowSize;
 }
 
+sf::FloatRect WindowManager::getViewSpace()
+{
+	sf::Vector2f viewCenter = m_window.getView().getCenter();
+	sf::Vector2f viewSize = m_window.getView().getSize();
+	return sf::FloatRect(viewCenter - viewSize / 2.f, viewSize);
+}
+
 InputManager* WindowManager::getInputManager()
 {
 	return &m_inputManager;

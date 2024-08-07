@@ -2,6 +2,8 @@
 #include "ECS_Params.h"
 #include "Component.h"
 #include "C_Base.h"
+#include "C_Position.h"
+#include "C_Sprite.h"
 #include "Entity.h"
 #include <vector>
 #include <unordered_map>

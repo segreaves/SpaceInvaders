@@ -2,7 +2,8 @@
 #include "StateManager.h"
 #include "Utilities.h"
 
-State_Intro::State_Intro(StateManager* stateManager) : State(stateManager)
+State_Intro::State_Intro(StateManager* stateManager) :
+	State(stateManager)
 {
 }
 
@@ -61,5 +62,5 @@ void State_Intro::deactivate()
 void State_Intro::transition(EventDetails* details)
 {
 	m_stateManager->switchTo(StateType::Menu);
-	//m_stateManager->remove(StateType::Intro);
+	m_stateManager->remove(StateType::Intro);
 }

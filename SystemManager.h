@@ -2,6 +2,7 @@
 #include "S_Base.h"
 #include "MessageHandler.h"
 #include "EventQueue.h"
+#include "WindowManager.h"
 #include <unordered_map>
 #include <queue>
 
@@ -13,25 +14,32 @@ public:
 	SystemManager();
 	~SystemManager();
 
+	/* Note: de-couple the entity manager and system manager by
+	creating an event for purging entities, then subscribing the
+	system manager to this event, and having the entity manager
+	dispatch this event rather than call the purge() function
+	on the system manager. */
+
+	void update(const float& deltaTime);
+	void draw(WindowManager* windowManager);
+
 	template<class T>
-	T* getSystem(const System& systemType)
+	T* getSystem(const System& sys)
 	{
-		auto it = m_systems.find(systemType);
-		return it != m_systems.end() ? dynamic_cast<T*> it->second : nullptr;
+		auto system = m_systems.find(sys);
+		return system != m_systems.end() ? dynamic_cast<T*>(system->second) : nullptr;
 	}
 
-	void addEvent(const EntityId& entity, const EventId& event);
-	void handleEvents();
+	EntityManager* getEntityManager();
+	void setEntityManager(EntityManager* entityManager);
 
-	EntityManager* getEntityManager() { return m_entityManager; }
-	void setEntityManager(EntityManager* entityManager) { m_entityManager = entityManager; }
-	MessageHandler* getMessageHandler() { return &m_messageHandler; }
+	void entityModified(const EntityId& id, const Bitmask& mask);
+	void removeEntity(const EntityId& id);
 
-	void purgeEntities();
 	void purgeSystems();
+	void purgeEntities();
 private:
 	std::unordered_map<System, S_Base*> m_systems;
-	std::unordered_map<EntityId, EventQueue> m_entityEvents;
 	EntityManager* m_entityManager;
-	MessageHandler m_messageHandler;
+
 };

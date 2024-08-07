@@ -1,8 +1,11 @@
 #include "SystemManager.h"
 #include "EntityManager.h"
+#include "S_Renderer.h"
 
-SystemManager::SystemManager()
+SystemManager::SystemManager() :
+	m_entityManager(nullptr)
 {
+	m_systems[System::Renderer] = new S_Renderer(this);
 }
 
 SystemManager::~SystemManager()
@@ -10,29 +13,46 @@ SystemManager::~SystemManager()
 	purgeSystems();
 }
 
-void SystemManager::addEvent(const EntityId& entity, const EventId& event)
+void SystemManager::update(const float& deltaTime)
 {
-	m_entityEvents[entity].addEvent(event);
+	for (auto& system : m_systems)
+		system.second->update(deltaTime);
 }
 
-void SystemManager::handleEvents()
+void SystemManager::draw(WindowManager* windowManager)
 {
-	for (auto& entityEvent : m_entityEvents)
+	auto it = m_systems.find(System::Renderer);
+	if (it == m_systems.end()) return;
+	S_Renderer* renderer = (S_Renderer*)it->second;
+	renderer->draw(windowManager);
+}
+
+EntityManager* SystemManager::getEntityManager()
+{
+	return m_entityManager;
+}
+
+void SystemManager::setEntityManager(EntityManager* entityManager)
+{
+	m_entityManager = entityManager;
+}
+
+void SystemManager::entityModified(const EntityId& id, const Bitmask& mask)
+{
+	for (auto& it : m_systems)
 	{
-		EventId eventId = 0;
-		while (entityEvent.second.processEvent(eventId))
-		{
-			for (auto& system : m_systems)
-				if (system.second->hasEntity(entityEvent.first))
-					system.second->handleEvent(entityEvent.first, (EntityEvent)eventId);
-		}
+		S_Base* system = it.second;
+		if (system->fitsRequirements(mask))
+			system->addEntity(id);
+		else
+			system->removeEntity(id);
 	}
 }
 
-void SystemManager::purgeEntities()
+void SystemManager::removeEntity(const EntityId& id)
 {
 	for (auto& system : m_systems)
-		system.second->purge();
+		system.second->removeEntity(id);
 }
 
 void SystemManager::purgeSystems()
@@ -40,4 +60,10 @@ void SystemManager::purgeSystems()
 	for (auto& system : m_systems)
 		delete system.second;
 	m_systems.clear();
+}
+
+void SystemManager::purgeEntities()
+{
+	for (auto& system : m_systems)
+		system.second->purge();
 }

@@ -87,6 +87,12 @@
     <ClCompile Include="S_Base.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="S_Renderer.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="State_Game.cpp">
+      <Filter>Source Files\Core\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowManager.h">
@@ -137,9 +143,6 @@
     <ClInclude Include="C_Drawable.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="C_Rectangle.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Message.h">
       <Filter>Header Files\Core\ECS\Messaging</Filter>
     </ClInclude>
@@ -172,6 +175,15 @@
     </ClInclude>
     <ClInclude Include="EventQueue.h">
       <Filter>Header Files\Core\ECS\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Position.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="State_Game.h">
+      <Filter>Header Files\Core\States</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Sprite.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

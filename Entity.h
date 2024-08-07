@@ -1,5 +1,5 @@
 #pragma once
-#include "ECS_Types.h"
+#include "ECS_Params.h"
 #include "C_Base.h"
 #include <vector>
 #include <unordered_map>

@@ -1,9 +1,9 @@
 #include "State_Menu.h"
 #include "StateManager.h"
 #include "Utilities.h"
-#include "C_Rectangle.h"
 
-State_Menu::State_Menu(StateManager* stateManager) : State(stateManager)
+State_Menu::State_Menu(StateManager* stateManager) :
+	State(stateManager)
 {
 }
 
@@ -27,7 +27,7 @@ void State_Menu::onCreate()
 {
 	m_font.loadFromFile(Utilities::getWorkingDirectory() + "assets/fonts/game_over.ttf");
 	m_text.setFont(m_font);
-	m_text.setString({ "Main Menu" });
+	m_text.setString({ "Menu" });
 	m_text.setCharacterSize(150);
 	sf::FloatRect textBounds = m_text.getLocalBounds();
 	m_text.setOrigin(
@@ -44,9 +44,6 @@ void State_Menu::onCreate()
 	m_panel.setFillColor(sf::Color(0, 0, 0, 150));
 
 	m_stateManager->getContext()->m_inputManager->addCallback(StateType::Menu, m_continueInput, &State_Menu::transition, this);
-	Bitmask mask((unsigned int)Component::Rectangle);
-	m_stateManager->getContext()->m_entityManager->addEntity(mask);
-	m_stateManager->getContext()->m_entityManager->getEntity(0)->getComponent<C_Rectangle>(mask)->setPosition(sf::Vector2f(100.f, 100.f));
 }
 
 void State_Menu::onDestroy()
@@ -63,6 +60,6 @@ void State_Menu::deactivate()
 
 void State_Menu::transition(EventDetails* details)
 {
-	m_stateManager->switchTo(StateType::Intro);
+	m_stateManager->switchTo(StateType::Game);
 	//m_stateManager->remove(StateType::Menu);
 }

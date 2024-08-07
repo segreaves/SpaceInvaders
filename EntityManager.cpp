@@ -1,13 +1,13 @@
 #include "EntityManager.h"
 #include "SystemManager.h"
-#include "C_Rectangle.h"
 #include <iostream>
 
 EntityManager::EntityManager(SystemManager* systemManager) :
 	m_idCounter(0),
 	m_systemManager(systemManager)
 {
-	addComponentType<C_Rectangle>(Component::Rectangle);
+	addComponentType<C_Position>(Component::Position);
+	addComponentType<C_Sprite>(Component::Sprite);
 }
 
 EntityManager::~EntityManager()

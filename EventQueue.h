@@ -6,7 +6,7 @@ using EventId = unsigned int;
 class EventQueue
 {
 public:
-	bool addEvent(const EventId& event)
+	void addEvent(const EventId& event)
 	{
 		m_eventQueue.push(event);
 	}

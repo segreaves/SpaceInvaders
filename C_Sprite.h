@@ -1,23 +1,24 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 #include "C_Drawable.h"
 
-class C_Rectangle : public C_Drawable
+class C_Sprite : public C_Drawable
 {
 public:
-	C_Rectangle() : C_Drawable()
+	C_Sprite() : C_Drawable()
 	{
 		m_shape.setFillColor(sf::Color::White);
 		m_shape.setSize(sf::Vector2f(75.f, 100.f));
 	}
 
-	C_Rectangle(sf::RectangleShape shape) : C_Drawable(),
+	C_Sprite(sf::RectangleShape shape) : C_Drawable(),
 		m_shape(shape)
 	{
 	}
 
 	void ping() override
 	{
-		std::cout << "Rectangle" << std::endl;
+		std::cout << "Sprite ping" << std::endl;
 	}
 
 	void draw(sf::RenderWindow* window) override

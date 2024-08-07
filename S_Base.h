@@ -2,10 +2,11 @@
 #include "ISubscriber.h"
 #include "System.h"
 #include "EntityEvent.h"
+#include "EntityManager.h"
+#include "ECS_Params.h"
 #include <vector>
 
 class SystemManager;
-class EntityId;
 
 class S_Base : public ISubscriber
 {
@@ -22,7 +23,7 @@ public:
 
 	bool fitsRequirements(const Bitmask& bits) const;
 	void purge();
-private:
+protected:
 	System m_id;
 	std::vector<EntityId> m_entities;
 	std::vector<Bitmask> m_requirements;

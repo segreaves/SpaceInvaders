@@ -1,6 +1,7 @@
 #include "StateManager.h"
 #include "State_Intro.h"
 #include "State_Menu.h"
+#include "State_Game.h"
 #include <iostream>
 
 StateManager::StateManager(Context* context) :
@@ -8,6 +9,7 @@ StateManager::StateManager(Context* context) :
 {
 	registerState<State_Intro>(StateType::Intro);
 	registerState<State_Menu>(StateType::Menu);
+	registerState<State_Game>(StateType::Game);
 }
 
 StateManager::~StateManager()
