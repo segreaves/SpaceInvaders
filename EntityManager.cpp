@@ -46,7 +46,7 @@ int EntityManager::addEntity(const Bitmask& mask)
 		delete entity;
 		return -1;
 	}
-	// TODO: Notify system manager of modified/created entity
+	m_systemManager->entityModified(entity->getId(), mask);
 	return m_idCounter++;
 }
 
@@ -56,7 +56,7 @@ bool EntityManager::removeEntity(const EntityId& id)
 	if (entity == m_entities.end()) return false;
 	delete entity->second;
 	m_entities.erase(entity);
-	// TODO: Notify system manager of removed entity
+	m_systemManager->removeEntity(id);
 	return true;
 }
 

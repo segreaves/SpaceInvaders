@@ -26,9 +26,9 @@ public:
 	bool removeEntity(const EntityId& id);
 
 	template <class T>
-	void addComponentType(const Component& compType)
+	void addComponentType(const Component& bit)
 	{
-		Bitmask mask((unsigned int)compType);
+		Bitmask mask(1 << (unsigned int)bit);
 		m_componentFactory[mask] = []()->C_Base* { return new T(); };
 	}
 

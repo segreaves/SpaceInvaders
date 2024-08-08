@@ -15,10 +15,12 @@ public:
 	bool removeComponent(const Bitmask& component);
 
 	template<class T>
-	T* getComponent(const Bitmask& componentType)
+	T* getComponent(const unsigned int& componentType)
 	{
-		if (m_components.find(componentType) == m_components.end()) return nullptr;
-		return dynamic_cast<T*>(m_components[componentType]);
+		Bitmask mask;
+		mask.set(componentType);
+		if (m_components.find(mask) == m_components.end()) return nullptr;
+		return dynamic_cast<T*>(m_components[mask]);
 	}
 
 	void onDestroy();

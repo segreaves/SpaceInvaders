@@ -21,9 +21,11 @@ void State_Game::draw()
 
 void State_Game::onCreate()
 {
-	Bitmask mask((unsigned int)Component::Sprite);
+	Bitmask mask;
+	mask.set((unsigned int)Component::Position);
+	mask.set((unsigned int)Component::Sprite);
 	m_stateManager->getContext()->m_entityManager->addEntity(mask);
-	m_stateManager->getContext()->m_entityManager->getEntity(0)->getComponent<C_Sprite>(mask)->setPosition(sf::Vector2f(100.f, 100.f));
+	m_stateManager->getContext()->m_entityManager->getEntity(0)->getComponent<C_Position>((unsigned int)Component::Position)->setPosition(sf::Vector2f(100.f, 100.f));
 }
 
 void State_Game::onDestroy()

@@ -8,7 +8,7 @@ public:
 	C_Sprite() : C_Drawable()
 	{
 		m_shape.setFillColor(sf::Color::White);
-		m_shape.setSize(sf::Vector2f(75.f, 100.f));
+		m_shape.setSize(sf::Vector2f(50.f, 35.f));
 	}
 
 	C_Sprite(sf::RectangleShape shape) : C_Drawable(),
