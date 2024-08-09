@@ -139,10 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
-    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="State_Game.cpp" />
@@ -154,13 +155,18 @@
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="Channel.h" />
+    <ClInclude Include="Comp.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Comp_Sprite.h" />
     <ClInclude Include="Context.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="C_Base.h" />
     <ClInclude Include="C_Drawable.h" />
     <ClInclude Include="C_Position.h" />
     <ClInclude Include="C_Sprite.h" />
+    <ClInclude Include="Direction.h" />
     <ClInclude Include="ECS_Params.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Entity.h" />
@@ -168,7 +174,7 @@
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="EntityMessage.h" />
     <ClInclude Include="EventQueue.h" />
-    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="InputEvent.h" />
     <ClInclude Include="ISubscriber.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageHandler.h" />

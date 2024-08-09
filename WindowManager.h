@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "InputManager.h"
+#include "Controller.h"
 
 class WindowManager
 {
@@ -19,12 +19,12 @@ public:
 	sf::RenderWindow* getRenderWindow();
 	sf::Vector2u getWindowSize();
 	sf::FloatRect getViewSpace();
-	InputManager* getInputManager();
+	Controller* getController();
 
-	void toggleFullscreen(EventDetails* details = nullptr);
+	void toggleFullscreen();
 private:
 	void createWindow();
-	void closeWindow(EventDetails* details = nullptr);
+	void closeWindow();
 
 	sf::RenderWindow m_window;
 	sf::Vector2u m_windowSize;
@@ -32,5 +32,5 @@ private:
 	bool m_isFocused;
 	bool m_isFullscreen;
 	bool m_isOpen;
-	InputManager m_inputManager;
+	Controller m_controller;
 };

@@ -1,7 +1,6 @@
 #pragma once
 #include "Context.h"
 #include "WindowManager.h"
-#include "InputManager.h"
 #include "StateManager.h"
 #include "SystemManager.h"
 #include "EntityManager.h"

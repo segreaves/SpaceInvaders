@@ -1,6 +1,7 @@
 #pragma once
 #include "EntityMessage.h"
 #include "Channel.h"
+#include "Message.h"
 #include <unordered_map>
 
 class MessageHandler
@@ -8,7 +9,7 @@ class MessageHandler
 public:
 	bool subscribe(EntityMessage messageType, ISubscriber* sub)
 	{
-		// check what happens when the system doesn't exist
+		// check what happens when the message type doesn't exist
 		return m_channels[messageType]->addSubscriber(sub);
 	}
 
@@ -17,9 +18,11 @@ public:
 		return m_channels[messageType]->removeSubscriber(sub);
 	}
 
-	void dispatch(EntityMessage messageType, const Message& msg)
+	void dispatch(const Message& msg)
 	{
-		m_channels[messageType]->broadcast(msg);
+		auto it = m_channels.find((EntityMessage)msg.m_type);
+		if (it == m_channels.end()) return;
+		it->second->broadcast(msg);
 	}
 private:
 	std::unordered_map<EntityMessage, Channel*> m_channels;

@@ -7,8 +7,9 @@ WindowManager::WindowManager(const std::string& title, const sf::Vector2u& size)
 	m_isFullscreen = false;
 	m_isOpen = true;
 	createWindow();
-	m_inputManager.addCallback(StateType(0), "Key_Escape", &WindowManager::closeWindow, this);
-	m_inputManager.addCallback(StateType(0), "Fullscreen_toggle", &WindowManager::toggleFullscreen, this);
+	m_controller.setWindowManager(this);
+	m_controller.m_onEscape.addCallback("WindowManager_closeWindow", std::bind(&WindowManager::closeWindow, this));
+	m_controller.m_onToggleFullscreen.addCallback("WindowManager_toggleFullscreen", std::bind(&WindowManager::toggleFullscreen, this));
 }
 
 WindowManager::~WindowManager()
@@ -24,13 +25,13 @@ void WindowManager::update()
 		if (event.type == sf::Event::Closed)
 			closeWindow();
 		else if (event.type == sf::Event::GainedFocus)
-			m_isFocused = m_inputManager.setFocus(true);
+			m_isFocused = m_controller.setFocus(true);
 		else if (event.type == sf::Event::LostFocus)
-			m_isFocused = m_inputManager.setFocus(false);
+			m_isFocused = m_controller.setFocus(false);
 		else
-			m_inputManager.handleEvent(event);
+			m_controller.handleEvent(event);
 	}
-	m_inputManager.update();
+	m_controller.update();
 }
 
 void WindowManager::drawStart()
@@ -75,12 +76,12 @@ sf::FloatRect WindowManager::getViewSpace()
 	return sf::FloatRect(viewCenter - viewSize / 2.f, viewSize);
 }
 
-InputManager* WindowManager::getInputManager()
+Controller* WindowManager::getController()
 {
-	return &m_inputManager;
+	return &m_controller;
 }
 
-void WindowManager::toggleFullscreen(EventDetails* details)
+void WindowManager::toggleFullscreen()
 {
 	m_isFullscreen = !m_isFullscreen;
 	m_window.close();
@@ -93,7 +94,7 @@ void WindowManager::createWindow()
 	m_window.create(videoMode, m_windowTitle, m_isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
 }
 
-void WindowManager::closeWindow(EventDetails* details)
+void WindowManager::closeWindow()
 {
 	m_isOpen = false;
 }

@@ -9,7 +9,7 @@ Engine::Engine() :
 	srand(time(nullptr));
 
 	m_context.m_windowManager = &m_windowManager;
-	m_context.m_inputManager = m_windowManager.getInputManager();
+	m_context.m_controller = m_windowManager.getController();
 	m_context.m_entityManager = &m_entityManager;
 	m_systemManager.setEntityManager(&m_entityManager);
 	m_context.m_systemManager = &m_systemManager;

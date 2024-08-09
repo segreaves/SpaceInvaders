@@ -9,7 +9,7 @@ State_Menu::State_Menu(StateManager* stateManager) :
 
 State_Menu::~State_Menu()
 {
-	m_stateManager->getContext()->m_inputManager->removeCallback(StateType::Menu, m_continueInput);
+	onDestroy();
 }
 
 void State_Menu::update(const float& deltaTime)
@@ -42,8 +42,6 @@ void State_Menu::onCreate()
 	m_panel.setSize(sf::Vector2f(windowSize));
 	m_panel.setPosition(0, 0);
 	m_panel.setFillColor(sf::Color(0, 0, 0, 150));
-
-	m_stateManager->getContext()->m_inputManager->addCallback(StateType::Menu, m_continueInput, &State_Menu::transition, this);
 }
 
 void State_Menu::onDestroy()
@@ -52,14 +50,16 @@ void State_Menu::onDestroy()
 
 void State_Menu::activate()
 {
+	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Menu_onContinue", std::bind(&State_Menu::onContinue, this));
 }
 
 void State_Menu::deactivate()
 {
+	m_stateManager->getContext()->m_controller->m_onShoot.removeCallback("Menu_onContinue");
 }
 
-void State_Menu::transition(EventDetails* details)
+void State_Menu::onContinue()
 {
 	m_stateManager->switchTo(StateType::Game);
-	//m_stateManager->remove(StateType::Menu);
+	// remove menu state here?
 }

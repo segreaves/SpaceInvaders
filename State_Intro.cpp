@@ -42,24 +42,23 @@ void State_Intro::onCreate()
 	m_panel.setSize(sf::Vector2f(windowSize));
 	m_panel.setPosition(0, 0);
 	m_panel.setFillColor(sf::Color(0, 0, 0, 150));
-
-	m_stateManager->getContext()->m_inputManager->addCallback(StateType::Intro, m_continueInput, &State_Intro::transition, this);
 }
 
 void State_Intro::onDestroy()
 {
-	m_stateManager->getContext()->m_inputManager->removeCallback(StateType::Intro, m_continueInput);
 }
 
 void State_Intro::activate()
 {
+	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Intro_onContinue", std::bind(&State_Intro::onContinue, this));
 }
 
 void State_Intro::deactivate()
 {
+	m_stateManager->getContext()->m_controller->m_onShoot.removeCallback("Intro_onContinue");
 }
 
-void State_Intro::transition(EventDetails* details)
+void State_Intro::onContinue()
 {
 	m_stateManager->switchTo(StateType::Menu);
 	m_stateManager->remove(StateType::Intro);

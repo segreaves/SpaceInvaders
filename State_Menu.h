@@ -1,6 +1,5 @@
 #pragma once
 #include "State.h"
-#include "InputManager.h"
 
 class State_Menu : public State
 {
@@ -15,10 +14,9 @@ public:
 	void activate();
 	void deactivate();
 
-	void transition(EventDetails* details);
+	void onContinue();
 private:
 	sf::Font m_font;
 	sf::Text m_text;
 	sf::RectangleShape m_panel;
-	std::string m_continueInput = "Intro_Continue";
 };

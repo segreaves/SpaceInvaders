@@ -8,17 +8,11 @@
 
 class EntityManager;
 
-class SystemManager
+class SystemManager : public ISubscriber
 {
 public:
 	SystemManager();
 	~SystemManager();
-
-	/* Note: de-couple the entity manager and system manager by
-	creating an event for purging entities, then subscribing the
-	system manager to this event, and having the entity manager
-	dispatch this event rather than call the purge() function
-	on the system manager. */
 
 	void update(const float& deltaTime);
 	void draw(WindowManager* windowManager);
@@ -32,14 +26,20 @@ public:
 
 	EntityManager* getEntityManager();
 	void setEntityManager(EntityManager* entityManager);
+	MessageHandler* getMessageHandler();
 
 	void entityModified(const EntityId& id, const Bitmask& mask);
 	void removeEntity(const EntityId& id);
+
+	void addEvent(const EntityId& id, const EventId& event);
+	void handleEvents();
+	void notify(const Message& msg);
 
 	void purgeSystems();
 	void purgeEntities();
 private:
 	std::unordered_map<System, S_Base*> m_systems;
 	EntityManager* m_entityManager;
-
+	MessageHandler m_messageHandler;
+	std::unordered_map<EntityId, EventQueue> m_entityEvents;
 };

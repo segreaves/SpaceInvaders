@@ -22,8 +22,8 @@ Entity* EntityManager::getEntity(const EntityId& id)
 
 int EntityManager::addEntity(const Bitmask& mask)
 {
-	std::cout << "EntityManager::addEntity() Adding entity with mask: " << mask << std::endl;
-	std::cout << "Entity id: " << m_idCounter << std::endl;
+	//std::cout << "EntityManager::addEntity() Adding entity with mask: " << mask << std::endl;
+	//std::cout << "Entity id: " << m_idCounter << std::endl;
 	Entity* entity = new Entity(m_idCounter);
 	for (unsigned int i = 0; i < n_components; i++)
 	{

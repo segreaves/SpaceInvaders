@@ -84,19 +84,18 @@ void StateManager::switchTo(const StateType& toState)
 		if (it->first == toState)
 		{
 			m_states.back().second->deactivate();
-			StateType itType = it->first;
-			State* itState = it->second;
+			StateType type = it->first;
+			State* state = it->second;
 			m_states.erase(it);
-			m_states.emplace_back(itType, itState);
-			itState->activate();
-			m_context->m_inputManager->setCurrentState(toState);
+			m_states.emplace_back(type, state);
+			state->activate();
 			return;
 		}
 	}
-	if (!m_states.empty()) m_states.back().second->deactivate();
+	if (!m_states.empty())
+		m_states.back().second->deactivate();
 	createState(toState);
 	m_states.back().second->activate();
-	m_context->m_inputManager->setCurrentState(toState);
 }
 
 void StateManager::createState(const StateType& newState)

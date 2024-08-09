@@ -12,4 +12,8 @@ public:
 	void onDestroy() override;
 	void activate() override;
 	void deactivate() override;
+
+	//void playerMove(EventDetails* details);
+private:
+	int m_playerId;
 };

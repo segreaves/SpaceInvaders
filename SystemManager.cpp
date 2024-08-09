@@ -17,6 +17,7 @@ void SystemManager::update(const float& deltaTime)
 {
 	for (auto& system : m_systems)
 		system.second->update(deltaTime);
+	handleEvents();
 }
 
 void SystemManager::draw(WindowManager* windowManager)
@@ -37,6 +38,11 @@ void SystemManager::setEntityManager(EntityManager* entityManager)
 	m_entityManager = entityManager;
 }
 
+MessageHandler* SystemManager::getMessageHandler()
+{
+	return &m_messageHandler;
+}
+
 void SystemManager::entityModified(const EntityId& id, const Bitmask& mask)
 {
 	for (auto& it : m_systems)
@@ -53,6 +59,26 @@ void SystemManager::removeEntity(const EntityId& id)
 {
 	for (auto& system : m_systems)
 		system.second->removeEntity(id);
+}
+
+void SystemManager::addEvent(const EntityId& id, const EventId& event)
+{
+	m_entityEvents[id].addEvent(event);
+}
+
+void SystemManager::handleEvents()
+{
+	for (auto& eventQueue : m_entityEvents)
+	{
+		EventId eventId = 0;
+		while (eventQueue.second.processEvent(eventId))
+			for (auto& system : m_systems)
+				if (system.second->hasEntity(eventQueue.first)) system.second->handleEvent(eventQueue.first, (EntityEvent)eventId);
+	}
+}
+
+void SystemManager::notify(const Message& msg)
+{
 }
 
 void SystemManager::purgeSystems()
