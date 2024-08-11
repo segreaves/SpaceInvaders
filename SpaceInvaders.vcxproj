@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="ActorManager.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -149,16 +150,23 @@
     <ClCompile Include="State_Game.cpp" />
     <ClCompile Include="State_Intro.cpp" />
     <ClCompile Include="State_Menu.cpp" />
+    <ClCompile Include="SysManager.cpp" />
+    <ClCompile Include="System.cpp" />
     <ClCompile Include="SystemManager.cpp" />
+    <ClCompile Include="Sys_Renderer.cpp" />
     <ClCompile Include="S_Base.cpp" />
     <ClCompile Include="S_Renderer.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="ActorEventType.h" />
+    <ClInclude Include="ActorManager.h" />
     <ClInclude Include="Channel.h" />
     <ClInclude Include="Comp.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="CompType.h" />
+    <ClInclude Include="Comp_Position.h" />
     <ClInclude Include="Comp_Sprite.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="Controller.h" />
@@ -184,8 +192,11 @@
     <ClInclude Include="State_Game.h" />
     <ClInclude Include="State_Intro.h" />
     <ClInclude Include="State_Menu.h" />
+    <ClInclude Include="SysManager.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="SystemManager.h" />
+    <ClInclude Include="SystemType.h" />
+    <ClInclude Include="Sys_Renderer.h" />
     <ClInclude Include="S_Base.h" />
     <ClInclude Include="S_Renderer.h" />
     <ClInclude Include="Utilities.h" />

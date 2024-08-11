@@ -18,7 +18,7 @@ public:
 	void draw(WindowManager* windowManager);
 
 	template<class T>
-	T* getSystem(const System& sys)
+	T* getSystem(const SystemType& sys)
 	{
 		auto system = m_systems.find(sys);
 		return system != m_systems.end() ? dynamic_cast<T*>(system->second) : nullptr;
@@ -38,7 +38,7 @@ public:
 	void purgeSystems();
 	void purgeEntities();
 private:
-	std::unordered_map<System, S_Base*> m_systems;
+	std::unordered_map<SystemType, S_Base*> m_systems;
 	EntityManager* m_entityManager;
 	MessageHandler m_messageHandler;
 	std::unordered_map<EntityId, EventQueue> m_entityEvents;

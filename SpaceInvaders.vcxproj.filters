@@ -105,6 +105,18 @@
     <ClCompile Include="Controller.cpp">
       <Filter>Source Files\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="ActorManager.cpp">
+      <Filter>Source Files\Core\ECS\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SysManager.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys_Renderer.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowManager.h">
@@ -173,9 +185,6 @@
     <ClInclude Include="EntityMessage.h">
       <Filter>Header Files\Core\ECS\Messaging</Filter>
     </ClInclude>
-    <ClInclude Include="System.h">
-      <Filter>Header Files\Core\ECS\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
@@ -211,6 +220,30 @@
     </ClInclude>
     <ClInclude Include="InputEvent.h">
       <Filter>Header Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemType.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorManager.h">
+      <Filter>Header Files\Core\ECS\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="CompType.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SysManager.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Position.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_Renderer.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorEventType.h">
+      <Filter>Header Files\Core\ECS\Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@
 SystemManager::SystemManager() :
 	m_entityManager(nullptr)
 {
-	m_systems[System::Renderer] = new S_Renderer(this);
+	m_systems[SystemType::Renderer] = new S_Renderer(this);
 }
 
 SystemManager::~SystemManager()
@@ -22,7 +22,7 @@ void SystemManager::update(const float& deltaTime)
 
 void SystemManager::draw(WindowManager* windowManager)
 {
-	auto it = m_systems.find(System::Renderer);
+	auto it = m_systems.find(SystemType::Renderer);
 	if (it == m_systems.end()) return;
 	S_Renderer* renderer = (S_Renderer*)it->second;
 	renderer->draw(windowManager);

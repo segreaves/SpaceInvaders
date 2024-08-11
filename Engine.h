@@ -2,8 +2,10 @@
 #include "Context.h"
 #include "WindowManager.h"
 #include "StateManager.h"
-#include "SystemManager.h"
-#include "EntityManager.h"
+//#include "SystemManager.h"
+//#include "EntityManager.h"
+#include "SysManager.h"
+#include "ActorManager.h"
 
 class Engine
 {
@@ -20,6 +22,8 @@ private:
 	Context m_context;
 	WindowManager m_windowManager;
 	StateManager m_stateManager;
-	SystemManager m_systemManager;
-	EntityManager m_entityManager;
+	//SystemManager m_systemManager;
+	//EntityManager m_entityManager;
+	SysManager m_systemManager;
+	ActorManager m_entityManager;
 };

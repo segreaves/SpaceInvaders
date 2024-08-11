@@ -4,7 +4,7 @@
 #include "EntityManager.h"
 
 S_Renderer::S_Renderer(SystemManager* systemManager)
-	: S_Base(System::Renderer, systemManager)
+	: S_Base(SystemType::Renderer, systemManager)
 {
 	Bitmask req;
 	req.set((unsigned int)Component::Position, true);

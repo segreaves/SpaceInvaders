@@ -1,4 +1,5 @@
 #pragma once
+#include "CompType.h"
 
 class Comp
 {
@@ -15,5 +16,4 @@ public:
 
 	virtual void awake() {};
 	virtual void onDestroy() {};
-	virtual void update(const float& deltaTime) = 0;
 };

@@ -1,7 +1,8 @@
 #include "State_Game.h"
 #include "StateManager.h"
 #include "Direction.h"
-#include "C_Sprite.h"
+#include "Comp_Position.h"
+#include "Comp_Sprite.h"
 
 State_Game::State_Game(StateManager* stateManager) :
 	State(stateManager),
@@ -25,18 +26,19 @@ void State_Game::onCreate()
 {
 	// create player entity
 	Bitmask mask;
-	mask.set((unsigned int)Component::Position);
-	mask.set((unsigned int)Component::Sprite);
-	m_playerId = m_stateManager->getContext()->m_entityManager->addEntity(mask);
+	//mask.set((unsigned int)Component::Position);
+	//mask.set((unsigned int)Component::Sprite);
+	mask.set((unsigned int)CompType::Position);
+	mask.set((unsigned int)CompType::Sprite);
+	//m_playerId = m_stateManager->getContext()->m_entityManager->addEntity(mask);
+	m_playerId = m_stateManager->getContext()->m_entityManager->createActor(mask);
 	// set player in center-bottom of the view space
 	sf::FloatRect viewSpace = m_stateManager->getContext()->m_windowManager->getViewSpace();
-	C_Sprite* playerSprite = m_stateManager->getContext()->m_entityManager->getEntity(m_playerId)->getComponent<C_Sprite>((unsigned)Component::Sprite);
-	m_stateManager->getContext()->m_entityManager->getEntity(0)->getComponent<C_Position>((unsigned int)Component::Position)->setPosition(viewSpace.left + viewSpace.width / 2.f - playerSprite->getSize().x / 2.f, viewSpace.top + viewSpace.height * 0.9f - playerSprite->getSize().y / 2.f);
-
-	//m_stateManager->getContext()->m_inputManager->addCallback(StateType::Game, "Player_MoveUp", &State_Game::playerMove, this);
-	//m_stateManager->getContext()->m_inputManager->addCallback(StateType::Game, "Player_MoveDown", &State_Game::playerMove, this);
-	//m_stateManager->getContext()->m_inputManager->addCallback(StateType::Game, "Player_MoveLeft", &State_Game::playerMove, this);
-	//m_stateManager->getContext()->m_inputManager->addCallback(StateType::Game, "Player_MoveRight", &State_Game::playerMove, this);
+	//C_Sprite* playerSprite = m_stateManager->getContext()->m_entityManager->getEntity(m_playerId)->getComponent<C_Sprite>((unsigned)Component::Sprite);
+	//m_stateManager->getContext()->m_entityManager->getEntity(0)->getComponent<C_Position>((unsigned int)Component::Position)->setPosition(viewSpace.left + viewSpace.width / 2.f - playerSprite->getSize().x / 2.f, viewSpace.top + viewSpace.height * 0.9f - playerSprite->getSize().y / 2.f);
+	Comp_Sprite* playerSprite = m_stateManager->getContext()->m_entityManager->getActor(0)->getComponent<Comp_Sprite>(CompType::Sprite);
+	Comp_Position* playerPos = m_stateManager->getContext()->m_entityManager->getActor(0)->getComponent<Comp_Position>(CompType::Position);
+	playerPos->setPosition(viewSpace.left + viewSpace.width / 2.f - playerSprite->getSize().x / 2.f, viewSpace.top + viewSpace.height * 0.9f - playerSprite->getSize().y / 2.f);
 }
 
 void State_Game::onDestroy()

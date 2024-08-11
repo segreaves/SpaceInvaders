@@ -1,7 +1,7 @@
 #include "S_Base.h"
 #include "ECS_Params.h"
 
-S_Base::S_Base(System id, SystemManager* systemManager)
+S_Base::S_Base(SystemType id, SystemManager* systemManager)
 {
 	m_id = id;
 	m_systemManager = systemManager;

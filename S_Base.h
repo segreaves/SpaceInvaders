@@ -1,6 +1,6 @@
 #pragma once
 #include "ISubscriber.h"
-#include "System.h"
+#include "SystemType.h"
 #include "EntityEvent.h"
 #include "EntityManager.h"
 #include "ECS_Params.h"
@@ -11,7 +11,7 @@ class SystemManager;
 class S_Base : public ISubscriber
 {
 public:
-	S_Base(System id, SystemManager* systemManager);
+	S_Base(SystemType id, SystemManager* systemManager);
 	virtual ~S_Base();
 
 	virtual void update(const float& deltaTime) = 0;
@@ -24,7 +24,7 @@ public:
 	bool fitsRequirements(const Bitmask& bits) const;
 	void purge();
 protected:
-	System m_id;
+	SystemType m_id;
 	std::vector<EntityId> m_entities;
 	std::vector<Bitmask> m_requirements;
 	SystemManager* m_systemManager;

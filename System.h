@@ -1,12 +1,32 @@
 #pragma once
+#include "ISubscriber.h"
+#include "ECS_Params.h"
+#include <vector>
 
-enum class System
+class Message;
+class SysManager;
+
+using ActorId = unsigned int;
+using ActorEvent = unsigned int;
+
+class System : public ISubscriber
 {
-	None = 0,
-	Renderer = 1 << 0,
-	Movement = 1 << 1,
-	Collision = 1 << 2,
-	Control = 1 << 3,
-	State = 1 << 4,
-	Animation = 1 << 5
+public:
+	System(SysManager* systemManager);
+
+	virtual void setupRequirements() = 0;
+	virtual void subscribeToChannels() = 0;
+
+	virtual void update(const float& deltaTime) = 0;
+	virtual void handleEvent(const ActorId& actorId, const ActorEvent& msg ) = 0;
+
+	bool addActor(const ActorId& actor);
+	bool removeActor(const ActorId& actor);
+	void removeAllActors();
+	bool hasActor(const ActorId& actor);
+	bool fitsRequirements(const Bitmask& mask);
+protected:
+	Bitmask m_requirements;
+	std::vector<ActorId> m_actorIds;
+	SysManager* m_systemManager;
 };
