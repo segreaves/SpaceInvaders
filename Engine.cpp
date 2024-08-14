@@ -11,7 +11,6 @@ Engine::Engine() :
 	m_context.m_windowManager = &m_windowManager;
 	m_context.m_controller = m_windowManager.getController();
 	m_context.m_entityManager = &m_entityManager;
-	//m_systemManager.setEntityManager(&m_entityManager);
 	m_systemManager.setActorManager(&m_entityManager);
 	m_context.m_systemManager = &m_systemManager;
 
@@ -20,19 +19,17 @@ Engine::Engine() :
 
 void Engine::update()
 {
-	float deltaTime = m_clock.getElapsedTime().asSeconds();
 	m_windowManager.update();
-	m_stateManager.update(deltaTime);
+	m_stateManager.update(m_elapsed.asSeconds());
 }
 
 void Engine::lateUpdate()
 {
-	m_clock.restart();
+	m_elapsed = m_clock.restart();
 }
 
 void Engine::render()
 {
-	float deltaTime = m_clock.getElapsedTime().asSeconds();
 	m_windowManager.drawStart();
 	m_stateManager.draw();
 	m_windowManager.drawEnd();

@@ -2,9 +2,10 @@
 #include "SysManager.h"
 #include "ActorManager.h"
 #include "WindowManager.h"
+#include <iostream>
 
 Sys_Renderer::Sys_Renderer(SysManager* systemManager) :
-	System(systemManager)
+	Sys(systemManager)
 {
 	setupRequirements();
 	subscribeToChannels();
@@ -47,10 +48,9 @@ void Sys_Renderer::notify(const Message& msg)
 
 void Sys_Renderer::setupRequirements()
 {
-	Bitmask reqs;
-	reqs.set((unsigned int)CompType::Position, true);
-	reqs.set((unsigned int)CompType::Sprite, true);
-	m_requirements = reqs;
+	m_requirements = Bitmask();
+	m_requirements.set((unsigned int)CompType::Position, true);
+	m_requirements.set((unsigned int)CompType::Sprite, true);
 }
 
 void Sys_Renderer::subscribeToChannels()

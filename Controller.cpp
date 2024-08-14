@@ -9,17 +9,14 @@ Controller::Controller() :
 
 void Controller::update()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			m_onMove.dispatch(sf::Vector2f(0.f, -1.f));
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			m_onMove.dispatch(sf::Vector2f(0.f, 1.f));
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			m_onMove.dispatch(sf::Vector2f(-1.f, 0.f));
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			m_onMove.dispatch(sf::Vector2f(1.f, 0.f));
-	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		m_onMove.dispatch(sf::Vector2f(0.f, -1.f));
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		m_onMove.dispatch(sf::Vector2f(0.f, 1.f));
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		m_onMove.dispatch(sf::Vector2f(-1.f, 0.f));
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		m_onMove.dispatch(sf::Vector2f(1.f, 0.f));
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button(sf::Mouse::Left)))
 	{
 		sf::Vector2i mouseXY = sf::Mouse::getPosition(*m_windowManager->getRenderWindow());

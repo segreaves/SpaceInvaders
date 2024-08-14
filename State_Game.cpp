@@ -26,16 +26,13 @@ void State_Game::onCreate()
 {
 	// create player entity
 	Bitmask mask;
-	//mask.set((unsigned int)Component::Position);
-	//mask.set((unsigned int)Component::Sprite);
 	mask.set((unsigned int)CompType::Position);
 	mask.set((unsigned int)CompType::Sprite);
-	//m_playerId = m_stateManager->getContext()->m_entityManager->addEntity(mask);
+	mask.set((unsigned int)CompType::Movable);
+	mask.set((unsigned int)CompType::Controller);
 	m_playerId = m_stateManager->getContext()->m_entityManager->createActor(mask);
 	// set player in center-bottom of the view space
 	sf::FloatRect viewSpace = m_stateManager->getContext()->m_windowManager->getViewSpace();
-	//C_Sprite* playerSprite = m_stateManager->getContext()->m_entityManager->getEntity(m_playerId)->getComponent<C_Sprite>((unsigned)Component::Sprite);
-	//m_stateManager->getContext()->m_entityManager->getEntity(0)->getComponent<C_Position>((unsigned int)Component::Position)->setPosition(viewSpace.left + viewSpace.width / 2.f - playerSprite->getSize().x / 2.f, viewSpace.top + viewSpace.height * 0.9f - playerSprite->getSize().y / 2.f);
 	Comp_Sprite* playerSprite = m_stateManager->getContext()->m_entityManager->getActor(0)->getComponent<Comp_Sprite>(CompType::Sprite);
 	Comp_Position* playerPos = m_stateManager->getContext()->m_entityManager->getActor(0)->getComponent<Comp_Position>(CompType::Position);
 	playerPos->setPosition(viewSpace.left + viewSpace.width / 2.f - playerSprite->getSize().x / 2.f, viewSpace.top + viewSpace.height * 0.9f - playerSprite->getSize().y / 2.f);
@@ -47,19 +44,19 @@ void State_Game::onDestroy()
 
 void State_Game::activate()
 {
+	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 }
 
 void State_Game::deactivate()
 {
+	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onMove");
 }
 
-/*void State_Game::playerMove(EventDetails* details)
+void State_Game::onPlayerMove(sf::Vector2f xy)
 {
-	Message msg((MessageType)EntityMessage::Move);
-	if (details->m_name == "Player_MoveLeft") msg.m_int = (int)Direction::Left;
-	else if (details->m_name == "Player_MoveRight") msg.m_int = (int)Direction::Right;
-	else if (details->m_name == "Player_MoveUp") msg.m_int = (int)Direction::Up;
-	else if (details->m_name == "Player_MoveDown") msg.m_int = (int)Direction::Down;
+	Message msg((MessageType)ActorMessage::Move);
 	msg.m_receiver = m_playerId;
+	msg.m_xy.x = xy.x;
+	msg.m_xy.y = 0;
 	m_stateManager->getContext()->m_systemManager->getMessageHandler()->dispatch(msg);
-}*/
+}

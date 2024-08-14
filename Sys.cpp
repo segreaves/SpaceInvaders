@@ -1,20 +1,20 @@
-#include "System.h"
+#include "Sys.h"
 #include "SysManager.h"
 #include "Message.h"
 
-System::System(SysManager* systemManager) :
+Sys::Sys(SysManager* systemManager) :
 	m_systemManager(systemManager)
 {
 }
 
-bool System::addActor(const ActorId& actor)
+bool Sys::addActor(const ActorId& actor)
 {
 	if (hasActor(actor)) return false;
 	m_actorIds.emplace_back(actor);
 	return true;
 }
 
-bool System::removeActor(const ActorId& actor)
+bool Sys::removeActor(const ActorId& actor)
 {
 	auto it = std::find(m_actorIds.begin(), m_actorIds.end(), actor);
 	if (it == m_actorIds.end()) return false;
@@ -22,18 +22,21 @@ bool System::removeActor(const ActorId& actor)
 	return true;
 }
 
-void System::removeAllActors()
+void Sys::removeAllActors()
 {
 	m_actorIds.clear();
 }
 
-bool System::hasActor(const ActorId& actor)
+bool Sys::hasActor(const ActorId& actor)
 {
 	if (std::find(m_actorIds.begin(), m_actorIds.end(), actor) != m_actorIds.end()) return true;
 	return false;
 }
 
-bool System::fitsRequirements(const Bitmask& mask)
+bool Sys::fitsRequirements(const Bitmask& mask)
 {
-	return mask == m_requirements;
+	for (int i = 0; i < m_requirements.size(); i++)
+		if (m_requirements.test(i) && !mask.test(i))
+			return false;
+	return true;
 }

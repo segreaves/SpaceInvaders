@@ -13,7 +13,7 @@ public:
 	void activate() override;
 	void deactivate() override;
 
-	//void playerMove(EventDetails* details);
+	void onPlayerMove(sf::Vector2f xy);
 private:
 	int m_playerId;
 };

@@ -19,17 +19,8 @@
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{52ba0d79-acf1-44d6-8d1c-3052c4026454}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Core\States">
-      <UniqueIdentifier>{98d4feaa-61cd-40dd-960d-914acdc10830}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core\States">
-      <UniqueIdentifier>{ea034341-442a-46e4-ab5e-b83d5986e7ac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Core\ECS">
       <UniqueIdentifier>{506d6d8d-b30a-4e81-8265-2456948cdb4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Core\ResourceManagers">
-      <UniqueIdentifier>{c72041c2-4681-4f38-ad7d-88ef00e9ba5a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Core\ECS">
       <UniqueIdentifier>{ca9a131b-20c3-4b5c-927a-48d8a0ed751b}</UniqueIdentifier>
@@ -61,6 +52,15 @@
     <Filter Include="Source Files\Controls">
       <UniqueIdentifier>{e928d3fb-b625-4326-a520-9c4e9eb7b8f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Engine States">
+      <UniqueIdentifier>{ea034341-442a-46e4-ab5e-b83d5986e7ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\Resource Managers">
+      <UniqueIdentifier>{c72041c2-4681-4f38-ad7d-88ef00e9ba5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\Engine States">
+      <UniqueIdentifier>{98d4feaa-61cd-40dd-960d-914acdc10830}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceInvaders.cpp">
@@ -73,31 +73,16 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="StateManager.cpp">
-      <Filter>Source Files\Core\States</Filter>
+      <Filter>Source Files\Core\Engine States</Filter>
     </ClCompile>
     <ClCompile Include="State_Intro.cpp">
-      <Filter>Source Files\Core\States</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Source Files\Core\ECS\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityManager.cpp">
-      <Filter>Source Files\Core\ECS\Entities</Filter>
+      <Filter>Source Files\Core\Engine States</Filter>
     </ClCompile>
     <ClCompile Include="State_Menu.cpp">
-      <Filter>Source Files\Core\States</Filter>
-    </ClCompile>
-    <ClCompile Include="SystemManager.cpp">
-      <Filter>Source Files\Core\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="S_Base.cpp">
-      <Filter>Source Files\Core\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="S_Renderer.cpp">
-      <Filter>Source Files\Core\ECS\Systems</Filter>
+      <Filter>Source Files\Core\Engine States</Filter>
     </ClCompile>
     <ClCompile Include="State_Game.cpp">
-      <Filter>Source Files\Core\States</Filter>
+      <Filter>Source Files\Core\Engine States</Filter>
     </ClCompile>
     <ClCompile Include="Actor.cpp">
       <Filter>Source Files\Core\ECS\Entities</Filter>
@@ -108,13 +93,19 @@
     <ClCompile Include="ActorManager.cpp">
       <Filter>Source Files\Core\ECS\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="System.cpp">
-      <Filter>Source Files\Core\ECS\Systems</Filter>
-    </ClCompile>
     <ClCompile Include="SysManager.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Sys_Renderer.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys_Movement.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys_Control.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
   </ItemGroup>
@@ -129,40 +120,22 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="StateManager.h">
-      <Filter>Header Files\Core\States</Filter>
+      <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
     <ClInclude Include="State.h">
-      <Filter>Header Files\Core\States</Filter>
+      <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
     <ClInclude Include="Context.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="State_Intro.h">
-      <Filter>Header Files\Core\States</Filter>
+      <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
     <ClInclude Include="State_Menu.h">
-      <Filter>Header Files\Core\States</Filter>
+      <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
-      <Filter>Header Files\Core\ResourceManagers</Filter>
-    </ClInclude>
-    <ClInclude Include="C_Base.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Header Files\Core\ECS\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityManager.h">
-      <Filter>Header Files\Core\ECS\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="S_Base.h">
-      <Filter>Header Files\Core\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemManager.h">
-      <Filter>Header Files\Core\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="C_Drawable.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
+      <Filter>Header Files\Core\Resource Managers</Filter>
     </ClInclude>
     <ClInclude Include="Message.h">
       <Filter>Header Files\Core\ECS\Messaging</Filter>
@@ -170,19 +143,10 @@
     <ClInclude Include="ISubscriber.h">
       <Filter>Header Files\Core\ECS\Messaging</Filter>
     </ClInclude>
-    <ClInclude Include="EntityEvent.h">
-      <Filter>Header Files\Core\ECS\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="S_Renderer.h">
-      <Filter>Header Files\Core\ECS\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="Channel.h">
       <Filter>Header Files\Core\ECS\Messaging</Filter>
     </ClInclude>
     <ClInclude Include="MessageHandler.h">
-      <Filter>Header Files\Core\ECS\Messaging</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityMessage.h">
       <Filter>Header Files\Core\ECS\Messaging</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
@@ -191,17 +155,8 @@
     <ClInclude Include="ECS_Params.h">
       <Filter>Header Files\Core\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="EventQueue.h">
-      <Filter>Header Files\Core\ECS\Messaging</Filter>
-    </ClInclude>
-    <ClInclude Include="C_Position.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="State_Game.h">
-      <Filter>Header Files\Core\States</Filter>
-    </ClInclude>
-    <ClInclude Include="C_Sprite.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
+      <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
     <ClInclude Include="Direction.h">
       <Filter>Header Files\Data</Filter>
@@ -224,9 +179,6 @@
     <ClInclude Include="SystemType.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="System.h">
-      <Filter>Header Files\Core\ECS\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="ActorManager.h">
       <Filter>Header Files\Core\ECS\Entities</Filter>
     </ClInclude>
@@ -244,6 +196,24 @@
     </ClInclude>
     <ClInclude Include="ActorEventType.h">
       <Filter>Header Files\Core\ECS\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Controller.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Movable.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_Movement.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorMessage.h">
+      <Filter>Header Files\Core\ECS\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_Control.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

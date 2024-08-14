@@ -6,6 +6,8 @@ SysManager::SysManager() :
 	m_actorManager(nullptr)
 {
 	m_systems[SystemType::Renderer] = new Sys_Renderer(this);
+	m_systems[SystemType::Movement] = new Sys_Movement(this);
+	m_systems[SystemType::Control] = new Sys_Control(this);
 }
 
 SysManager::~SysManager()
@@ -28,20 +30,18 @@ void SysManager::draw(WindowManager* windowManager)
 	rend->draw(windowManager);
 }
 
-void SysManager::addEvent(const ActorId& actorId, const EventId& eventId)
-{
-	m_actorEvents[actorId].push(eventId);
-}
-
 void SysManager::handleEvents()
 {
 	for (auto& eventQueue : m_actorEvents)
 	{
 		EventId eventId = 0;
-		while (processActorEvent(eventQueue.second, eventId))
+		while (eventQueue.second.size() > 0)
+		{
+			eventId = eventQueue.second.front();
+			eventQueue.second.pop();
 			for (auto& sys : m_systems)
-				if (sys.second->hasActor(eventQueue.first))
-					sys.second->handleEvent(eventQueue.first, (ActorEvent)eventId);
+				sys.second->handleEvent(eventQueue.first, eventId);
+		}
 	}
 }
 
@@ -66,14 +66,6 @@ void SysManager::removeAllActors()
 {
 	for (auto& sys : m_systems)
 		sys.second->removeAllActors();
-}
-
-bool SysManager::processActorEvent(std::queue<EventId> eventQueue, EventId& eventId)
-{
-	if (eventQueue.empty()) return false;
-	eventId = eventQueue.front();
-	eventQueue.pop();
-	return true;
 }
 
 void SysManager::setActorManager(ActorManager* actorManager)

@@ -4,11 +4,13 @@ using MessageType = unsigned int;
 
 struct XY
 {
-	XY(float x, float y) : m_x(x), m_y(y)
+	XY(float x, float y) :
+		x(x), y(y)
 	{
 	}
-	float m_x;
-	float m_y;
+
+	float x;
+	float y;
 };
 
 struct Message

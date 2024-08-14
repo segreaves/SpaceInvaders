@@ -8,6 +8,8 @@ ActorManager::ActorManager(SysManager* systemManager) :
 {
 	addComponentType<Comp_Position>(CompType::Position);
 	addComponentType<Comp_Sprite>(CompType::Sprite);
+	addComponentType<Comp_Movable>(CompType::Movable);
+	addComponentType<Comp_Controller>(CompType::Controller);
 }
 
 ActorManager::~ActorManager()

@@ -1,6 +1,6 @@
 #pragma once
 
-enum class EntityMessage
+enum class ActorMessage
 {
 	Move,
 	Attack,

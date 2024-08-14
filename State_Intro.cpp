@@ -3,18 +3,14 @@
 #include "Utilities.h"
 
 State_Intro::State_Intro(StateManager* stateManager) :
-	State(stateManager)
-{
-}
+	State(stateManager) {}
 
 State_Intro::~State_Intro()
 {
 	onDestroy();
 }
 
-void State_Intro::update(const float& deltaTime)
-{
-}
+void State_Intro::update(const float& deltaTime) {}
 
 void State_Intro::draw()
 {

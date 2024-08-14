@@ -2,8 +2,6 @@
 #include "Context.h"
 #include "WindowManager.h"
 #include "StateManager.h"
-//#include "SystemManager.h"
-//#include "EntityManager.h"
 #include "SysManager.h"
 #include "ActorManager.h"
 
@@ -19,11 +17,10 @@ public:
 
 private:
 	sf::Clock m_clock;
+	sf::Time m_elapsed;
 	Context m_context;
 	WindowManager m_windowManager;
 	StateManager m_stateManager;
-	//SystemManager m_systemManager;
-	//EntityManager m_entityManager;
 	SysManager m_systemManager;
 	ActorManager m_entityManager;
 };

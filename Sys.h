@@ -3,22 +3,22 @@
 #include "ECS_Params.h"
 #include <vector>
 
-class Message;
+struct Message;
 class SysManager;
 
 using ActorId = unsigned int;
 using ActorEvent = unsigned int;
 
-class System : public ISubscriber
+class Sys : public ISubscriber
 {
 public:
-	System(SysManager* systemManager);
+	Sys(SysManager* systemManager);
 
-	virtual void setupRequirements() = 0;
-	virtual void subscribeToChannels() = 0;
+	virtual void setupRequirements() {}
+	virtual void subscribeToChannels() {}
 
 	virtual void update(const float& deltaTime) = 0;
-	virtual void handleEvent(const ActorId& actorId, const ActorEvent& msg ) = 0;
+	virtual void handleEvent(const ActorId& actorId, const ActorEvent& msg) = 0;
 
 	bool addActor(const ActorId& actor);
 	bool removeActor(const ActorId& actor);

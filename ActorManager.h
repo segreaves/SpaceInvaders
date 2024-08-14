@@ -3,6 +3,8 @@
 #include "ECS_Params.h"
 #include "Comp_Position.h"
 #include "Comp_Sprite.h"
+#include "Comp_Controller.h"
+#include "Comp_Movable.h"
 #include <functional>
 
 class SysManager;

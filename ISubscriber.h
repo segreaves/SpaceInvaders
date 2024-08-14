@@ -1,6 +1,6 @@
 #pragma once
 
-class Message;
+struct Message;
 
 class ISubscriber
 {

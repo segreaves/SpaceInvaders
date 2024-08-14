@@ -1,7 +1,9 @@
 #pragma once
 #include "SystemType.h"
-#include "System.h"
+#include "Sys.h"
 #include "Sys_Renderer.h"
+#include "Sys_Movement.h"
+#include "Sys_Control.h"
 #include "MessageHandler.h"
 #include "CompType.h"
 #include <unordered_map>
@@ -31,8 +33,6 @@ public:
 	void removeActor(const ActorId& actorId);
 	void removeAllActors();
 
-	void addEvent(const ActorId& actorId, const EventId& eventId);
-	bool processActorEvent(std::queue<EventId> eventQueue, EventId& actorEvent);
 	void setActorManager(ActorManager* actorManager);
 	ActorManager* getActorManager();
 	MessageHandler* getMessageHandler();
@@ -46,7 +46,7 @@ public:
 	void purgeSystems();
 private:
 	ActorManager* m_actorManager;
-	std::unordered_map<SystemType, System*> m_systems;
+	std::unordered_map<SystemType, Sys*> m_systems;
 	std::unordered_map<ActorId, std::queue<EventId>> m_actorEvents;
 	MessageHandler m_messageHandler;
 };
