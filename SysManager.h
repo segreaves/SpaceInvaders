@@ -4,8 +4,9 @@
 #include "Sys_Renderer.h"
 #include "Sys_Movement.h"
 #include "Sys_Control.h"
+#include "Sys_Collision.h"
+#include "Sys_AIController.h"
 #include "MessageHandler.h"
-#include "CompType.h"
 #include <unordered_map>
 #include <queue>
 
@@ -28,6 +29,7 @@ public:
 	void update(const float& deltaTime);
 	void draw(WindowManager* windowManager);
 	void handleEvents();
+	void addEvent(ActorId actorId, ActorEvent eventId);
 	
 	void actorModified(const ActorId& actorId, const Bitmask& mask);
 	void removeActor(const ActorId& actorId);
@@ -37,9 +39,9 @@ public:
 	ActorManager* getActorManager();
 	MessageHandler* getMessageHandler();
 	template<class T>
-	T* getSystem(CompType type)
+	T* getSystem(const SystemType& type)
 	{
-		auto& sys = m_systems.find(type);
+		auto sys = m_systems.find(type);
 		return sys != m_systems.end() ? dynamic_cast<T*>(sys->second) : nullptr;
 	}
 

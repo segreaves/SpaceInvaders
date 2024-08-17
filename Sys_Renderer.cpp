@@ -2,13 +2,17 @@
 #include "SysManager.h"
 #include "ActorManager.h"
 #include "WindowManager.h"
-#include <iostream>
 
 Sys_Renderer::Sys_Renderer(SysManager* systemManager) :
 	Sys(systemManager)
 {
 	setupRequirements();
 	subscribeToChannels();
+}
+
+Sys_Renderer::~Sys_Renderer()
+{
+	unsubscribeFromChannels();
 }
 
 void Sys_Renderer::update(const float& deltaTime)
@@ -23,7 +27,7 @@ void Sys_Renderer::update(const float& deltaTime)
 	}
 }
 
-void Sys_Renderer::handleEvent(const ActorId& actorId, const ActorEvent& msg)
+void Sys_Renderer::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
 }
 
@@ -42,17 +46,25 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 	}
 }
 
+void Sys_Renderer::debugOverlay(WindowManager* windowManager)
+{
+}
+
 void Sys_Renderer::notify(const Message& msg)
 {
 }
 
 void Sys_Renderer::setupRequirements()
 {
-	m_requirements = Bitmask();
-	m_requirements.set((unsigned int)CompType::Position, true);
-	m_requirements.set((unsigned int)CompType::Sprite, true);
+	m_requirements.set(
+		(unsigned int)CompType::Position |
+		(unsigned int)CompType::Sprite);
 }
 
 void Sys_Renderer::subscribeToChannels()
+{
+}
+
+void Sys_Renderer::unsubscribeFromChannels()
 {
 }

@@ -2,14 +2,13 @@
 #include "Sys.h"
 
 class SysManager;
-class ActorManager;
-class WindowManager;
+class Level;
 
-class Sys_Renderer : public Sys
+class Sys_Collision : public Sys
 {
 public:
-	Sys_Renderer(SysManager* systemManager);
-	~Sys_Renderer();
+	Sys_Collision(SysManager* systemManager);
+	~Sys_Collision();
 
 	void setupRequirements() override;
 	void subscribeToChannels() override;
@@ -17,8 +16,15 @@ public:
 
 	void update(const float& deltaTime);
 	void handleEvent(const ActorId& actorId, const ActorEventType& eventId);
-	void draw(WindowManager* windowManager);
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
+
+	void setLevel(Level* level);
+private:
+	void levelCollisions();
+	void actorOnLevelCollisions(const ActorId& actorId, Comp_Position* posComp, Comp_Collision* colComp);
+	void actorCollisions();
+
+	Level* m_level;
 };

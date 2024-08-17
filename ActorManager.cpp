@@ -1,6 +1,5 @@
 #include "ActorManager.h"
 #include "SysManager.h"
-#include <iostream>
 
 ActorManager::ActorManager(SysManager* systemManager) :
 	m_systemManager(systemManager),
@@ -9,7 +8,9 @@ ActorManager::ActorManager(SysManager* systemManager) :
 	addComponentType<Comp_Position>(CompType::Position);
 	addComponentType<Comp_Sprite>(CompType::Sprite);
 	addComponentType<Comp_Movable>(CompType::Movable);
-	addComponentType<Comp_Controller>(CompType::Controller);
+	addComponentType<Comp_PlayerControl>(CompType::PlayerController);
+	addComponentType<Comp_AIControl>(CompType::AIController);
+	addComponentType<Comp_Collision>(CompType::Collision);
 }
 
 ActorManager::~ActorManager()
@@ -28,7 +29,7 @@ int ActorManager::createActor(Bitmask components)
 			auto factory = m_componentFactory.find(compType);
 			if (factory == m_componentFactory.end())
 			{
-				std::cout << "! Error: ActorManager::createActor() component factory element not found." << std::endl;
+				std::cout << "! Error: ActorManager::createActor() component factory element " << (unsigned int)compType << " not found." << std::endl;
 				return -1;
 			}
 			actor->addComponent(compType, factory->second());

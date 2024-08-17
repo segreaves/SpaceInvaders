@@ -6,8 +6,10 @@ SysManager::SysManager() :
 	m_actorManager(nullptr)
 {
 	m_systems[SystemType::Renderer] = new Sys_Renderer(this);
-	m_systems[SystemType::Movement] = new Sys_Movement(this);
 	m_systems[SystemType::Control] = new Sys_Control(this);
+	m_systems[SystemType::Movement] = new Sys_Movement(this);
+	m_systems[SystemType::Collision] = new Sys_Collision(this);
+	m_systems[SystemType::AIController] = new Sys_AIController(this);
 }
 
 SysManager::~SysManager()
@@ -28,6 +30,8 @@ void SysManager::draw(WindowManager* windowManager)
 	if (it == m_systems.end()) return;
 	Sys_Renderer* rend = (Sys_Renderer*)it->second;
 	rend->draw(windowManager);
+	for (auto& sys : m_systems)
+		sys.second->debugOverlay(windowManager);
 }
 
 void SysManager::handleEvents()
@@ -40,9 +44,14 @@ void SysManager::handleEvents()
 			eventId = eventQueue.second.front();
 			eventQueue.second.pop();
 			for (auto& sys : m_systems)
-				sys.second->handleEvent(eventQueue.first, eventId);
+				sys.second->handleEvent(eventQueue.first, (ActorEventType)eventId);
 		}
 	}
+}
+
+void SysManager::addEvent(ActorId actorId, ActorEvent eventId)
+{
+	m_actorEvents[actorId].push(eventId);
 }
 
 void SysManager::actorModified(const ActorId& actorId, const Bitmask& mask)

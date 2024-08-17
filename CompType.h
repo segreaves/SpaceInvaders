@@ -6,6 +6,7 @@ enum class CompType
 	Sprite,
 	State,
 	Movable,
-	Controller,
-	Collidable
+	PlayerController,
+	AIController,
+	Collision
 };

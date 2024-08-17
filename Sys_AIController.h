@@ -1,15 +1,11 @@
 #pragma once
 #include "Sys.h"
 
-class SysManager;
-class ActorManager;
-class WindowManager;
-
-class Sys_Renderer : public Sys
+class Sys_AIController : public Sys
 {
 public:
-	Sys_Renderer(SysManager* systemManager);
-	~Sys_Renderer();
+	Sys_AIController(SysManager* systemManager);
+	~Sys_AIController();
 
 	void setupRequirements() override;
 	void subscribeToChannels() override;
@@ -17,8 +13,10 @@ public:
 
 	void update(const float& deltaTime);
 	void handleEvent(const ActorId& actorId, const ActorEventType& eventId);
-	void draw(WindowManager* windowManager);
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
+
+	void move(const ActorId& actorId, const float& deltaTime);
+private:
 };

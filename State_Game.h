@@ -1,6 +1,8 @@
 #pragma once
 #include "State.h"
 
+class Level;
+
 class State_Game : public State
 {
 public:
@@ -16,4 +18,5 @@ public:
 	void onPlayerMove(sf::Vector2f xy);
 private:
 	int m_playerId;
+	Level* m_level;
 };

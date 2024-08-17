@@ -1,7 +1,6 @@
 #include "Sys_Movement.h"
 #include "ActorManager.h"
 #include "SysManager.h"
-#include <iostream>
 
 Sys_Movement::Sys_Movement(SysManager* systemManager) :
 	Sys(systemManager)
@@ -10,15 +9,26 @@ Sys_Movement::Sys_Movement(SysManager* systemManager) :
 	subscribeToChannels();
 }
 
+Sys_Movement::~Sys_Movement()
+{
+	unsubscribeFromChannels();
+}
+
 void Sys_Movement::setupRequirements()
 {
-	m_requirements = Bitmask();
-	m_requirements.set((unsigned int)CompType::Position, true);
-	m_requirements.set((unsigned int)CompType::Movable, true);
+	m_requirements.set(
+		(unsigned int)CompType::Position |
+		(unsigned int)CompType::Movable);
 }
 
 void Sys_Movement::subscribeToChannels()
 {
+	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Resolve, this);
+}
+
+void Sys_Movement::unsubscribeFromChannels()
+{
+	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Resolve, this);
 }
 
 void Sys_Movement::update(const float& deltaTime)
@@ -27,12 +37,36 @@ void Sys_Movement::update(const float& deltaTime)
 		move(id, deltaTime);
 }
 
-void Sys_Movement::handleEvent(const ActorId& actorId, const ActorEvent& msg)
+void Sys_Movement::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
+{
+	Comp_Movable* moveComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Movable>(CompType::Movable);
+	switch (eventId)
+	{
+	case ActorEventType::CollidingOnX:
+		moveComp->setAcceleration(0, moveComp->getAcceleration().y);
+		break;
+	case ActorEventType::CollidingOnY:
+		moveComp->setAcceleration(moveComp->getAcceleration().x, 0);
+		break;
+	}
+}
+
+void Sys_Movement::debugOverlay(WindowManager* windowManager)
 {
 }
 
 void Sys_Movement::notify(const Message& msg)
 {
+	if (!hasActor(msg.m_receiver)) return;
+	ActorMessageType msgType = (ActorMessageType)msg.m_type;
+	switch (msgType)
+	{
+	case ActorMessageType::Resolve:
+		Actor* actor = m_systemManager->getActorManager()->getActor(msg.m_receiver);
+		Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
+		posComp->move(msg.m_xy.x, msg.m_xy.y);
+		break;
+	}
 }
 
 void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)

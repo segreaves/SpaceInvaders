@@ -2,10 +2,12 @@
 
 enum class ActorEventType
 {
-	Spawned,
+	Spawned = 0,
 	Despawned,
 	Moving_Left,
 	Moving_Right,
 	Moving_Up,
-	Moving_Down
+	Moving_Down,
+	CollidingOnX,
+	CollidingOnY
 };

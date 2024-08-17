@@ -5,7 +5,10 @@
 class Comp_Position : public Comp
 {
 public:
-	sf::Vector2f getPosition() { return m_position; }
+	sf::Vector2f getPosition()
+	{
+		return m_position;
+	}
 	
 	void setPosition(const float& x, const float& y)
 	{

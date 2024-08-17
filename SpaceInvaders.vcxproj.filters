@@ -43,9 +43,6 @@
     <Filter Include="Header Files\Core\ECS\Messaging">
       <UniqueIdentifier>{35dbc663-da54-40e2-b217-b6c803ee9427}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Data">
-      <UniqueIdentifier>{ed76146b-4952-467c-9bd5-1e9ee9aa0a84}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Controls">
       <UniqueIdentifier>{78133876-133a-42d1-ac59-0aee00355626}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,15 @@
     </Filter>
     <Filter Include="Header Files\Core\Engine States">
       <UniqueIdentifier>{98d4feaa-61cd-40dd-960d-914acdc10830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Levels">
+      <UniqueIdentifier>{71cf8020-b2ef-4aca-8281-89721fedf066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Levels">
+      <UniqueIdentifier>{7c72c0e2-9bbd-4648-b081-c92aa2787093}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controls\Data">
+      <UniqueIdentifier>{86324953-e3f9-4255-8fe0-bc42f757e267}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +112,15 @@
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Sys_Control.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys_Collision.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys_AIController.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
   </ItemGroup>
@@ -158,9 +173,6 @@
     <ClInclude Include="State_Game.h">
       <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
-    <ClInclude Include="Direction.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
     <ClInclude Include="Comp.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
@@ -176,14 +188,8 @@
     <ClInclude Include="InputEvent.h">
       <Filter>Header Files\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="SystemType.h">
-      <Filter>Header Files\Core\ECS\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="ActorManager.h">
       <Filter>Header Files\Core\ECS\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="CompType.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="SysManager.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
@@ -194,12 +200,6 @@
     <ClInclude Include="Sys_Renderer.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="ActorEventType.h">
-      <Filter>Header Files\Core\ECS\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Comp_Controller.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Comp_Movable.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
@@ -209,11 +209,44 @@
     <ClInclude Include="Sys.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="ActorMessage.h">
-      <Filter>Header Files\Core\ECS\Messaging</Filter>
-    </ClInclude>
     <ClInclude Include="Sys_Control.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Collision.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_Collision.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_PlayerControl.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_AIControl.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CompType.h">
+      <Filter>Header Files\Controls\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorEventType.h">
+      <Filter>Header Files\Controls\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorMessageType.h">
+      <Filter>Header Files\Controls\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemType.h">
+      <Filter>Header Files\Controls\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Direction.h">
+      <Filter>Header Files\Controls\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_AIController.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_BulletControl.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

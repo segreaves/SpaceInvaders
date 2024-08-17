@@ -7,6 +7,10 @@ Sys::Sys(SysManager* systemManager) :
 {
 }
 
+Sys::~Sys()
+{
+}
+
 bool Sys::addActor(const ActorId& actor)
 {
 	if (hasActor(actor)) return false;

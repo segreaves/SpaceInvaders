@@ -3,15 +3,19 @@
 #include "ECS_Params.h"
 #include "Comp_Position.h"
 #include "Comp_Sprite.h"
-#include "Comp_Controller.h"
+#include "Comp_PlayerControl.h"
+#include "Comp_AIControl.h"
 #include "Comp_Movable.h"
+#include "Comp_Collision.h"
+#include "ActorEventType.h"
 #include <functional>
 
 class SysManager;
 
+using ActorId = unsigned int;
+
 class ActorManager
 {
-	using ActorId = unsigned int;
 public:
 	ActorManager(SysManager* systemManager);
 	~ActorManager();

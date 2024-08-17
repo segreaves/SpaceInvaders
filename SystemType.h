@@ -7,5 +7,6 @@ enum class SystemType
 	Collision,
 	Control,
 	State,
-	Animation
+	Animation,
+	AIController
 };

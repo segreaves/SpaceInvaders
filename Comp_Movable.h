@@ -32,6 +32,12 @@ public:
 		m_acceleration = acceleration;
 	}
 
+	void setAcceleration(const float& accelerationX, const float& accelerationY)
+	{
+		m_acceleration.x = accelerationX;
+		m_acceleration.y = accelerationY;
+	}
+
 	void accelerate(const sf::Vector2f& movementInput)
 	{
 		m_acceleration = movementInput * m_maxSpeed;

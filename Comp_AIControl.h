@@ -1,6 +1,6 @@
 #pragma once
 #include "Comp.h"
 
-class Comp_Controller : public Comp
+class Comp_AIControl : public Comp
 {
 };
