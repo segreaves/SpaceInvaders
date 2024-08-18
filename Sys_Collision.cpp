@@ -19,23 +19,21 @@ Sys_Collision::~Sys_Collision()
 
 void Sys_Collision::setupRequirements()
 {
-	m_requirements.set(
-		(unsigned int)CompType::Position |
-		(unsigned int)CompType::Collision);
+	m_requirements.set((unsigned int)CompType::Position);
+	m_requirements.set((unsigned int)CompType::Collision);
 }
 
 void Sys_Collision::subscribeToChannels()
 {
-	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Resolve, this);
 }
 
 void Sys_Collision::unsubscribeFromChannels()
 {
-	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Resolve, this);
 }
 
 void Sys_Collision::update(const float& deltaTime)
 {
+	if (m_actorIds.empty()) return;
 	levelCollisions();
 	actorCollisions();
 }
@@ -46,6 +44,7 @@ void Sys_Collision::handleEvent(const ActorId& actorId, const ActorEventType& ev
 
 void Sys_Collision::debugOverlay(WindowManager* windowManager)
 {
+	if (m_actorIds.empty()) return;
 	for (auto& actorId : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
@@ -61,17 +60,6 @@ void Sys_Collision::debugOverlay(WindowManager* windowManager)
 
 void Sys_Collision::notify(const Message& msg)
 {
-	if (!hasActor(msg.m_receiver)) return;
-	ActorMessageType messageType = (ActorMessageType)msg.m_type;
-	switch (messageType)
-	{
-	case ActorMessageType::Resolve:
-		Actor* actor = m_systemManager->getActorManager()->getActor(msg.m_receiver);
-		Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
-		Comp_Collision* colComp = actor->getComponent<Comp_Collision>(CompType::Collision);
-		colComp->setPosition(posComp->getPosition());
-		break;
-	}
 }
 
 void Sys_Collision::setLevel(Level* level)

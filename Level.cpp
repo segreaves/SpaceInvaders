@@ -9,9 +9,9 @@ Level::Level(Context* context)
 	// create level bounds
 	float marginWidth = 10.f;
 	// Up
-	m_colliders[Direction::Up] = sf::FloatRect(viewSpace.left, viewSpace.top - marginWidth, viewSpace.width, marginWidth);
+	m_colliders[Direction::Up] = sf::FloatRect(viewSpace.left, viewSpace.top - 2 * marginWidth, viewSpace.width, marginWidth);
 	// Down
-	m_colliders[Direction::Down] = sf::FloatRect(viewSpace.left, viewSpace.top + viewSpace.height, viewSpace.width, marginWidth);
+	m_colliders[Direction::Down] = sf::FloatRect(viewSpace.left, viewSpace.top + 2 * viewSpace.height, viewSpace.width, marginWidth);
 	// Left
 	m_colliders[Direction::Left] = sf::FloatRect(viewSpace.left, viewSpace.top, marginWidth, viewSpace.height);
 	// Right

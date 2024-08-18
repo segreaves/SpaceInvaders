@@ -8,8 +8,8 @@ ActorManager::ActorManager(SysManager* systemManager) :
 	addComponentType<Comp_Position>(CompType::Position);
 	addComponentType<Comp_Sprite>(CompType::Sprite);
 	addComponentType<Comp_Movable>(CompType::Movable);
-	addComponentType<Comp_PlayerControl>(CompType::PlayerController);
-	addComponentType<Comp_AIControl>(CompType::AIController);
+	addComponentType<Comp_PlayerControl>(CompType::PlayerControl);
+	addComponentType<Comp_AIControl>(CompType::AIControl);
 	addComponentType<Comp_Collision>(CompType::Collision);
 }
 
@@ -18,7 +18,7 @@ ActorManager::~ActorManager()
 	destroyAllActors();
 }
 
-int ActorManager::createActor(Bitmask components)
+int ActorManager::createActor(Bitmask components, const bool& enabled)
 {
 	Actor* actor = new Actor();
 	for (int i = 0; i < components.size(); i++)
@@ -41,7 +41,12 @@ int ActorManager::createActor(Bitmask components)
 		delete actor;
 		return -1;
 	}
-	m_systemManager->actorModified(m_idCounter, components);
+
+	if (enabled)
+		enableActor(m_idCounter);
+	else
+		disableActor(m_idCounter);
+
 	return m_idCounter++;
 }
 
@@ -57,10 +62,23 @@ bool ActorManager::destroyActor(ActorId id)
 void ActorManager::destroyAllActors()
 {
 	while (m_actors.begin() != m_actors.end())
-		destroyActor(m_actors.begin()->first);
+	{
+		delete m_actors.begin()->second;
+		m_actors.erase(m_actors.begin());
+	}
 }
 
-Actor* ActorManager::getActor(ActorId id)
+void ActorManager::enableActor(const ActorId& id)
+{
+	m_systemManager->actorModified(id, *getActor(id)->getComponentBitmask());
+}
+
+void ActorManager::disableActor(const ActorId& id)
+{
+	m_systemManager->actorModified(id, Bitmask(0));
+}
+
+Actor* ActorManager::getActor(const ActorId& id)
 {
 	auto it = m_actors.find(id);
 	return it == m_actors.end() ? nullptr : it->second;

@@ -6,8 +6,12 @@
 class Actor
 {
 public:
-	void onCreate();
-	void onDestroy();
+	Actor();
+	~Actor();
+
+	void enable();
+	void disable();
+	bool isEnabled();
 
 	void addComponent(CompType compType, Comp* component);
 	void removeComponent(CompType compType);
@@ -20,6 +24,7 @@ public:
 	void updateComponentBitmask();
 	Bitmask* getComponentBitmask();
 private:
+	bool m_enabled;
 	std::unordered_map<CompType, Comp*> m_components;
 	Bitmask m_componentBitmask;
 };

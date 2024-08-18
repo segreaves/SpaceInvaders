@@ -20,11 +20,13 @@ public:
 	ActorManager(SysManager* systemManager);
 	~ActorManager();
 
-	int createActor(Bitmask components);
+	int createActor(Bitmask components, const bool& enabled = true);
 	bool destroyActor(ActorId id);
 	void destroyAllActors();
+	void enableActor(const ActorId& id);
+	void disableActor(const ActorId& id);
 
-	Actor* getActor(ActorId id);
+	Actor* getActor(const ActorId& id);
 
 	template<class T>
 	void addComponentType(CompType compType)

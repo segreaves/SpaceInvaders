@@ -17,10 +17,9 @@ Sys_Control::~Sys_Control()
 
 void Sys_Control::setupRequirements()
 {
-	m_requirements.set(
-		(unsigned int)CompType::PlayerController |
-		(unsigned int)CompType::Position |
-		(unsigned int)CompType::Movable);
+	m_requirements.set((unsigned int)CompType::PlayerControl);
+	m_requirements.set((unsigned int)CompType::Position);
+	m_requirements.set((unsigned int)CompType::Movable);
 }
 
 void Sys_Control::subscribeToChannels()

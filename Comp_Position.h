@@ -37,5 +37,4 @@ public:
 private:
 	sf::Vector2f m_position;
 	sf::Vector2f m_positionPrev;
-	float m_maxMoveDistance;
 };

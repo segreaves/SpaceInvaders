@@ -15,7 +15,11 @@ public:
 	void activate() override;
 	void deactivate() override;
 
+	void loadNextLevel();
+	void createPlayer();
+	void createBullets(unsigned int maxBullets);
 	void onPlayerMove(sf::Vector2f xy);
+	void onPlayerShoot();
 private:
 	int m_playerId;
 	Level* m_level;

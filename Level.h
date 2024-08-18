@@ -7,6 +7,7 @@ class Context;
 
 /// <summary>
 /// Contains level bounds.
+/// Up/Down bounds are shifted away from view space to allow for bullets to be disabled off screen.
 /// </summary>
 class Level
 {

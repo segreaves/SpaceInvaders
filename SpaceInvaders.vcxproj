@@ -152,6 +152,7 @@
     <ClCompile Include="Sys.cpp" />
     <ClCompile Include="SysManager.cpp" />
     <ClCompile Include="Sys_AIController.cpp" />
+    <ClCompile Include="Sys_BulletSpawner.cpp" />
     <ClCompile Include="Sys_Collision.cpp" />
     <ClCompile Include="Sys_Control.cpp" />
     <ClCompile Include="Sys_Movement.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="SysManager.h" />
     <ClInclude Include="SystemType.h" />
     <ClInclude Include="Sys_AIController.h" />
+    <ClInclude Include="Sys_BulletSpawner.h" />
     <ClInclude Include="Sys_Collision.h" />
     <ClInclude Include="Sys_Control.h" />
     <ClInclude Include="Sys_Movement.h" />

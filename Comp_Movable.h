@@ -43,17 +43,22 @@ public:
 		m_acceleration = movementInput * m_maxSpeed;
 	}
 
-	const float& getFrictionCoefficient() const { return m_FrictionCoefficient; }
+	const float& getFrictionCoefficient() const { return m_frictionCoefficient; }
+
+	void setFrictionCoefficient(const float& frictionCoefficient)
+	{
+		m_frictionCoefficient = frictionCoefficient;
+	}
 
 	void applyBaseFriction(const sf::Vector2f& velocity)
 	{
 		if (sqrt(pow(m_velocity.x, 2) + pow(m_velocity.y, 2)) == 0) return;
-		sf::Vector2f friction = m_FrictionCoefficient * velocity;
+		sf::Vector2f friction = m_frictionCoefficient * velocity;
 		m_velocity = m_velocity - friction;
 	}
 private:
 	float m_maxSpeed = 10000.f;
-	const float m_FrictionCoefficient = 25.f;
+	float m_frictionCoefficient = 25.f;
 	sf::Vector2f m_velocity;
 	sf::Vector2f m_acceleration;
 };

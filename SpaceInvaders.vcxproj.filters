@@ -123,6 +123,9 @@
     <ClCompile Include="Sys_AIController.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sys_BulletSpawner.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowManager.h">
@@ -247,6 +250,9 @@
     </ClInclude>
     <ClInclude Include="Comp_BulletControl.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_BulletSpawner.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

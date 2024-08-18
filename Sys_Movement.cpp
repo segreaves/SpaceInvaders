@@ -16,9 +16,8 @@ Sys_Movement::~Sys_Movement()
 
 void Sys_Movement::setupRequirements()
 {
-	m_requirements.set(
-		(unsigned int)CompType::Position |
-		(unsigned int)CompType::Movable);
+	m_requirements.set((unsigned int)CompType::Position);
+	m_requirements.set((unsigned int)CompType::Movable);
 }
 
 void Sys_Movement::subscribeToChannels()

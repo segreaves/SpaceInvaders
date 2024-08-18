@@ -15,10 +15,9 @@ Sys_AIController::~Sys_AIController()
 
 void Sys_AIController::setupRequirements()
 {
-	m_requirements.set(
-		(unsigned int)CompType::Position |
-		(unsigned int)CompType::Collision |
-		(unsigned int)CompType::AIController);
+	m_requirements.set((unsigned int)CompType::Position);
+	m_requirements.set((unsigned int)CompType::Collision);
+	m_requirements.set((unsigned int)CompType::AIControl);
 }
 
 void Sys_AIController::subscribeToChannels()
@@ -62,7 +61,7 @@ void Sys_AIController::notify(const Message& msg)
 	switch (msgType)
 	{
 	case ActorMessageType::Resolve:
-		// resolve collision for all invaders
+		// resolve collision for all invaders save original colliding invader
 		// original colliding invader has already been resolved
 		for (auto& actorId : m_actorIds)
 		{

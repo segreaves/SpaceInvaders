@@ -56,9 +56,8 @@ void Sys_Renderer::notify(const Message& msg)
 
 void Sys_Renderer::setupRequirements()
 {
-	m_requirements.set(
-		(unsigned int)CompType::Position |
-		(unsigned int)CompType::Sprite);
+	m_requirements.set((unsigned int)CompType::Position);
+	m_requirements.set((unsigned int)CompType::Sprite);
 }
 
 void Sys_Renderer::subscribeToChannels()

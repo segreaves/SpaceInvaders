@@ -8,5 +8,6 @@ enum class SystemType
 	Control,
 	State,
 	Animation,
-	AIController
+	AIController,
+	BulletSpawner
 };

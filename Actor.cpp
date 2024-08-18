@@ -1,12 +1,28 @@
 #include "Actor.h"
 
-void Actor::onCreate()
+Actor::Actor() :
+	m_enabled(false)
 {
 }
 
-void Actor::onDestroy()
+Actor::~Actor()
 {
-		removeAllComponents();
+	removeAllComponents();
+}
+
+void Actor::enable()
+{
+	m_enabled = true;
+}
+
+void Actor::disable()
+{
+	m_enabled = false;
+}
+
+bool Actor::isEnabled()
+{
+	return m_enabled;
 }
 
 void Actor::addComponent(CompType compType, Comp* component)
@@ -33,9 +49,9 @@ void Actor::removeAllComponents()
 
 void Actor::updateComponentBitmask()
 {
-	m_componentBitmask = Bitmask(0);
+	m_componentBitmask.reset();
 	for (auto comp : m_components)
-		m_componentBitmask |= (int)comp.first;
+		m_componentBitmask.set((unsigned int)comp.first);
 }
 
 Bitmask* Actor::getComponentBitmask()
