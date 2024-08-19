@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="ActorManager.cpp" />
+    <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="Sys.cpp" />
     <ClCompile Include="SysManager.cpp" />
     <ClCompile Include="Sys_AIController.cpp" />
+    <ClCompile Include="Sys_Bounds.cpp" />
     <ClCompile Include="Sys_BulletSpawner.cpp" />
     <ClCompile Include="Sys_Collision.cpp" />
     <ClCompile Include="Sys_Control.cpp" />
@@ -164,6 +166,7 @@
     <ClInclude Include="ActorEventType.h" />
     <ClInclude Include="ActorManager.h" />
     <ClInclude Include="ActorMessageType.h" />
+    <ClInclude Include="BulletManager.h" />
     <ClInclude Include="Channel.h" />
     <ClInclude Include="Comp.h" />
     <ClInclude Include="Component.h" />
@@ -195,6 +198,7 @@
     <ClInclude Include="SysManager.h" />
     <ClInclude Include="SystemType.h" />
     <ClInclude Include="Sys_AIController.h" />
+    <ClInclude Include="Sys_Bounds.h" />
     <ClInclude Include="Sys_BulletSpawner.h" />
     <ClInclude Include="Sys_Collision.h" />
     <ClInclude Include="Sys_Control.h" />

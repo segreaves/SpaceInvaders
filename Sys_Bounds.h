@@ -3,14 +3,11 @@
 
 class SysManager;
 
-/// <summary>
-/// Handles collision between actors.
-/// </summary>
-class Sys_Collision : public Sys
+class Sys_Bounds : public Sys
 {
 public:
-	Sys_Collision(SysManager* systemManager);
-	~Sys_Collision();
+	Sys_Bounds(SysManager* systemManager);
+	~Sys_Bounds();
 
 	void setupRequirements() override;
 	void subscribeToChannels() override;
@@ -21,6 +18,8 @@ public:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
+
+	void setViewSpace(sf::FloatRect viewSpace);
 private:
-	void actorCollisions();
+	sf::FloatRect m_viewSpace;
 };

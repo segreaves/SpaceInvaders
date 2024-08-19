@@ -5,6 +5,7 @@
 #include "Comp_Sprite.h"
 #include "Comp_PlayerControl.h"
 #include "Comp_AIControl.h"
+#include "Comp_BulletControl.h"
 #include "Comp_Movable.h"
 #include "Comp_Collision.h"
 #include "ActorEventType.h"

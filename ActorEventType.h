@@ -8,6 +8,5 @@ enum class ActorEventType
 	Moving_Right,
 	Moving_Up,
 	Moving_Down,
-	CollidingOnX,
-	CollidingOnY
+	CollidingOnX
 };

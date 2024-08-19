@@ -52,8 +52,7 @@ void State_Game::loadNextLevel()
 	if (m_level)
 		delete m_level;
 	m_level = new Level(m_stateManager->getContext());
-	m_stateManager->getContext()->m_systemManager->getSystem<Sys_Collision>(SystemType::Collision)->setLevel(m_level);
-	m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletSpawner>(SystemType::BulletSpawner)->setLevel(m_level);
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_Bounds>(SystemType::Bounds)->setViewSpace(m_stateManager->getContext()->m_windowManager->getViewSpace());
 }
 
 void State_Game::createPlayer()
@@ -69,6 +68,9 @@ void State_Game::createPlayer()
 	// set player in center-bottom of the view space
 	sf::FloatRect viewSpace = m_stateManager->getContext()->m_windowManager->getViewSpace();
 	Comp_Position* posComp = m_stateManager->getContext()->m_actorManager->getActor(m_playerId)->getComponent<Comp_Position>(CompType::Position);
+	Comp_Collision* colComp = m_stateManager->getContext()->m_actorManager->getActor(m_playerId)->getComponent<Comp_Collision>(CompType::Collision);
+	Comp_Sprite* spriteComp = m_stateManager->getContext()->m_actorManager->getActor(m_playerId)->getComponent<Comp_Sprite>(CompType::Sprite);
+	colComp->setSize(spriteComp->getSize());
 	posComp->setPosition(viewSpace.left + viewSpace.width / 2.f, viewSpace.top + viewSpace.height * 0.9f);
 }
 
@@ -85,8 +87,14 @@ void State_Game::createBullets(unsigned int maxBullets)
 	for (unsigned int i = 0; i < maxBullets; i++)
 	{
 		int bulletId = actorManager->createActor(mask, false);
-		Comp_Movable* moveComp = actorManager->getActor(bulletId)->getComponent<Comp_Movable>(CompType::Movable);
+		Actor* bullet = actorManager->getActor(bulletId);
+		Comp_Collision* colComp = m_stateManager->getContext()->m_actorManager->getActor(bulletId)->getComponent<Comp_Collision>(CompType::Collision);
+		Comp_Sprite* spriteComp = m_stateManager->getContext()->m_actorManager->getActor(bulletId)->getComponent<Comp_Sprite>(CompType::Sprite);
+		spriteComp->setSize(sf::Vector2f(5, 10));
+		colComp->setSize(spriteComp->getSize());
+		Comp_Movable* moveComp = bullet->getComponent<Comp_Movable>(CompType::Movable);
 		moveComp->setFrictionCoefficient(0.0f);
+		m_bulletManager.addBullet(bullet);
 	}
 }
 
@@ -101,5 +109,5 @@ void State_Game::onPlayerMove(sf::Vector2f xy)
 
 void State_Game::onPlayerShoot()
 {
-	
+	m_bulletManager.shootBullet(sf::Vector2f(0, 1));
 }

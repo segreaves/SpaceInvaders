@@ -44,9 +44,6 @@ void Sys_Movement::handleEvent(const ActorId& actorId, const ActorEventType& eve
 	case ActorEventType::CollidingOnX:
 		moveComp->setAcceleration(0, moveComp->getAcceleration().y);
 		break;
-	case ActorEventType::CollidingOnY:
-		moveComp->setAcceleration(moveComp->getAcceleration().x, 0);
-		break;
 	}
 }
 

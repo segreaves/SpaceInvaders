@@ -45,9 +45,6 @@ void Sys_AIController::handleEvent(const ActorId& actorId, const ActorEventType&
 		// reverse direction
 		// increase speed
 		break;
-	case ActorEventType::CollidingOnY:
-		// if colliding on lower bound of the level, game over
-		break;
 	}
 }
 

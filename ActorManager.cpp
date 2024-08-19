@@ -11,6 +11,7 @@ ActorManager::ActorManager(SysManager* systemManager) :
 	addComponentType<Comp_PlayerControl>(CompType::PlayerControl);
 	addComponentType<Comp_AIControl>(CompType::AIControl);
 	addComponentType<Comp_Collision>(CompType::Collision);
+	addComponentType<Comp_BulletControl>(CompType::BulletControl);
 }
 
 ActorManager::~ActorManager()

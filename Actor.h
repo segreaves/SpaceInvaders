@@ -24,6 +24,7 @@ public:
 	void updateComponentBitmask();
 	Bitmask* getComponentBitmask();
 private:
+	// add component to actorManager so that it can be notified of enabled/disabled actors
 	bool m_enabled;
 	std::unordered_map<CompType, Comp*> m_components;
 	Bitmask m_componentBitmask;

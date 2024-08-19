@@ -14,10 +14,6 @@ class Level
 public:
 	Level(Context* context);
 	~Level();
-
-	sf::FloatRect* getColliders(Direction obj);
-	std::unordered_map<Direction, sf::FloatRect>& getColliders();
 private:
-	std::unordered_map<Direction, sf::FloatRect> m_colliders;
 	Context* m_context;
 };

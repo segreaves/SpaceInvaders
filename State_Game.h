@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "BulletManager.h"
 
 class Level;
 
@@ -23,4 +24,5 @@ public:
 private:
 	int m_playerId;
 	Level* m_level;
+	BulletManager m_bulletManager;
 };

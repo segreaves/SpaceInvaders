@@ -9,5 +9,5 @@ enum class SystemType
 	State,
 	Animation,
 	AIController,
-	BulletSpawner
+	Bounds
 };

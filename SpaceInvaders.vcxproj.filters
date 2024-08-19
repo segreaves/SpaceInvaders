@@ -67,6 +67,12 @@
     <Filter Include="Header Files\Controls\Data">
       <UniqueIdentifier>{86324953-e3f9-4255-8fe0-bc42f757e267}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Gameplay">
+      <UniqueIdentifier>{a89aac02-de94-49df-83f8-5297fa57197c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gameplay">
+      <UniqueIdentifier>{a9058117-da33-4310-a94e-786eca028179}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceInvaders.cpp">
@@ -123,8 +129,14 @@
     <ClCompile Include="Sys_AIController.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sys_Bounds.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="Sys_BulletSpawner.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletManager.cpp">
+      <Filter>Source Files\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,8 +263,14 @@
     <ClInclude Include="Comp_BulletControl.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Sys_Bounds.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="Sys_BulletSpawner.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletManager.h">
+      <Filter>Header Files\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
