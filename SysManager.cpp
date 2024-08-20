@@ -11,6 +11,7 @@ SysManager::SysManager() :
 	m_systems[SystemType::Collision] = new Sys_Collision(this);
 	m_systems[SystemType::AIController] = new Sys_AIController(this);
 	m_systems[SystemType::Bounds] = new Sys_Bounds(this);
+	m_systems[SystemType::Combat] = new Sys_Combat(this);
 }
 
 SysManager::~SysManager()

@@ -6,13 +6,10 @@
 class Actor
 {
 public:
-	Actor();
+	Actor(unsigned int id);
 	~Actor();
 
-	void enable();
-	void disable();
-	bool isEnabled();
-
+	unsigned int getId();
 	void addComponent(CompType compType, Comp* component);
 	void removeComponent(CompType compType);
 	void removeAllComponents();
@@ -24,8 +21,7 @@ public:
 	void updateComponentBitmask();
 	Bitmask* getComponentBitmask();
 private:
-	// add component to actorManager so that it can be notified of enabled/disabled actors
-	bool m_enabled;
+	unsigned int m_id;
 	std::unordered_map<CompType, Comp*> m_components;
 	Bitmask m_componentBitmask;
 };

@@ -9,5 +9,6 @@ enum class SystemType
 	State,
 	Animation,
 	AIController,
-	Bounds
+	Bounds,
+	Combat
 };

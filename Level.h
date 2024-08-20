@@ -1,19 +1,23 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Direction.h"
 #include <unordered_map>
 
 class Context;
 
 /// <summary>
-/// Contains level bounds.
-/// Up/Down bounds are shifted away from view space to allow for bullets to be disabled off screen.
+/// Sets up the spawn points for the player and invaders.
 /// </summary>
 class Level
 {
 public:
 	Level(Context* context);
 	~Level();
+
+	std::vector<sf::Vector2f> getInvaderSpawnPoints(sf::FloatRect viewSpace);
+	sf::Vector2f getPlayerSpawnPoint(sf::FloatRect viewSpace) const;
 private:
+	std::vector<sf::Vector2f> getGridFormation(unsigned int rows, unsigned int columns, float lengthX, float lengthY);
+
 	Context* m_context;
+	const unsigned int m_numInvaders = 50;
 };

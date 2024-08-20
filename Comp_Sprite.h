@@ -10,7 +10,7 @@ public:
 		Comp()
 	{
 		m_shape.setFillColor(sf::Color::White);
-		m_shape.setSize(sf::Vector2f(50.f, 35.f));
+		m_shape.setSize(sf::Vector2f(50.f, 50.f));
 		m_shape.setOrigin(m_shape.getSize() / 2.f);
 		m_center.setFillColor(sf::Color::Red);
 		m_center.setSize(sf::Vector2f(5.f, 5.f));
@@ -42,6 +42,7 @@ public:
 	void setSize(const sf::Vector2f& size)
 	{
 		m_shape.setSize(size);
+		m_shape.setOrigin(m_shape.getSize() / 2.f);
 	}
 
 	sf::Vector2f getSize() const

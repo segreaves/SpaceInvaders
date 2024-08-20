@@ -1,7 +1,7 @@
 #include "Actor.h"
 
-Actor::Actor() :
-	m_enabled(false)
+Actor::Actor(unsigned int id) :
+	m_id(id)
 {
 }
 
@@ -10,19 +10,9 @@ Actor::~Actor()
 	removeAllComponents();
 }
 
-void Actor::enable()
+unsigned int Actor::getId()
 {
-	m_enabled = true;
-}
-
-void Actor::disable()
-{
-	m_enabled = false;
-}
-
-bool Actor::isEnabled()
-{
-	return m_enabled;
+	return m_id;
 }
 
 void Actor::addComponent(CompType compType, Comp* component)

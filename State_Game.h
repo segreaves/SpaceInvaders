@@ -1,6 +1,5 @@
 #pragma once
 #include "State.h"
-#include "BulletManager.h"
 
 class Level;
 
@@ -19,10 +18,10 @@ public:
 	void loadNextLevel();
 	void createPlayer();
 	void createBullets(unsigned int maxBullets);
+	void createInvaders();
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();
 private:
 	int m_playerId;
 	Level* m_level;
-	BulletManager m_bulletManager;
 };

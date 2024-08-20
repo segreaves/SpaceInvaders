@@ -21,7 +21,7 @@ ActorManager::~ActorManager()
 
 int ActorManager::createActor(Bitmask components, const bool& enabled)
 {
-	Actor* actor = new Actor();
+	Actor* actor = new Actor(m_idCounter);
 	for (int i = 0; i < components.size(); i++)
 	{
 		if (components.test(i))
@@ -47,7 +47,7 @@ int ActorManager::createActor(Bitmask components, const bool& enabled)
 		enableActor(m_idCounter);
 	else
 		disableActor(m_idCounter);
-
+	
 	return m_idCounter++;
 }
 
