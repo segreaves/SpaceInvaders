@@ -42,6 +42,7 @@ void Sys_Movement::handleEvent(const ActorId& actorId, const ActorEventType& eve
 	switch (eventId)
 	{
 	case ActorEventType::CollidingOnX:
+		moveComp->setVelocity(0, moveComp->getVelocity().y);
 		moveComp->setAcceleration(0, moveComp->getAcceleration().y);
 		break;
 	}
@@ -70,8 +71,12 @@ void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
 	Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
 	Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
 	Comp_Movable* moveComp = actor->getComponent<Comp_Movable>(CompType::Movable);
-	moveComp->addVelocity(moveComp->getAcceleration() * deltaTime);
+	sf::Vector2f acceleration = sf::Vector2f(
+		moveComp->getAcceleration().x * !moveComp->getCollidingOnX(),
+		moveComp->getAcceleration().y * !moveComp->getCollidingOnY());
+	moveComp->addVelocity(acceleration * deltaTime);
 	moveComp->setAcceleration(sf::Vector2f(0, 0));
+	moveComp->resetCollisionFlags();
 	if (moveComp->getFrictionCoefficient() > 0)
 		moveComp->applyBaseFriction(moveComp->getVelocity() * deltaTime);
 	float speed = sqrt(

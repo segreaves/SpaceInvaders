@@ -18,6 +18,4 @@ public:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
-
-	void move(const ActorId& actorId, const float& x, const float& y);
 };

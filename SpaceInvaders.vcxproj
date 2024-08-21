@@ -169,11 +169,12 @@
     <ClInclude Include="Comp.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="CompType.h" />
-    <ClInclude Include="Comp_AIControl.h" />
-    <ClInclude Include="Comp_BulletControl.h" />
+    <ClInclude Include="Comp_AI.h" />
+    <ClInclude Include="Comp_Bullet.h" />
     <ClInclude Include="Comp_Collision.h" />
     <ClInclude Include="Comp_Movable.h" />
-    <ClInclude Include="Comp_PlayerControl.h" />
+    <ClInclude Include="Comp_Control.h" />
+    <ClInclude Include="Comp_Player.h" />
     <ClInclude Include="Comp_Position.h" />
     <ClInclude Include="Comp_Sprite.h" />
     <ClInclude Include="Context.h" />

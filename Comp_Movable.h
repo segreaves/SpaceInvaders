@@ -20,6 +20,12 @@ public:
 		m_velocity = velocity;
 	}
 
+	void setVelocity(const float& velocityX, const float& velocityY)
+	{
+		m_velocity.x = velocityX;
+		m_velocity.y = velocityY;
+	}
+
 	void addVelocity(const sf::Vector2f& velocity)
 	{
 		m_velocity += velocity;
@@ -40,7 +46,7 @@ public:
 
 	void accelerate(const sf::Vector2f& movementInput)
 	{
-		m_acceleration = movementInput * m_maxSpeed;
+		m_acceleration += movementInput * m_maxSpeed;
 	}
 
 	const float& getFrictionCoefficient() const { return m_frictionCoefficient; }
@@ -56,9 +62,31 @@ public:
 		sf::Vector2f friction = m_frictionCoefficient * velocity;
 		m_velocity = m_velocity - friction;
 	}
+
+	void setCollidingOnX(const bool& collidingOnX)
+	{
+		m_collidingOnX = collidingOnX;
+	}
+
+	const bool& getCollidingOnX() const { return m_collidingOnX; }
+
+	void setCollidingOnY(const bool& collidingOnY)
+	{
+		m_collidingOnY = collidingOnY;
+	}
+
+	const bool& getCollidingOnY() const { return m_collidingOnY; }
+
+	void resetCollisionFlags()
+	{
+		m_collidingOnX = false;
+		m_collidingOnY = false;
+	}
 private:
 	float m_maxSpeed = 10000.f;
 	float m_frictionCoefficient = 25.f;
 	sf::Vector2f m_velocity;
 	sf::Vector2f m_acceleration;
+	bool m_collidingOnX = false;
+	bool m_collidingOnY = false;
 };

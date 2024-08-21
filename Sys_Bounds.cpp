@@ -16,6 +16,7 @@ Sys_Bounds::~Sys_Bounds()
 void Sys_Bounds::setupRequirements()
 {
 	m_requirements.set((unsigned int)CompType::Position);
+	m_requirements.set((unsigned int)CompType::Movable);
 	m_requirements.set((unsigned int)CompType::Collision);
 }
 
@@ -36,8 +37,8 @@ void Sys_Bounds::update(const float& deltaTime)
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
 		Comp_Collision* colComp = actor->getComponent<Comp_Collision>(CompType::Collision);
 		sf::FloatRect actorAABB = colComp->getAABB();
-		Comp_BulletControl* bulletControlComp = actor->getComponent<Comp_BulletControl>(CompType::BulletControl);
-		if (bulletControlComp)
+		Comp_Bullet* bulletComp = actor->getComponent<Comp_Bullet>(CompType::Bullet);
+		if (bulletComp)
 		{
 			// check if bullet is out of bounds (vertically)
 			if (actorAABB.top + actorAABB.height < 0 || actorAABB.top > m_viewSpace.getSize().y)
@@ -52,12 +53,17 @@ void Sys_Bounds::update(const float& deltaTime)
 			resolve = -(actorAABB.left + actorAABB.width - m_viewSpace.getSize().x);
 		if (resolve != 0)
 		{
-			m_systemManager->addEvent(actorId, (ActorEvent)ActorEventType::CollidingOnX);
+			// resolve collision
 			Message msg((MessageType)ActorMessageType::Resolve);
 			msg.m_receiver = actorId;
 			msg.m_xy.x = resolve;
 			msg.m_xy.y = 0;
 			m_systemManager->getMessageHandler()->dispatch(msg);
+			// stop movement and set collision flag
+			Comp_Movable* moveComp = actor->getComponent<Comp_Movable>(CompType::Movable);
+			moveComp->setAcceleration(0, moveComp->getAcceleration().y);
+			moveComp->setVelocity(0, moveComp->getVelocity().y);
+			moveComp->setCollidingOnX(true);
 		}
 	}
 }

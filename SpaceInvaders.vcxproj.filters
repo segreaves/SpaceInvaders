@@ -227,10 +227,7 @@
     <ClInclude Include="Level.h">
       <Filter>Header Files\Levels</Filter>
     </ClInclude>
-    <ClInclude Include="Comp_PlayerControl.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Comp_AIControl.h">
+    <ClInclude Include="Comp_Control.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="CompType.h">
@@ -251,14 +248,20 @@
     <ClInclude Include="Sys_AIController.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Comp_BulletControl.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Sys_Bounds.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Sys_Combat.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_AI.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Player.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Bullet.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

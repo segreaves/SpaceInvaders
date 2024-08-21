@@ -62,8 +62,9 @@ void State_Game::createPlayer()
 	mask.set((unsigned int)CompType::Position);
 	mask.set((unsigned int)CompType::Sprite);
 	mask.set((unsigned int)CompType::Movable);
-	mask.set((unsigned int)CompType::PlayerControl);
+	mask.set((unsigned int)CompType::Control);
 	mask.set((unsigned int)CompType::Collision);
+	mask.set((unsigned int)CompType::Player);
 
 	m_playerId = m_stateManager->getContext()->m_actorManager->createActor(mask);
 	Actor* player = m_stateManager->getContext()->m_actorManager->getActor(m_playerId);
@@ -84,7 +85,8 @@ void State_Game::createBullets(unsigned int maxBullets)
 	mask.set((unsigned int)CompType::Sprite);
 	mask.set((unsigned int)CompType::Movable);
 	mask.set((unsigned int)CompType::Collision);
-	mask.set((unsigned int)CompType::BulletControl);
+	mask.set((unsigned int)CompType::Control);
+	mask.set((unsigned int)CompType::Bullet);
 
 	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
 	for (unsigned int i = 0; i < maxBullets; i++)
@@ -108,7 +110,8 @@ void State_Game::createInvaders()
 	mask.set((unsigned int)CompType::Sprite);
 	mask.set((unsigned int)CompType::Movable);
 	mask.set((unsigned int)CompType::Collision);
-	mask.set((unsigned int)CompType::AIControl);
+	mask.set((unsigned int)CompType::Control);
+	mask.set((unsigned int)CompType::AI);
 
 	std::vector<sf::Vector2f> spawnPoints = m_level->getInvaderSpawnPoints(m_stateManager->getContext()->m_windowManager->getViewSpace());
 	for (auto& spawnPoint : spawnPoints)
@@ -127,11 +130,8 @@ void State_Game::createInvaders()
 
 void State_Game::onPlayerMove(sf::Vector2f xy)
 {
-	Message msg((MessageType)ActorMessageType::Move);
-	msg.m_receiver = m_playerId;
-	msg.m_xy.x = xy.x;
-	msg.m_xy.y = 0;
-	m_stateManager->getContext()->m_systemManager->getMessageHandler()->dispatch(msg);
+	Comp_Control* controlComp = m_stateManager->getContext()->m_actorManager->getActor(m_playerId)->getComponent<Comp_Control>(CompType::Control);
+	controlComp->setMovementInput(xy);
 }
 
 void State_Game::onPlayerShoot()

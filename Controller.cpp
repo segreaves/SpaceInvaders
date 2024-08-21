@@ -9,14 +9,11 @@ Controller::Controller() :
 
 void Controller::update()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		m_onMove.dispatch(sf::Vector2f(0.f, -1.f));
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		m_onMove.dispatch(sf::Vector2f(0.f, 1.f));
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		m_onMove.dispatch(sf::Vector2f(-1.f, 0.f));
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		m_onMove.dispatch(sf::Vector2f(1.f, 0.f));
+	sf::Vector2f movementInput(0.f, 0.f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		movementInput += sf::Vector2f(-1.f, 0.f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		movementInput += sf::Vector2f(1.f, 0.f);
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button(sf::Mouse::Left)))
 	{
 		sf::Vector2i mouseXY = sf::Mouse::getPosition(*m_windowManager->getRenderWindow());
@@ -26,20 +23,14 @@ void Controller::update()
 	{
 		float deadZone = 10.f;
 		float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
-		float y = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
-		sf::Vector2f joystickXY(x, y);
-		if (sqrt(pow(x, 2) + pow(y, 2)) <= deadZone)
-		{
+		sf::Vector2f joystickXY(x, 0);
+		if (x <= deadZone)
 			joystickXY.x = 0.f;
-			joystickXY.y = 0.f;
-		}
 		else
-		{
 			joystickXY.x = x / 100.f;
-			joystickXY.y = y / 100.f;
-		}
-		m_onMove.dispatch(joystickXY);
+		movementInput += joystickXY;
 	}
+	m_onMove.dispatch(movementInput);
 }
 
 void Controller::handleEvent(sf::Event event)

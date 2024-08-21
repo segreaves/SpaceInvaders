@@ -9,8 +9,8 @@ SysManager::SysManager() :
 	m_systems[SystemType::Control] = new Sys_Control(this);
 	m_systems[SystemType::Movement] = new Sys_Movement(this);
 	m_systems[SystemType::Collision] = new Sys_Collision(this);
-	m_systems[SystemType::AIController] = new Sys_AIController(this);
 	m_systems[SystemType::Bounds] = new Sys_Bounds(this);
+	m_systems[SystemType::AIController] = new Sys_AIController(this);
 	m_systems[SystemType::Combat] = new Sys_Combat(this);
 }
 

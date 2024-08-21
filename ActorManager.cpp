@@ -8,10 +8,11 @@ ActorManager::ActorManager(SysManager* systemManager) :
 	addComponentType<Comp_Position>(CompType::Position);
 	addComponentType<Comp_Sprite>(CompType::Sprite);
 	addComponentType<Comp_Movable>(CompType::Movable);
-	addComponentType<Comp_PlayerControl>(CompType::PlayerControl);
-	addComponentType<Comp_AIControl>(CompType::AIControl);
+	addComponentType<Comp_Control>(CompType::Control);
 	addComponentType<Comp_Collision>(CompType::Collision);
-	addComponentType<Comp_BulletControl>(CompType::BulletControl);
+	addComponentType<Comp_Player>(CompType::Player);
+	addComponentType<Comp_AI>(CompType::AI);
+	addComponentType<Comp_Bullet>(CompType::Bullet);
 }
 
 ActorManager::~ActorManager()

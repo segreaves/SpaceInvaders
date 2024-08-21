@@ -57,17 +57,18 @@ void Sys_Combat::notify(const Message& msg)
 
 bool Sys_Combat::addBullet(Actor* bullet)
 {
-	if (!bullet->getComponent<Comp_BulletControl>(CompType::BulletControl)) return false;
+	if (!bullet->getComponent<Comp_Bullet>(CompType::Bullet)) return false;
 	m_bullets.push_back(bullet);
 	return true;
 }
 
 void Sys_Combat::shoot(const ActorId& actorId, sf::Vector2f direction)
 {
+	if (m_bullets.empty()) return;
 	Actor* shooter = m_systemManager->getActorManager()->getActor(actorId);
 	Comp_Position* shooterPos = shooter->getComponent<Comp_Position>(CompType::Position);
 	Comp_Collision* shooterCol = shooter->getComponent<Comp_Collision>(CompType::Collision);
-	Comp_PlayerControl* playerControl = shooter->getComponent<Comp_PlayerControl>(CompType::AIControl);
+	Comp_Player* playerComp = shooter->getComponent<Comp_Player>(CompType::Player);
 
 	Actor* bullet = m_bullets[m_currentBullet++];
 	Comp_Position* bulletPos = bullet->getComponent<Comp_Position>(CompType::Position);
@@ -75,7 +76,7 @@ void Sys_Combat::shoot(const ActorId& actorId, sf::Vector2f direction)
 	bulletPos->setPosition(shooterPos->getPosition() +
 		direction * (bulletCol->getAABB().getSize().y + shooterCol->getAABB().getSize().y) / 2.f);
 	Comp_Movable* bulletMove = bullet->getComponent<Comp_Movable>(CompType::Movable);
-	if (playerControl)
+	if (playerComp)
 		bulletMove->setVelocity(direction * 1000.f);
 	else
 		bulletMove->setVelocity(direction * 750.f);
