@@ -14,14 +14,17 @@ public:
 	void onDestroy() override;
 	void activate() override;
 	void deactivate() override;
-
+private:
 	void loadNextLevel();
 	void createPlayer();
 	void createBullets(unsigned int maxBullets);
 	void createInvaders();
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();
-private:
+
 	int m_playerId;
+	const sf::Vector2f m_playerSize = sf::Vector2f(50, 35);
+	const sf::Vector2f m_bulletSize = sf::Vector2f(3, 15);
+	const sf::Vector2f m_invaderSize = sf::Vector2f(50, 35);
 	Level* m_level;
 };

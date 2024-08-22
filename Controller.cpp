@@ -1,5 +1,6 @@
 #include "Controller.h"
 #include "WindowManager.h"
+#include <iostream>
 
 Controller::Controller() :
 	m_windowManager(nullptr),
@@ -24,7 +25,7 @@ void Controller::update()
 		float deadZone = 10.f;
 		float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
 		sf::Vector2f joystickXY(x, 0);
-		if (x <= deadZone)
+		if (abs(x) <= deadZone)
 			joystickXY.x = 0.f;
 		else
 			joystickXY.x = x / 100.f;

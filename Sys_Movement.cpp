@@ -38,10 +38,14 @@ void Sys_Movement::update(const float& deltaTime)
 
 void Sys_Movement::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
-	Comp_Movable* moveComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Movable>(CompType::Movable);
+	if (!hasActor(actorId)) return;
 	switch (eventId)
 	{
+	case ActorEventType::Despawned:
+		removeActor(actorId);
+		break;
 	case ActorEventType::CollidingOnX:
+		Comp_Movable* moveComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Movable>(CompType::Movable);
 		moveComp->setVelocity(0, moveComp->getVelocity().y);
 		moveComp->setAcceleration(0, moveComp->getAcceleration().y);
 		break;

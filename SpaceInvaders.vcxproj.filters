@@ -126,7 +126,7 @@
     <ClCompile Include="Sys_Bounds.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Sys_Combat.cpp">
+    <ClCompile Include="Sys_BulletSpawner.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
   </ItemGroup>
@@ -251,7 +251,7 @@
     <ClInclude Include="Sys_Bounds.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Sys_Combat.h">
+    <ClInclude Include="Sys_BulletSpawner.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Comp_AI.h">

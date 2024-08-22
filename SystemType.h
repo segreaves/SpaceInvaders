@@ -10,5 +10,5 @@ enum class SystemType
 	Animation,
 	AIController,
 	Bounds,
-	Combat
+	BulletSpawner
 };

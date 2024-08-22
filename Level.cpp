@@ -17,7 +17,7 @@ std::vector<sf::Vector2f> Level::getInvaderSpawnPoints(sf::FloatRect viewSpace)
 	// create a grid of invaders side-by-side
 	unsigned int rows = 5;
 	unsigned int columns = m_numInvaders / rows;
-	float gridWidth = viewSpace.width * 0.35f;
+	float gridWidth = viewSpace.width * 0.3f;
 	float gridHeight = viewSpace.height * 0.2;
 	std::vector<sf::Vector2f> formationPoints = getGridFormation(rows, columns, gridWidth, gridHeight);
 	std::vector<sf::Vector2f> secondGrid(formationPoints);

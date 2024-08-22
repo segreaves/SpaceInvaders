@@ -23,11 +23,13 @@ void Sys_AIController::setupRequirements()
 void Sys_AIController::subscribeToChannels()
 {
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Resolve, this);
+	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
 }
 
 void Sys_AIController::unsubscribeFromChannels()
 {
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Resolve, this);
+	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
 }
 
 void Sys_AIController::update(const float& deltaTime)
@@ -38,9 +40,12 @@ void Sys_AIController::update(const float& deltaTime)
 
 void Sys_AIController::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
-	Comp_Movable* moveComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Movable>(CompType::Movable);
+	if (!hasActor(actorId)) return;
 	switch (eventId)
 	{
+	case ActorEventType::Despawned:
+		removeActor(actorId);
+		break;
 	case ActorEventType::CollidingOnX:
 		// reverse direction
 		// increase speed
@@ -54,11 +59,11 @@ void Sys_AIController::debugOverlay(WindowManager* windowManager)
 
 void Sys_AIController::notify(const Message& msg)
 {
+	if (!hasActor(msg.m_receiver)) return;
 	ActorMessageType msgType = (ActorMessageType)msg.m_type;
 	switch (msgType)
 	{
 	case ActorMessageType::Resolve:
-		if (!hasActor(msg.m_receiver)) return;
 		// resolve collision for all invaders save original colliding invader
 		// original colliding invader has already been resolved
 		for (auto& actorId : m_actorIds)
@@ -71,6 +76,21 @@ void Sys_AIController::notify(const Message& msg)
 			colComp->setPosition(posComp->getPosition());
 		}
 		break;
+		case ActorMessageType::Collision:
+		{
+			Actor* actor = m_systemManager->getActorManager()->getActor(msg.m_receiver);
+			Actor* other = m_systemManager->getActorManager()->getActor(msg.m_sender);
+			Comp_Player* playerComp = other->getComponent<Comp_Player>(CompType::Player);
+			if (playerComp)
+			{
+				// player collided with invader
+				std::cout << "Player invaded!" << std::endl;
+				m_systemManager->addEvent(msg.m_sender, (EventId)ActorEventType::Despawned);
+				return;
+			}
+			m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
+			break;
+		}
 	}
 }
 

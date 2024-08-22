@@ -83,7 +83,7 @@ public:
 		m_collidingOnY = false;
 	}
 private:
-	float m_maxSpeed = 10000.f;
+	float m_maxSpeed = 2e4;
 	float m_frictionCoefficient = 25.f;
 	sf::Vector2f m_velocity;
 	sf::Vector2f m_acceleration;

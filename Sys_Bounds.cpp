@@ -42,7 +42,7 @@ void Sys_Bounds::update(const float& deltaTime)
 		{
 			// check if bullet is out of bounds (vertically)
 			if (actorAABB.top + actorAABB.height < 0 || actorAABB.top > m_viewSpace.getSize().y)
-				m_systemManager->getActorManager()->disableActor(actorId);
+				m_systemManager->addEvent(actorId, (EventId)ActorEventType::Despawned);
 			continue;
 		}
 		float resolve = 0;
@@ -70,6 +70,13 @@ void Sys_Bounds::update(const float& deltaTime)
 
 void Sys_Bounds::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
+	if (!hasActor(actorId)) return;
+	switch (eventId)
+	{
+	case ActorEventType::Despawned:
+		removeActor(actorId);
+		break;
+	}
 }
 
 void Sys_Bounds::debugOverlay(WindowManager* windowManager)

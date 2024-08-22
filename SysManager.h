@@ -7,7 +7,7 @@
 #include "Sys_Collision.h"
 #include "Sys_AIController.h"
 #include "Sys_Bounds.h"
-#include "Sys_Combat.h"
+#include "Sys_BulletSpawner.h"
 #include "MessageHandler.h"
 #include <unordered_map>
 #include <queue>

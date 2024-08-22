@@ -37,6 +37,13 @@ void Sys_Collision::update(const float& deltaTime)
 
 void Sys_Collision::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
+	if (!hasActor(actorId)) return;
+	switch (eventId)
+	{
+	case ActorEventType::Despawned:
+		removeActor(actorId);
+		break;
+	}
 }
 
 void Sys_Collision::debugOverlay(WindowManager* windowManager)
@@ -69,20 +76,20 @@ void Sys_Collision::actorCollisions()
 		colComp1->setPosition(posComp1->getPosition());
 		for (auto id2 = std::next(id1); id2 != m_actorIds.end(); id2++)
 		{
-			Actor* actor2 = m_systemManager->getActorManager()->getActor(*id1);
+			Actor* actor2 = m_systemManager->getActorManager()->getActor(*id2);
 			Comp_Position* posComp2 = actor2->getComponent<Comp_Position>(CompType::Position);
 			Comp_Collision* colComp2 = actor2->getComponent<Comp_Collision>(CompType::Collision);
 			colComp2->setPosition(posComp2->getPosition());
 			if (colComp1->getAABB().intersects(colComp2->getAABB()))
 			{
 				Message msg1((MessageType)ActorMessageType::Collision);
-				msg1.m_receiver = *id2;
 				msg1.m_sender = *id1;
+				msg1.m_receiver = *id2;
 				m_systemManager->getMessageHandler()->dispatch(msg1);
 
 				Message msg2((MessageType)ActorMessageType::Collision);
-				msg2.m_receiver = *id1;
 				msg2.m_sender = *id2;
+				msg2.m_receiver = *id1;
 				m_systemManager->getMessageHandler()->dispatch(msg2);
 			}
 		}

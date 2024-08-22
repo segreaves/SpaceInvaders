@@ -66,16 +66,18 @@ void State_Game::createPlayer()
 	mask.set((unsigned int)CompType::Collision);
 	mask.set((unsigned int)CompType::Player);
 
-	m_playerId = m_stateManager->getContext()->m_actorManager->createActor(mask);
-	Actor* player = m_stateManager->getContext()->m_actorManager->getActor(m_playerId);
+	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
+	m_playerId = actorManager->createActor(mask);
+	Actor* player = actorManager->getActor(m_playerId);
 	// set player in center-bottom of the view space
 	sf::FloatRect viewSpace = m_stateManager->getContext()->m_windowManager->getViewSpace();
 	Comp_Position* posComp = player->getComponent<Comp_Position>(CompType::Position);
 	Comp_Collision* colComp = player->getComponent<Comp_Collision>(CompType::Collision);
 	Comp_Sprite* spriteComp = player->getComponent<Comp_Sprite>(CompType::Sprite);
-	spriteComp->setSize(sf::Vector2f(35, 20));
+	spriteComp->setSize(m_playerSize);
 	colComp->setSize(spriteComp->getSize());
 	posComp->setPosition(m_level->getPlayerSpawnPoint(viewSpace));
+	actorManager->enableActor(m_playerId);
 }
 
 void State_Game::createBullets(unsigned int maxBullets)
@@ -91,15 +93,15 @@ void State_Game::createBullets(unsigned int maxBullets)
 	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
 	for (unsigned int i = 0; i < maxBullets; i++)
 	{
-		int bulletId = actorManager->createActor(mask, false);
+		int bulletId = actorManager->createActor(mask);
 		Actor* bullet = actorManager->getActor(bulletId);
 		Comp_Collision* colComp = m_stateManager->getContext()->m_actorManager->getActor(bulletId)->getComponent<Comp_Collision>(CompType::Collision);
 		Comp_Sprite* spriteComp = m_stateManager->getContext()->m_actorManager->getActor(bulletId)->getComponent<Comp_Sprite>(CompType::Sprite);
-		spriteComp->setSize(sf::Vector2f(5, 10));
+		spriteComp->setSize(m_bulletSize);
 		colComp->setSize(spriteComp->getSize());
 		Comp_Movable* moveComp = bullet->getComponent<Comp_Movable>(CompType::Movable);
 		moveComp->setFrictionCoefficient(0.0f);
-		m_stateManager->getContext()->m_systemManager->getSystem<Sys_Combat>(SystemType::Combat)->addBullet(bullet);
+		m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletSpawner>(SystemType::BulletSpawner)->addBullet(bullet);
 	}
 }
 
@@ -114,17 +116,19 @@ void State_Game::createInvaders()
 	mask.set((unsigned int)CompType::AI);
 
 	std::vector<sf::Vector2f> spawnPoints = m_level->getInvaderSpawnPoints(m_stateManager->getContext()->m_windowManager->getViewSpace());
+	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
 	for (auto& spawnPoint : spawnPoints)
 	{
-		int invaderId = m_stateManager->getContext()->m_actorManager->createActor(mask);
-		Actor* invader = m_stateManager->getContext()->m_actorManager->getActor(invaderId);
+		int invaderId = actorManager->createActor(mask);
+		Actor* invader = actorManager->getActor(invaderId);
 		// arrange invaders in grids
 		Comp_Position* posComp = invader->getComponent<Comp_Position>(CompType::Position);
 		Comp_Collision* colComp = invader->getComponent<Comp_Collision>(CompType::Collision);
 		Comp_Sprite* spriteComp = invader->getComponent<Comp_Sprite>(CompType::Sprite);
-		spriteComp->setSize(sf::Vector2f(25, 20));
+		spriteComp->setSize(m_invaderSize);
 		colComp->setSize(spriteComp->getSize());
 		posComp->setPosition(spawnPoint);
+		actorManager->enableActor(invaderId);
 	}
 }
 
@@ -137,7 +141,7 @@ void State_Game::onPlayerMove(sf::Vector2f xy)
 void State_Game::onPlayerShoot()
 {
 	Message msg((MessageType)ActorMessageType::Shoot);
-	msg.m_receiver = m_playerId;
+	msg.m_sender = m_playerId;
 	msg.m_xy.x = 0;
 	msg.m_xy.y = -1;
 	m_stateManager->getContext()->m_systemManager->getMessageHandler()->dispatch(msg);

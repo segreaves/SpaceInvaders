@@ -1,7 +1,7 @@
 #include "Engine.h"
 
 Engine::Engine() :
-	m_windowManager("Space Invaders", sf::Vector2u(800, 600)),
+	m_windowManager("Space Invaders", sf::Vector2u(1920, 1080)),
 	m_stateManager(&m_context),
 	m_entityManager(&m_systemManager)
 {

@@ -4,11 +4,11 @@
 
 class SysManager;
 
-class Sys_Combat : public Sys
+class Sys_BulletSpawner : public Sys
 {
 public:
-	Sys_Combat(SysManager* systemManager);
-	~Sys_Combat();
+	Sys_BulletSpawner(SysManager* systemManager);
+	~Sys_BulletSpawner();
 
 	void setupRequirements() override;
 	void subscribeToChannels() override;
@@ -23,6 +23,7 @@ public:
 	bool addBullet(Actor* bullet);
 private:
 	void shoot(const ActorId& actorId, sf::Vector2f direction);
+	void incrementBullet();
 	
 	unsigned int m_currentBullet;
 	std::vector<Actor*> m_bullets;

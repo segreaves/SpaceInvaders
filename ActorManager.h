@@ -22,7 +22,7 @@ public:
 	ActorManager(SysManager* systemManager);
 	~ActorManager();
 
-	int createActor(Bitmask components, const bool& enabled = true);
+	int createActor(Bitmask components);
 	bool destroyActor(ActorId id);
 	void destroyAllActors();
 	void enableActor(const ActorId& id);

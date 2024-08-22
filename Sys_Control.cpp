@@ -43,6 +43,13 @@ void Sys_Control::update(const float& deltaTime)
 
 void Sys_Control::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
+	if (!hasActor(actorId)) return;
+	switch (eventId)
+	{
+	case ActorEventType::Despawned:
+		removeActor(actorId);
+		break;
+	}
 }
 
 void Sys_Control::debugOverlay(WindowManager* windowManager)
