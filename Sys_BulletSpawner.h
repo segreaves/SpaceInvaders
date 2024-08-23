@@ -10,9 +10,10 @@ public:
 	Sys_BulletSpawner(SysManager* systemManager);
 	~Sys_BulletSpawner();
 
-	void setupRequirements() override;
-	void subscribeToChannels() override;
-	void unsubscribeFromChannels() override;
+	void start();
+	void setupRequirements();
+	void subscribeToChannels();
+	void unsubscribeFromChannels();
 
 	void update(const float& deltaTime);
 	void handleEvent(const ActorId& actorId, const ActorEventType& eventId);

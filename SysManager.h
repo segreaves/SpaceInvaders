@@ -28,6 +28,7 @@ public:
 	SysManager();
 	~SysManager();
 
+	void start();
 	void update(const float& deltaTime);
 	void draw(WindowManager* windowManager);
 	void handleEvents();

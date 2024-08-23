@@ -15,6 +15,10 @@ Sys_Control::~Sys_Control()
 	unsubscribeFromChannels();
 }
 
+void Sys_Control::start()
+{
+}
+
 void Sys_Control::setupRequirements()
 {
 	m_requirements.set((unsigned int)CompType::Control);

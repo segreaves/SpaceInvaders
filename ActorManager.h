@@ -22,7 +22,7 @@ public:
 	ActorManager(SysManager* systemManager);
 	~ActorManager();
 
-	int createActor(Bitmask components);
+	int createActor(Bitmask components, std::string tag);
 	bool destroyActor(ActorId id);
 	void destroyAllActors();
 	void enableActor(const ActorId& id);

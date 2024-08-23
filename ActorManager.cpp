@@ -20,9 +20,9 @@ ActorManager::~ActorManager()
 	destroyAllActors();
 }
 
-int ActorManager::createActor(Bitmask components)
+int ActorManager::createActor(Bitmask components, std::string tag)
 {
-	Actor* actor = new Actor(m_idCounter);
+	Actor* actor = new Actor(m_idCounter, tag);
 	for (int i = 0; i < components.size(); i++)
 	{
 		if (components.test(i))

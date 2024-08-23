@@ -179,7 +179,6 @@
     <ClInclude Include="Comp_Sprite.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="Controller.h" />
-    <ClInclude Include="Direction.h" />
     <ClInclude Include="ECS_Params.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="InputEvent.h" />

@@ -15,6 +15,10 @@ Sys_Collision::~Sys_Collision()
 	unsubscribeFromChannels();
 }
 
+void Sys_Collision::start()
+{
+}
+
 void Sys_Collision::setupRequirements()
 {
 	m_requirements.set((unsigned int)CompType::Position);

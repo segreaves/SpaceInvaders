@@ -19,6 +19,12 @@ SysManager::~SysManager()
 	purgeSystems();
 }
 
+void SysManager::start()
+{
+	for (auto& sys : m_systems)
+		sys.second->start();
+}
+
 void SysManager::update(const float& deltaTime)
 {
 	for (auto& sys : m_systems)

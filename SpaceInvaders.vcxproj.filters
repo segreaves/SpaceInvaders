@@ -242,9 +242,6 @@
     <ClInclude Include="SystemType.h">
       <Filter>Header Files\Controls\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Direction.h">
-      <Filter>Header Files\Controls\Data</Filter>
-    </ClInclude>
     <ClInclude Include="Sys_AIController.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>

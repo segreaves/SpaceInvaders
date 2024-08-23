@@ -9,9 +9,10 @@ public:
 	Sys_Bounds(SysManager* systemManager);
 	~Sys_Bounds();
 
-	void setupRequirements() override;
-	void subscribeToChannels() override;
-	void unsubscribeFromChannels() override;
+	void start();
+	void setupRequirements();
+	void subscribeToChannels();
+	void unsubscribeFromChannels();
 
 	void update(const float& deltaTime);
 	void handleEvent(const ActorId& actorId, const ActorEventType& eventId);
@@ -21,5 +22,12 @@ public:
 
 	void setViewSpace(sf::FloatRect viewSpace);
 private:
+	void trackPlayerPosition(Actor* player);
+	void trackInvadersPosition(Actor* invader);
+	void trackBulletsPosition(Actor* bullet);
+	void selectTrackedInvaders();
+
 	sf::FloatRect m_viewSpace;
+	ActorId m_leftInvader;
+	ActorId m_rightInvader;
 };

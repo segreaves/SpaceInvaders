@@ -6,10 +6,11 @@
 class Actor
 {
 public:
-	Actor(unsigned int id);
+	Actor(const unsigned int id, std::string tag);
 	~Actor();
 
 	unsigned int getId();
+	std::string getTag();
 	void addComponent(CompType compType, Comp* component);
 	void removeComponent(CompType compType);
 	void removeAllComponents();
@@ -21,7 +22,8 @@ public:
 	void updateComponentBitmask();
 	Bitmask* getComponentBitmask();
 private:
-	unsigned int m_id;
+	const unsigned int m_id;
+	const std::string m_tag;
 	std::unordered_map<CompType, Comp*> m_components;
 	Bitmask m_componentBitmask;
 };

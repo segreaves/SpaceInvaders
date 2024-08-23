@@ -1,6 +1,5 @@
 #include "Controller.h"
 #include "WindowManager.h"
-#include <iostream>
 
 Controller::Controller() :
 	m_windowManager(nullptr),

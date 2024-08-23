@@ -11,9 +11,10 @@ public:
 	Sys_Renderer(SysManager* systemManager);
 	~Sys_Renderer();
 
-	void setupRequirements() override;
-	void subscribeToChannels() override;
-	void unsubscribeFromChannels() override;
+	void start();
+	void setupRequirements();
+	void subscribeToChannels();
+	void unsubscribeFromChannels();
 
 	void update(const float& deltaTime);
 	void handleEvent(const ActorId& actorId, const ActorEventType& eventId);

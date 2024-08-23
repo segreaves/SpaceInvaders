@@ -17,10 +17,11 @@ public:
 	Sys(SysManager* systemManager);
 	~Sys();
 
-	virtual void setupRequirements() {}
-	virtual void subscribeToChannels() {}
-	virtual void unsubscribeFromChannels() {}
+	virtual void setupRequirements() = 0;
+	virtual void subscribeToChannels() = 0;
+	virtual void unsubscribeFromChannels() = 0;
 
+	virtual void start() = 0;
 	virtual void update(const float& deltaTime) = 0;
 	virtual void debugOverlay(WindowManager* windowManager) = 0;
 	virtual void handleEvent(const ActorId& actorId, const ActorEventType& eventId) = 0;

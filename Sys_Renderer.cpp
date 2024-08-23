@@ -61,6 +61,10 @@ void Sys_Renderer::notify(const Message& msg)
 {
 }
 
+void Sys_Renderer::start()
+{
+}
+
 void Sys_Renderer::setupRequirements()
 {
 	m_requirements.set((unsigned int)CompType::Position);

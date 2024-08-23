@@ -1,7 +1,8 @@
 #include "Actor.h"
 
-Actor::Actor(unsigned int id) :
-	m_id(id)
+Actor::Actor(const unsigned int id, const std::string tag) :
+	m_id(id),
+	m_tag(tag)
 {
 }
 
@@ -13,6 +14,11 @@ Actor::~Actor()
 unsigned int Actor::getId()
 {
 	return m_id;
+}
+
+std::string Actor::getTag()
+{
+	return m_tag;
 }
 
 void Actor::addComponent(CompType compType, Comp* component)

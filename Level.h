@@ -13,7 +13,7 @@ public:
 	Level(Context* context);
 	~Level();
 
-	std::vector<sf::Vector2f> getInvaderSpawnPoints(sf::FloatRect viewSpace);
+	std::vector<sf::Vector2f> getInvaderSpawnPoints(sf::FloatRect viewSpace, const sf::Vector2f& invaderSize);
 	sf::Vector2f getPlayerSpawnPoint(sf::FloatRect viewSpace) const;
 private:
 	std::vector<sf::Vector2f> getGridFormation(unsigned int rows, unsigned int columns, float lengthX, float lengthY);

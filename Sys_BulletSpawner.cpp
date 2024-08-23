@@ -14,6 +14,10 @@ Sys_BulletSpawner::~Sys_BulletSpawner()
 	m_bullets.clear();
 }
 
+void Sys_BulletSpawner::start()
+{
+}
+
 void Sys_BulletSpawner::setupRequirements()
 {
 	m_requirements.set((unsigned int)CompType::Position);

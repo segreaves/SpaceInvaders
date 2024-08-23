@@ -12,9 +12,6 @@ public:
 		m_shape.setFillColor(sf::Color::White);
 		m_shape.setSize(sf::Vector2f(50.f, 50.f));
 		m_shape.setOrigin(m_shape.getSize() / 2.f);
-		m_center.setFillColor(sf::Color::Red);
-		m_center.setSize(sf::Vector2f(5.f, 5.f));
-		m_center.setOrigin(m_center.getSize() / 2.f);
 	}
 
 	~Comp_Sprite() {}
@@ -25,13 +22,16 @@ public:
 	void draw(sf::RenderWindow* window)
 	{
 		window->draw(m_shape);
-		window->draw(m_center);
+	}
+
+	void setColor(const sf::Color& color)
+	{
+		m_shape.setFillColor(color);
 	}
 
 	void setPosition(const sf::Vector2f& pos)
 	{
 		m_shape.setPosition(pos);
-		m_center.setPosition(pos);
 	}
 
 	sf::Vector2f getPosition() const
@@ -58,5 +58,4 @@ public:
 	}
 private:
 	sf::RectangleShape m_shape;
-	sf::RectangleShape m_center;
 };

@@ -12,9 +12,10 @@ public:
 	Sys_Collision(SysManager* systemManager);
 	~Sys_Collision();
 
-	void setupRequirements() override;
-	void subscribeToChannels() override;
-	void unsubscribeFromChannels() override;
+	void start();
+	void setupRequirements();
+	void subscribeToChannels();
+	void unsubscribeFromChannels();
 
 	void update(const float& deltaTime);
 	void handleEvent(const ActorId& actorId, const ActorEventType& eventId);
