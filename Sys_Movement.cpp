@@ -34,6 +34,7 @@ void Sys_Movement::unsubscribeFromChannels()
 
 void Sys_Movement::update(const float& deltaTime)
 {
+	if (m_actorIds.empty()) return;
 	for (auto& id : m_actorIds)
 		move(id, deltaTime);
 }
@@ -78,12 +79,13 @@ void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
 	float speed = sqrt(
 		pow(moveComp->getVelocity().x, 2) + 
 		pow(moveComp->getVelocity().y, 2));
-	if (speed > moveComp->getMaxSpeed())
+	float maxSpeed = moveComp->getMaxSpeed();
+	if (speed > maxSpeed)
 	{
 		moveComp->setVelocity(
 			sf::Vector2f(
-				moveComp->getMaxSpeed() * moveComp->getVelocity().x / speed,
-				moveComp->getMaxSpeed() * moveComp->getVelocity().y / speed));
+				maxSpeed * moveComp->getVelocity().x / speed,
+				maxSpeed * moveComp->getVelocity().y / speed));
 	}
 	posComp->move(moveComp->getVelocity() * deltaTime);
 }

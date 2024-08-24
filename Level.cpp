@@ -15,26 +15,17 @@ Level::~Level()
 std::vector<sf::Vector2f> Level::getInvaderSpawnPoints(sf::FloatRect viewSpace, const sf::Vector2f& invaderSize)
 {
 	// create a grid of invaders side-by-side
-	unsigned int rows = 5;
-	unsigned int columns = m_numInvaders / rows;
 	float gridWidth = viewSpace.width * 0.3f;
 	float gridHeight = viewSpace.height * 0.2;
-	std::vector<sf::Vector2f> formationPoints = getGridFormation(rows, columns, columns * invaderSize.x, rows * invaderSize.y);
-	std::vector<sf::Vector2f> secondGrid(formationPoints);
+	std::vector<sf::Vector2f> formationPoints = getGridFormation(m_invaderRows, m_invaderCols, m_invaderCols * invaderSize.x, m_invaderRows * invaderSize.y);
 	float offset = 0.6f;
 	for (int i = 0; i < formationPoints.size(); i++)
 	{
 		// center the formation in the view space
 		formationPoints[i].x += viewSpace.width / 2.f;
-		secondGrid[i].x += viewSpace.width / 2.f;
 		// move the formation to the top of the view space
 		formationPoints[i].y += viewSpace.height * 0.25f;
-		secondGrid[i].y += viewSpace.height * 0.25f;
-		// move one grid to the left and the other to the right
-		formationPoints[i].x -= offset * gridWidth;
-		secondGrid[i].x += offset * gridWidth;
 	}
-	formationPoints.insert(formationPoints.end(), secondGrid.begin(), secondGrid.end());
 	return formationPoints;
 }
 
@@ -55,6 +46,7 @@ std::vector<sf::Vector2f> Level::getGridFormation(unsigned int rows, unsigned in
 			float x = -0.5f * lengthX + colDelta * col;
 			formationPoints.emplace_back(sf::Vector2f(-0.5f * lengthX + colDelta * col, 0));
 		}
+		return formationPoints;
 	}
 	if (columns == 1)
 	{
@@ -64,19 +56,17 @@ std::vector<sf::Vector2f> Level::getGridFormation(unsigned int rows, unsigned in
 			float y = -0.5f * lengthY + rowDelta * row;
 			formationPoints.emplace_back(sf::Vector2f(0, y));
 		}
+		return formationPoints;
 	}
-	else
+	float rowDelta = lengthY / (rows - 1);
+	float colDelta = lengthX / (columns - 1);
+	for (int row = 0; row < rows; row++)
 	{
-		float rowDelta = lengthY / (rows - 1);
-		float colDelta = lengthX / (columns - 1);
-		for (int row = 0; row < rows; row++)
+		for (int col = 0; col < columns; col++)
 		{
-			for (int col = 0; col < columns; col++)
-			{
-				float x = -0.5f * lengthX + colDelta * col;
-				float y = -0.5f * lengthY + rowDelta * row;
-				formationPoints.emplace_back(sf::Vector2f(x, y));
-			}
+			float x = -0.5f * lengthX + colDelta * col;
+			float y = -0.5f * lengthY + rowDelta * row;
+			formationPoints.emplace_back(sf::Vector2f(x, y));
 		}
 	}
 	return formationPoints;

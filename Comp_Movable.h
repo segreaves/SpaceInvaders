@@ -35,18 +35,29 @@ public:
 
 	void setAcceleration(const sf::Vector2f& acceleration)
 	{
-		m_acceleration = acceleration;
+		float accelerationMagnitude = sqrt(pow(acceleration.x, 2) + pow(acceleration.y, 2));
+		if (accelerationMagnitude > m_maxAcceleration)
+			m_acceleration = sf::Vector2f(
+				m_maxAcceleration * acceleration.x / accelerationMagnitude,
+				m_maxAcceleration * acceleration.y / accelerationMagnitude);
+		else
+			m_acceleration = acceleration;
 	}
 
 	void setAcceleration(const float& accelerationX, const float& accelerationY)
 	{
-		m_acceleration.x = accelerationX;
-		m_acceleration.y = accelerationY;
+		float accelerationMagnitude = sqrt(pow(accelerationX, 2) + pow(accelerationY, 2));
+		if (accelerationMagnitude > m_maxAcceleration)
+			m_acceleration = sf::Vector2f(
+				m_maxAcceleration * accelerationX / accelerationMagnitude,
+				m_maxAcceleration * accelerationY / accelerationMagnitude);
+		else
+			m_acceleration = sf::Vector2f(accelerationX, accelerationY);
 	}
 
 	void accelerate(const sf::Vector2f& movementInput)
 	{
-		m_acceleration += movementInput * m_maxSpeed;
+		m_acceleration += movementInput * m_maxAcceleration;
 	}
 
 	const float& getFrictionCoefficient() const { return m_frictionCoefficient; }
@@ -83,7 +94,8 @@ public:
 		m_collidingOnY = false;
 	}
 private:
-	float m_maxSpeed = 2e4;
+	float m_maxSpeed = 100;
+	float m_maxAcceleration = 2e3;
 	float m_frictionCoefficient = 25.f;
 	sf::Vector2f m_velocity;
 	sf::Vector2f m_acceleration;

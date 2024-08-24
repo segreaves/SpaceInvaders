@@ -17,12 +17,12 @@ Sys_Renderer::~Sys_Renderer()
 
 void Sys_Renderer::update(const float& deltaTime)
 {
+	if (m_actorIds.empty()) return;
 	for (auto& id : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
 		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(CompType::Sprite);
-		if (!posComp || !spriteComp) continue;
 		spriteComp->setPosition(posComp->getPosition());
 	}
 }
@@ -45,7 +45,6 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
 		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(CompType::Sprite);
-		if (!posComp || !spriteComp) continue;
 		// culling
 		sf::FloatRect view = windowManager->getViewSpace();
 		if (view.intersects(spriteComp->getDrawableBounds()))

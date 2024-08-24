@@ -25,11 +25,10 @@ void State_Game::draw()
 
 void State_Game::onCreate()
 {
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_AIControl>(SystemType::AIControl)->setViewSpace(m_stateManager->getContext()->m_windowManager->getViewSpace());
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_PlayerControl>(SystemType::PlayerControl)->setViewSpace(m_stateManager->getContext()->m_windowManager->getViewSpace());
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletControl>(SystemType::BulletControl)->setViewSpace(m_stateManager->getContext()->m_windowManager->getViewSpace());
 	loadNextLevel();
-	createPlayer();
-	createBullets(100);
-	createInvaders();
-	m_stateManager->getContext()->m_systemManager->start();
 }
 
 void State_Game::onDestroy()
@@ -42,12 +41,14 @@ void State_Game::activate()
 {
 	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_AIControl>(SystemType::AIControl)->m_invadersDefeated.addCallback("Game_onInvadersDefeated", std::bind(&State_Game::loadNextLevel, this));
 }
 
 void State_Game::deactivate()
 {
 	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onMove");
 	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onShoot");
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_AIControl>(SystemType::AIControl)->m_invadersDefeated.removeCallback("Game_onInvadersDefeated");
 }
 
 void State_Game::loadNextLevel()
@@ -55,7 +56,10 @@ void State_Game::loadNextLevel()
 	if (m_level)
 		delete m_level;
 	m_level = new Level(m_stateManager->getContext());
-	m_stateManager->getContext()->m_systemManager->getSystem<Sys_Bounds>(SystemType::Bounds)->setViewSpace(m_stateManager->getContext()->m_windowManager->getViewSpace());
+	createPlayer();
+	createBullets(100);
+	createInvaders();
+	m_stateManager->getContext()->m_systemManager->start();
 }
 
 void State_Game::createPlayer()
@@ -103,7 +107,7 @@ void State_Game::createBullets(unsigned int maxBullets)
 		colComp->setSize(spriteComp->getSize());
 		Comp_Movable* moveComp = bullet->getComponent<Comp_Movable>(CompType::Movable);
 		moveComp->setFrictionCoefficient(0.0f);
-		m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletSpawner>(SystemType::BulletSpawner)->addBullet(bullet);
+		m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletControl>(SystemType::BulletControl)->addBullet(bullet);
 	}
 }
 

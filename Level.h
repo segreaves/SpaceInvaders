@@ -19,5 +19,6 @@ private:
 	std::vector<sf::Vector2f> getGridFormation(unsigned int rows, unsigned int columns, float lengthX, float lengthY);
 
 	Context* m_context;
-	const unsigned int m_numInvaders = 50;
+	const unsigned int m_invaderRows = 5;
+	const unsigned int m_invaderCols = 12;
 };

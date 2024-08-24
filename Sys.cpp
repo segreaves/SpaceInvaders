@@ -44,3 +44,8 @@ bool Sys::fitsRequirements(const Bitmask& mask)
 			return false;
 	return true;
 }
+
+int Sys::getActorCount() const
+{
+	return m_actorIds.size();
+}

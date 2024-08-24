@@ -6,12 +6,11 @@ SysManager::SysManager() :
 	m_actorManager(nullptr)
 {
 	m_systems[SystemType::Renderer] = new Sys_Renderer(this);
-	m_systems[SystemType::Control] = new Sys_Control(this);
+	m_systems[SystemType::PlayerControl] = new Sys_PlayerControl(this);
 	m_systems[SystemType::Movement] = new Sys_Movement(this);
 	m_systems[SystemType::Collision] = new Sys_Collision(this);
-	m_systems[SystemType::Bounds] = new Sys_Bounds(this);
-	m_systems[SystemType::AIController] = new Sys_AIController(this);
-	m_systems[SystemType::BulletSpawner] = new Sys_BulletSpawner(this);
+	m_systems[SystemType::AIControl] = new Sys_AIControl(this);
+	m_systems[SystemType::BulletControl] = new Sys_BulletControl(this);
 }
 
 SysManager::~SysManager()

@@ -4,11 +4,11 @@
 
 class SysManager;
 
-class Sys_BulletSpawner : public Sys
+class Sys_BulletControl : public Sys
 {
 public:
-	Sys_BulletSpawner(SysManager* systemManager);
-	~Sys_BulletSpawner();
+	Sys_BulletControl(SysManager* systemManager);
+	~Sys_BulletControl();
 
 	void start();
 	void setupRequirements();
@@ -21,11 +21,14 @@ public:
 
 	void notify(const Message& msg);
 
+	void setViewSpace(sf::FloatRect viewSpace);
+
 	bool addBullet(Actor* bullet);
 private:
 	void shoot(const ActorId& actorId, sf::Vector2f direction);
 	void incrementBullet();
 	
+	sf::FloatRect m_viewSpace;
 	unsigned int m_currentBullet;
 	std::vector<Actor*> m_bullets;
 };

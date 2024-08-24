@@ -3,11 +3,11 @@
 
 class SysManager;
 
-class Sys_Bounds : public Sys
+class Sys_PlayerControl : public Sys
 {
 public:
-	Sys_Bounds(SysManager* systemManager);
-	~Sys_Bounds();
+	Sys_PlayerControl(SysManager* systemManager);
+	~Sys_PlayerControl();
 
 	void start();
 	void setupRequirements();
@@ -22,12 +22,5 @@ public:
 
 	void setViewSpace(sf::FloatRect viewSpace);
 private:
-	void trackPlayerPosition(Actor* player);
-	void trackInvadersPosition(Actor* invader);
-	void trackBulletsPosition(Actor* bullet);
-	void selectTrackedInvaders();
-
 	sf::FloatRect m_viewSpace;
-	ActorId m_leftInvader;
-	ActorId m_rightInvader;
 };

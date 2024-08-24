@@ -1,11 +1,12 @@
 #pragma once
 #include "Sys.h"
+#include "Trigger.h"
 
-class Sys_AIController : public Sys
+class Sys_AIControl : public Sys
 {
 public:
-	Sys_AIController(SysManager* systemManager);
-	~Sys_AIController();
+	Sys_AIControl(SysManager* systemManager);
+	~Sys_AIControl();
 
 	void start();
 	void setupRequirements();
@@ -17,10 +18,16 @@ public:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
-private:
-	void move(const ActorId& actorId, const float& deltaTime);
-	void setMoveTarget(Comp_AI* aiComp, const float& deltaTime);
 
+	void setViewSpace(sf::FloatRect viewSpace);
+
+	Trigger<void> m_invadersDefeated;
+private:
+	void selectTrackedInvaders();
+
+	sf::FloatRect m_viewSpace;
 	bool m_movingRight;
 	float m_targetSpeed = 100.f;
+	ActorId m_leftInvader;
+	ActorId m_rightInvader;
 };

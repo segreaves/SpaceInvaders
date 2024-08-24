@@ -1,9 +1,10 @@
 #pragma once
 #include <unordered_map>
 #include <functional>
+#include <string>
 
 template<typename T = void>
-class InputEvent
+class Trigger
 {
 public:
     void addCallback(std::string id, const std::function<void(T)>& callback)
@@ -31,7 +32,7 @@ private:
 };
 
 template<>
-class InputEvent<void>
+class Trigger<void>
 {
 public:
     void addCallback(std::string id, const std::function<void()>& callback)

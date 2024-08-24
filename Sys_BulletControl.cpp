@@ -1,24 +1,24 @@
-#include "Sys_BulletSpawner.h"
+#include "Sys_BulletControl.h"
 #include "SysManager.h"
 
-Sys_BulletSpawner::Sys_BulletSpawner(SysManager* systemManager) :
+Sys_BulletControl::Sys_BulletControl(SysManager* systemManager) :
 	Sys(systemManager)
 {
 	setupRequirements();
 	subscribeToChannels();
 }
 
-Sys_BulletSpawner::~Sys_BulletSpawner()
+Sys_BulletControl::~Sys_BulletControl()
 {
 	unsubscribeFromChannels();
 	m_bullets.clear();
 }
 
-void Sys_BulletSpawner::start()
+void Sys_BulletControl::start()
 {
 }
 
-void Sys_BulletSpawner::setupRequirements()
+void Sys_BulletControl::setupRequirements()
 {
 	m_requirements.set((unsigned int)CompType::Position);
 	m_requirements.set((unsigned int)CompType::Movable);
@@ -27,31 +27,43 @@ void Sys_BulletSpawner::setupRequirements()
 	m_requirements.set((unsigned int)CompType::Bullet);
 }
 
-void Sys_BulletSpawner::subscribeToChannels()
+void Sys_BulletControl::subscribeToChannels()
 {
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Shoot, this);
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
 }
 
-void Sys_BulletSpawner::unsubscribeFromChannels()
+void Sys_BulletControl::unsubscribeFromChannels()
 {
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Shoot, this);
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
 }
 
-void Sys_BulletSpawner::update(const float& deltaTime)
+void Sys_BulletControl::update(const float& deltaTime)
+{
+	if (m_actorIds.empty()) return;
+	ActorManager* actorManager = m_systemManager->getActorManager();
+	for (auto& id : m_actorIds)
+	{
+		Actor* bullet = actorManager->getActor(id);
+		// no need to update bullet movement as their velocity is constant and set up on creation
+		Comp_Collision* colComp = bullet->getComponent<Comp_Collision>(CompType::Collision);
+		sf::FloatRect bulletAABB = colComp->getAABB();
+		// check if bullet is out of bounds
+		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_viewSpace.getSize().y)
+			m_systemManager->addEvent(bullet->getId(), (EventId)ActorEventType::Despawned);
+	}
+}
+
+void Sys_BulletControl::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
 }
 
-void Sys_BulletSpawner::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
+void Sys_BulletControl::debugOverlay(WindowManager* windowManager)
 {
 }
 
-void Sys_BulletSpawner::debugOverlay(WindowManager* windowManager)
-{
-}
-
-void Sys_BulletSpawner::notify(const Message& msg)
+void Sys_BulletControl::notify(const Message& msg)
 {
 	switch ((ActorMessageType)msg.m_type)
 	{
@@ -59,19 +71,25 @@ void Sys_BulletSpawner::notify(const Message& msg)
 			shoot(msg.m_sender, sf::Vector2f(msg.m_xy.x, msg.m_xy.y));
 			break;
 		case ActorMessageType::Collision:
-			m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
+			if (hasActor(msg.m_receiver))
+				m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
 			break;
 	}
 }
 
-bool Sys_BulletSpawner::addBullet(Actor* bullet)
+void Sys_BulletControl::setViewSpace(sf::FloatRect viewSpace)
+{
+	m_viewSpace = viewSpace;
+}
+
+bool Sys_BulletControl::addBullet(Actor* bullet)
 {
 	if (!bullet->getComponent<Comp_Bullet>(CompType::Bullet)) return false;
 	m_bullets.push_back(bullet);
 	return true;
 }
 
-void Sys_BulletSpawner::shoot(const ActorId& actorId, sf::Vector2f direction)
+void Sys_BulletControl::shoot(const ActorId& actorId, sf::Vector2f direction)
 {
 	if (m_bullets.empty()) return;
 	ActorManager* actorManager = m_systemManager->getActorManager();
@@ -96,7 +114,7 @@ void Sys_BulletSpawner::shoot(const ActorId& actorId, sf::Vector2f direction)
 	incrementBullet();
 }
 
-void Sys_BulletSpawner::incrementBullet()
+void Sys_BulletControl::incrementBullet()
 {
 	m_currentBullet = ++m_currentBullet % m_bullets.size();
 }

@@ -5,10 +5,10 @@ enum class SystemType
 	Renderer = 0,
 	Movement,
 	Collision,
-	Control,
+	PlayerControl,
 	State,
 	Animation,
-	AIController,
+	AIControl,
 	Bounds,
-	BulletSpawner
+	BulletControl
 };

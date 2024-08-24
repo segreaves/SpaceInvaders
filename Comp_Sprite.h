@@ -9,7 +9,7 @@ public:
 	Comp_Sprite() :
 		Comp()
 	{
-		m_shape.setFillColor(sf::Color::White);
+		m_shape.setFillColor(m_defaultColor);
 		m_shape.setSize(sf::Vector2f(50.f, 50.f));
 		m_shape.setOrigin(m_shape.getSize() / 2.f);
 	}
@@ -22,6 +22,11 @@ public:
 	void draw(sf::RenderWindow* window)
 	{
 		window->draw(m_shape);
+	}
+
+	sf::Color getDefaultColor() const
+	{
+		return m_defaultColor;
 	}
 
 	void setColor(const sf::Color& color)
@@ -58,4 +63,5 @@ public:
 	}
 private:
 	sf::RectangleShape m_shape;
+	const sf::Color m_defaultColor = sf::Color::White;
 };

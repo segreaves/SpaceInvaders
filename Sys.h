@@ -31,6 +31,8 @@ public:
 	void removeAllActors();
 	bool hasActor(const ActorId& actor);
 	bool fitsRequirements(const Bitmask& mask);
+
+	int getActorCount() const;
 protected:
 	Bitmask m_requirements;
 	std::vector<ActorId> m_actorIds;
