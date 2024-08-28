@@ -5,10 +5,10 @@
 #include "Sys_Movement.h"
 #include "Sys_PlayerControl.h"
 #include "Sys_Collision.h"
-#include "Sys_AIControl.h"
+#include "Sys_InvaderControl.h"
 #include "Sys_BulletControl.h"
 #include "MessageHandler.h"
-#include <unordered_map>
+#include <map>
 #include <queue>
 
 class ActorManager;
@@ -50,7 +50,7 @@ public:
 	void purgeSystems();
 private:
 	ActorManager* m_actorManager;
-	std::unordered_map<SystemType, Sys*> m_systems;
+	std::map<SystemType, Sys*> m_systems;
 	std::unordered_map<ActorId, std::queue<EventId>> m_actorEvents;
 	MessageHandler m_messageHandler;
 };

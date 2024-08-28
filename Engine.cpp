@@ -15,6 +15,8 @@ Engine::Engine() :
 	m_context.m_systemManager = &m_systemManager;
 
 	m_stateManager.switchTo(StateType::Intro);
+
+	m_windowManager.getRenderWindow()->setMouseCursorVisible(false);
 }
 
 void Engine::update()

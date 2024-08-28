@@ -3,6 +3,7 @@
 #include <SFML/System/Vector2.hpp>
 
 class SysManager;
+class LevelManager;
 
 class Sys_BulletControl : public Sys
 {
@@ -21,14 +22,10 @@ public:
 
 	void notify(const Message& msg);
 
-	void setViewSpace(sf::FloatRect viewSpace);
-
-	bool addBullet(Actor* bullet);
+	void setLevelManager(LevelManager* levelManager);
 private:
-	void shoot(const ActorId& actorId, sf::Vector2f direction);
-	void incrementBullet();
+	void shoot(const ActorId& shooterId, const ActorId& bulletId,sf::Vector2f direction);
 	
-	sf::FloatRect m_viewSpace;
+	LevelManager* m_levelManager;
 	unsigned int m_currentBullet;
-	std::vector<Actor*> m_bullets;
 };

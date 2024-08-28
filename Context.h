@@ -3,7 +3,7 @@
 #include "Controller.h"
 #include "ActorManager.h"
 #include "SysManager.h"
-#include "Level.h"
+#include "LevelManager.h"
 
 struct Context
 {
@@ -20,5 +20,5 @@ struct Context
 	Controller* m_controller;
 	ActorManager* m_actorManager;
 	SysManager* m_systemManager;
-	Level* m_level;
+	LevelManager* m_level;
 };

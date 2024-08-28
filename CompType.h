@@ -5,10 +5,10 @@ enum class CompType
 	Position = 0,
 	Sprite,
 	State,
-	Movable,
+	Movement,
 	Control,
 	Collision,
 	Player,
-	AI,
+	Invader,
 	Bullet
 };

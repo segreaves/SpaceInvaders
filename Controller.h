@@ -22,8 +22,8 @@ public:
 	Trigger<void> m_onPause;
 	Trigger<void> m_onToggleFullscreen;
 	Trigger<sf::Vector2f> m_onMove;
-	Trigger<sf::Vector2i> m_onMouseClick;
 private:
 	bool m_hasFocus;
 	WindowManager* m_windowManager;
+	const float m_mouseSensitivity = 2.f;
 };

@@ -52,7 +52,7 @@ void Sys_Collision::handleEvent(const ActorId& actorId, const ActorEventType& ev
 
 void Sys_Collision::debugOverlay(WindowManager* windowManager)
 {
-	if (m_actorIds.empty()) return;
+	/*if (m_actorIds.empty()) return;
 	for (auto& actorId : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
@@ -63,7 +63,7 @@ void Sys_Collision::debugOverlay(WindowManager* windowManager)
 		color.a = 50;
 		shape.setFillColor(color);
 		windowManager->getRenderWindow()->draw(shape);
-	}
+	}*/
 }
 
 void Sys_Collision::notify(const Message& msg)

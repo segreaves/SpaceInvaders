@@ -7,11 +7,11 @@ ActorManager::ActorManager(SysManager* systemManager) :
 {
 	addComponentType<Comp_Position>(CompType::Position);
 	addComponentType<Comp_Sprite>(CompType::Sprite);
-	addComponentType<Comp_Movable>(CompType::Movable);
+	addComponentType<Comp_Movement>(CompType::Movement);
 	addComponentType<Comp_Control>(CompType::Control);
 	addComponentType<Comp_Collision>(CompType::Collision);
 	addComponentType<Comp_Player>(CompType::Player);
-	addComponentType<Comp_AI>(CompType::AI);
+	addComponentType<Comp_Invader>(CompType::Invader);
 	addComponentType<Comp_Bullet>(CompType::Bullet);
 }
 
@@ -65,6 +65,7 @@ void ActorManager::destroyAllActors()
 		delete m_actors.begin()->second;
 		m_actors.erase(m_actors.begin());
 	}
+	m_idCounter = 0;
 }
 
 void ActorManager::enableActor(const ActorId& id)
@@ -72,9 +73,21 @@ void ActorManager::enableActor(const ActorId& id)
 	m_systemManager->actorModified(id, *getActor(id)->getComponentBitmask());
 }
 
+void ActorManager::enableAllActors()
+{
+	for (auto& actor : m_actors)
+		enableActor(actor.first);
+}
+
 void ActorManager::disableActor(const ActorId& id)
 {
 	m_systemManager->actorModified(id, Bitmask(0));
+}
+
+void ActorManager::disableAllActors()
+{
+	for (auto& actor : m_actors)
+		disableActor(actor.first);
 }
 
 Actor* ActorManager::getActor(const ActorId& id)

@@ -1,5 +1,6 @@
 #include "Sys_BulletControl.h"
 #include "SysManager.h"
+#include "LevelManager.h"
 
 Sys_BulletControl::Sys_BulletControl(SysManager* systemManager) :
 	Sys(systemManager)
@@ -11,7 +12,6 @@ Sys_BulletControl::Sys_BulletControl(SysManager* systemManager) :
 Sys_BulletControl::~Sys_BulletControl()
 {
 	unsubscribeFromChannels();
-	m_bullets.clear();
 }
 
 void Sys_BulletControl::start()
@@ -21,7 +21,7 @@ void Sys_BulletControl::start()
 void Sys_BulletControl::setupRequirements()
 {
 	m_requirements.set((unsigned int)CompType::Position);
-	m_requirements.set((unsigned int)CompType::Movable);
+	m_requirements.set((unsigned int)CompType::Movement);
 	m_requirements.set((unsigned int)CompType::Collision);
 	m_requirements.set((unsigned int)CompType::Sprite);
 	m_requirements.set((unsigned int)CompType::Bullet);
@@ -50,13 +50,21 @@ void Sys_BulletControl::update(const float& deltaTime)
 		Comp_Collision* colComp = bullet->getComponent<Comp_Collision>(CompType::Collision);
 		sf::FloatRect bulletAABB = colComp->getAABB();
 		// check if bullet is out of bounds
-		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_viewSpace.getSize().y)
+		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_levelManager->getViewSpace().getSize().y)
 			m_systemManager->addEvent(bullet->getId(), (EventId)ActorEventType::Despawned);
 	}
 }
 
 void Sys_BulletControl::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
+	if (!hasActor(actorId)) return;
+	switch (eventId)
+	{
+	case ActorEventType::Despawned:
+		removeActor(actorId);
+		m_systemManager->getActorManager()->disableActor(actorId);
+		break;
+	}
 }
 
 void Sys_BulletControl::debugOverlay(WindowManager* windowManager)
@@ -68,7 +76,8 @@ void Sys_BulletControl::notify(const Message& msg)
 	switch ((ActorMessageType)msg.m_type)
 	{
 		case ActorMessageType::Shoot:
-			shoot(msg.m_sender, sf::Vector2f(msg.m_xy.x, msg.m_xy.y));
+			if (hasActor(msg.m_receiver))
+				shoot(msg.m_sender, msg.m_receiver, sf::Vector2f(msg.m_xy.x, msg.m_xy.y));
 			break;
 		case ActorMessageType::Collision:
 			if (hasActor(msg.m_receiver))
@@ -77,44 +86,30 @@ void Sys_BulletControl::notify(const Message& msg)
 	}
 }
 
-void Sys_BulletControl::setViewSpace(sf::FloatRect viewSpace)
+void Sys_BulletControl::setLevelManager(LevelManager* levelManager)
 {
-	m_viewSpace = viewSpace;
+	m_levelManager = levelManager;
 }
 
-bool Sys_BulletControl::addBullet(Actor* bullet)
+void Sys_BulletControl::shoot(const ActorId& shooterId, const ActorId& bulletId, sf::Vector2f direction)
 {
-	if (!bullet->getComponent<Comp_Bullet>(CompType::Bullet)) return false;
-	m_bullets.push_back(bullet);
-	return true;
-}
-
-void Sys_BulletControl::shoot(const ActorId& actorId, sf::Vector2f direction)
-{
-	if (m_bullets.empty()) return;
+	if (m_actorIds.empty()) return;
 	ActorManager* actorManager = m_systemManager->getActorManager();
-	Actor* shooter = actorManager->getActor(actorId);
+	Actor* shooter = actorManager->getActor(shooterId);
 	Comp_Position* shooterPos = shooter->getComponent<Comp_Position>(CompType::Position);
 	Comp_Collision* shooterCol = shooter->getComponent<Comp_Collision>(CompType::Collision);
 	Comp_Player* playerComp = shooter->getComponent<Comp_Player>(CompType::Player);
 
-	Actor* bullet = m_bullets[m_currentBullet];
+	Actor* bullet = actorManager->getActor(bulletId);
 	Comp_Position* bulletPos = bullet->getComponent<Comp_Position>(CompType::Position);
 	Comp_Collision* bulletCol = bullet->getComponent<Comp_Collision>(CompType::Collision);
 	bulletPos->setPosition(shooterPos->getPosition() +
 		direction * (bulletCol->getAABB().getSize().y + shooterCol->getAABB().getSize().y) / 2.f);
-	Comp_Movable* bulletMove = bullet->getComponent<Comp_Movable>(CompType::Movable);
+	Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(CompType::Movement);
 	if (playerComp)
-		bulletMove->setVelocity(direction * 1000.f);
+		bulletMove->setVelocity(direction * 1250.f);
 	else
 		bulletMove->setVelocity(direction * 750.f);
 	Comp_Sprite* bulletSprite = bullet->getComponent<Comp_Sprite>(CompType::Sprite);
 	bulletSprite->setPosition(bulletPos->getPosition());
-	actorManager->enableActor(bullet->getId());
-	incrementBullet();
-}
-
-void Sys_BulletControl::incrementBullet()
-{
-	m_currentBullet = ++m_currentBullet % m_bullets.size();
 }

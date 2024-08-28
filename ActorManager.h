@@ -5,9 +5,9 @@
 #include "Comp_Sprite.h"
 #include "Comp_Control.h"
 #include "Comp_Player.h"
-#include "Comp_AI.h"
+#include "Comp_Invader.h"
 #include "Comp_Bullet.h"
-#include "Comp_Movable.h"
+#include "Comp_Movement.h"
 #include "Comp_Collision.h"
 #include "ActorEventType.h"
 #include <functional>
@@ -26,7 +26,9 @@ public:
 	bool destroyActor(ActorId id);
 	void destroyAllActors();
 	void enableActor(const ActorId& id);
+	void enableAllActors();
 	void disableActor(const ActorId& id);
+	void disableAllActors();
 
 	Actor* getActor(const ActorId& id);
 

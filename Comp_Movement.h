@@ -3,16 +3,9 @@
 #include "Comp.h"
 #include <cmath>
 
-class Comp_Movable : public Comp
+class Comp_Movement : public Comp
 {
 public:
-	const float& getMaxSpeed() const { return m_maxSpeed; }
-
-	void setMaxSpeed(const float& maxSpeed)
-	{
-		m_maxSpeed = maxSpeed;
-	}
-
 	const sf::Vector2f& getVelocity() const { return m_velocity; }
 
 	void setVelocity(const sf::Vector2f& velocity)
@@ -35,29 +28,17 @@ public:
 
 	void setAcceleration(const sf::Vector2f& acceleration)
 	{
-		float accelerationMagnitude = sqrt(pow(acceleration.x, 2) + pow(acceleration.y, 2));
-		if (accelerationMagnitude > m_maxAcceleration)
-			m_acceleration = sf::Vector2f(
-				m_maxAcceleration * acceleration.x / accelerationMagnitude,
-				m_maxAcceleration * acceleration.y / accelerationMagnitude);
-		else
-			m_acceleration = acceleration;
+		m_acceleration = acceleration;
 	}
 
 	void setAcceleration(const float& accelerationX, const float& accelerationY)
 	{
-		float accelerationMagnitude = sqrt(pow(accelerationX, 2) + pow(accelerationY, 2));
-		if (accelerationMagnitude > m_maxAcceleration)
-			m_acceleration = sf::Vector2f(
-				m_maxAcceleration * accelerationX / accelerationMagnitude,
-				m_maxAcceleration * accelerationY / accelerationMagnitude);
-		else
-			m_acceleration = sf::Vector2f(accelerationX, accelerationY);
+		m_acceleration = sf::Vector2f(accelerationX, accelerationY);
 	}
 
-	void accelerate(const sf::Vector2f& movementInput)
+	void accelerate(const sf::Vector2f& acceleration)
 	{
-		m_acceleration += movementInput * m_maxAcceleration;
+		m_acceleration += acceleration;
 	}
 
 	const float& getFrictionCoefficient() const { return m_frictionCoefficient; }
@@ -94,9 +75,7 @@ public:
 		m_collidingOnY = false;
 	}
 private:
-	float m_maxSpeed = 100;
-	float m_maxAcceleration = 2e3;
-	float m_frictionCoefficient = 25.f;
+	float m_frictionCoefficient = 100.f;
 	sf::Vector2f m_velocity;
 	sf::Vector2f m_acceleration;
 	bool m_collidingOnX = false;

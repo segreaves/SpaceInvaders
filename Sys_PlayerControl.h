@@ -2,6 +2,7 @@
 #include "Sys.h"
 
 class SysManager;
+class LevelManager;
 
 class Sys_PlayerControl : public Sys
 {
@@ -20,7 +21,7 @@ public:
 
 	void notify(const Message& msg);
 
-	void setViewSpace(sf::FloatRect viewSpace);
+	void setLevelManager(LevelManager* levelManager);
 private:
-	sf::FloatRect m_viewSpace;
+	LevelManager* m_levelManager;
 };

@@ -21,7 +21,7 @@ void Sys_Movement::start()
 void Sys_Movement::setupRequirements()
 {
 	m_requirements.set((unsigned int)CompType::Position);
-	m_requirements.set((unsigned int)CompType::Movable);
+	m_requirements.set((unsigned int)CompType::Movement);
 }
 
 void Sys_Movement::subscribeToChannels()
@@ -48,7 +48,7 @@ void Sys_Movement::handleEvent(const ActorId& actorId, const ActorEventType& eve
 		removeActor(actorId);
 		break;
 	case ActorEventType::CollidingOnX:
-		Comp_Movable* moveComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Movable>(CompType::Movable);
+		Comp_Movement* moveComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Movement>(CompType::Movement);
 		moveComp->setVelocity(0, moveComp->getVelocity().y);
 		moveComp->setAcceleration(0, moveComp->getAcceleration().y);
 		break;
@@ -67,7 +67,7 @@ void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
 {
 	Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
 	Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
-	Comp_Movable* moveComp = actor->getComponent<Comp_Movable>(CompType::Movable);
+	Comp_Movement* moveComp = actor->getComponent<Comp_Movement>(CompType::Movement);
 	sf::Vector2f acceleration = sf::Vector2f(
 		moveComp->getAcceleration().x * !moveComp->getCollidingOnX(),
 		moveComp->getAcceleration().y * !moveComp->getCollidingOnY());
@@ -79,13 +79,5 @@ void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
 	float speed = sqrt(
 		pow(moveComp->getVelocity().x, 2) + 
 		pow(moveComp->getVelocity().y, 2));
-	float maxSpeed = moveComp->getMaxSpeed();
-	if (speed > maxSpeed)
-	{
-		moveComp->setVelocity(
-			sf::Vector2f(
-				maxSpeed * moveComp->getVelocity().x / speed,
-				maxSpeed * moveComp->getVelocity().y / speed));
-	}
 	posComp->move(moveComp->getVelocity() * deltaTime);
 }

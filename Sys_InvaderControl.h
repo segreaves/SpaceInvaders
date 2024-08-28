@@ -1,12 +1,15 @@
 #pragma once
 #include "Sys.h"
 #include "Trigger.h"
+#include "LevelManager.h"
 
-class Sys_AIControl : public Sys
+class LevelManager;
+
+class Sys_InvaderControl : public Sys
 {
 public:
-	Sys_AIControl(SysManager* systemManager);
-	~Sys_AIControl();
+	Sys_InvaderControl(SysManager* systemManager);
+	~Sys_InvaderControl();
 
 	void start();
 	void setupRequirements();
@@ -19,15 +22,14 @@ public:
 
 	void notify(const Message& msg);
 
-	void setViewSpace(sf::FloatRect viewSpace);
+	void setLevelManager(LevelManager* levelManager);
 
-	Trigger<void> m_invadersDefeated;
+	Trigger<void> m_invaderDefeated;
 private:
 	void selectTrackedInvaders();
 
-	sf::FloatRect m_viewSpace;
+	LevelManager* m_levelManager;
 	bool m_movingRight;
-	float m_targetSpeed = 100.f;
 	ActorId m_leftInvader;
 	ActorId m_rightInvader;
 };

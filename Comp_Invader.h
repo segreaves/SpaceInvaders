@@ -2,7 +2,7 @@
 #include "Comp.h"
 #include <SFML/System/Vector2.hpp>
 
-class Comp_AI : public Comp
+class Comp_Invader : public Comp
 {
 public:
 	void setTarget(sf::Vector2f target)

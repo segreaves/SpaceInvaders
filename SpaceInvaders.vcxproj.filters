@@ -64,8 +64,11 @@
     <Filter Include="Header Files\Levels">
       <UniqueIdentifier>{7c72c0e2-9bbd-4648-b081-c92aa2787093}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Controls\Data">
+    <Filter Include="Header Files\Types">
       <UniqueIdentifier>{86324953-e3f9-4255-8fe0-bc42f757e267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{f700e456-e6d6-4715-b614-0811c32187d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -117,10 +120,10 @@
     <ClCompile Include="Sys_Collision.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Level.cpp">
+    <ClCompile Include="LevelManager.cpp">
       <Filter>Source Files\Levels</Filter>
     </ClCompile>
-    <ClCompile Include="Sys_AIControl.cpp">
+    <ClCompile Include="Sys_InvaderControl.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Sys_BulletControl.cpp">
@@ -200,7 +203,7 @@
     <ClInclude Include="Sys_Renderer.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Comp_Movable.h">
+    <ClInclude Include="Comp_Movement.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="Sys_Movement.h">
@@ -218,31 +221,31 @@
     <ClInclude Include="Sys_Collision.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Level.h">
+    <ClInclude Include="LevelManager.h">
       <Filter>Header Files\Levels</Filter>
     </ClInclude>
     <ClInclude Include="Comp_Control.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="CompType.h">
-      <Filter>Header Files\Controls\Data</Filter>
+      <Filter>Header Files\Types</Filter>
     </ClInclude>
     <ClInclude Include="ActorEventType.h">
-      <Filter>Header Files\Controls\Data</Filter>
+      <Filter>Header Files\Types</Filter>
     </ClInclude>
     <ClInclude Include="ActorMessageType.h">
-      <Filter>Header Files\Controls\Data</Filter>
+      <Filter>Header Files\Types</Filter>
     </ClInclude>
     <ClInclude Include="SystemType.h">
-      <Filter>Header Files\Controls\Data</Filter>
+      <Filter>Header Files\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Sys_AIControl.h">
+    <ClInclude Include="Sys_InvaderControl.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Sys_BulletControl.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Comp_AI.h">
+    <ClInclude Include="Comp_Invader.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="Comp_Player.h">
@@ -253,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="Trigger.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,11 +14,6 @@ void Controller::update()
 		movementInput += sf::Vector2f(-1.f, 0.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		movementInput += sf::Vector2f(1.f, 0.f);
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Button(sf::Mouse::Left)))
-	{
-		sf::Vector2i mouseXY = sf::Mouse::getPosition(*m_windowManager->getRenderWindow());
-		m_onMouseClick.dispatch(mouseXY);
-	}
 	if (sf::Joystick::isConnected(0))
 	{
 		float deadZone = 10.f;
@@ -30,6 +25,10 @@ void Controller::update()
 			joystickXY.x = x / 100.f;
 		movementInput += joystickXY;
 	}
+	int mouseX = sf::Mouse::getPosition(*m_windowManager->getRenderWindow()).x;
+	sf::Vector2f windowSize = sf::Vector2f(m_windowManager->getWindowSize());
+	sf::Vector2i screenCenter(windowSize.x / 2, windowSize.y / 2);
+	movementInput += m_mouseSensitivity * sf::Vector2f(mouseX - screenCenter.x, 0);
 	m_onMove.dispatch(movementInput);
 }
 
@@ -48,8 +47,8 @@ void Controller::handleEvent(sf::Event event)
 	}
 	else if (event.type == sf::Event::MouseButtonPressed)
 	{
-		/*if (event.mouseButton.button == sf::Mouse::Left)
-			m_onShoot.dispatch();*/
+		if (event.mouseButton.button == sf::Mouse::Left)
+			m_onShoot.dispatch();
 	}
 }
 

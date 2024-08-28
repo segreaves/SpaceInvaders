@@ -1,50 +1,61 @@
-#include "Sys_AIControl.h"
+#include "Sys_InvaderControl.h"
 #include "SysManager.h"
 #include "WindowManager.h"
+#include "LevelManager.h"
 
-Sys_AIControl::Sys_AIControl(SysManager* systemManager) :
+Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	Sys(systemManager)
 {
 	setupRequirements();
 	subscribeToChannels();
 }
 
-Sys_AIControl::~Sys_AIControl()
+Sys_InvaderControl::~Sys_InvaderControl()
 {
 	unsubscribeFromChannels();
 }
 
-void Sys_AIControl::start()
+void Sys_InvaderControl::start()
 {
-	// set random direction
-	srand(time(NULL));
+	srand(time(nullptr));
 	m_movingRight = rand() % 2;
+
+	ActorManager* actorManager = m_systemManager->getActorManager();
+	std::vector<sf::Vector2f> spawnPoints = m_levelManager->getInvaderSpawnPoints();
+	for (int i = 0; i < spawnPoints.size(); i++)
+	{
+		Actor* invader = actorManager->getActor(m_actorIds[i]);
+		Comp_Position* posComp = invader->getComponent<Comp_Position>(CompType::Position);
+		Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(CompType::Invader);
+		posComp->setPosition(spawnPoints[i]);
+		aiComp->setTarget(posComp->getPosition());
+	}
 
 	selectTrackedInvaders();
 }
 
-void Sys_AIControl::setupRequirements()
+void Sys_InvaderControl::setupRequirements()
 {
 	m_requirements.set((unsigned int)CompType::Position);
 	m_requirements.set((unsigned int)CompType::Collision);
-	m_requirements.set((unsigned int)CompType::Movable);
+	m_requirements.set((unsigned int)CompType::Movement);
 	m_requirements.set((unsigned int)CompType::Control);
-	m_requirements.set((unsigned int)CompType::AI);
+	m_requirements.set((unsigned int)CompType::Invader);
 }
 
-void Sys_AIControl::subscribeToChannels()
+void Sys_InvaderControl::subscribeToChannels()
 {
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::OutOfBounds, this);
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
 }
 
-void Sys_AIControl::unsubscribeFromChannels()
+void Sys_InvaderControl::unsubscribeFromChannels()
 {
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::OutOfBounds, this);
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
 }
 
-void Sys_AIControl::update(const float& deltaTime)
+void Sys_InvaderControl::update(const float& deltaTime)
 {
 	if (m_actorIds.empty()) return;
 	ActorManager* actorManager = m_systemManager->getActorManager();
@@ -52,15 +63,15 @@ void Sys_AIControl::update(const float& deltaTime)
 	{
 		Actor* invader = actorManager->getActor(id);
 		Comp_Position* posComp = invader->getComponent<Comp_Position>(CompType::Position);
-		Comp_AI* aiComp = invader->getComponent<Comp_AI>(CompType::AI);
-		Comp_Movable* moveComp = invader->getComponent<Comp_Movable>(CompType::Movable);
+		Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(CompType::Invader);
+		Comp_Movement* moveComp = invader->getComponent<Comp_Movement>(CompType::Movement);
 		Comp_Control* controlComp = invader->getComponent<Comp_Control>(CompType::Control);
 
 		// invader movement
-		aiComp->setTarget(aiComp->getTarget() + sf::Vector2f(m_movingRight ? m_targetSpeed : -m_targetSpeed, 0) * deltaTime);
+		aiComp->setTarget(aiComp->getTarget() + sf::Vector2f(m_movingRight ? controlComp->getMaxSpeed() : -controlComp->getMaxSpeed(), 0) * deltaTime);
 		sf::Vector2f direction = aiComp->getTarget() - posComp->getPosition();
 		controlComp->setMovementInput(direction);
-		moveComp->accelerate(controlComp->getMovementInput());
+		moveComp->accelerate(controlComp->getMovementDirection() * controlComp->getMaxAcceleration());
 
 		// check if invader is out of bounds
 		Comp_Collision* colComp = invader->getComponent<Comp_Collision>(CompType::Collision);
@@ -69,8 +80,8 @@ void Sys_AIControl::update(const float& deltaTime)
 		float resolve = 0;
 		if (aiComp->getTarget().x - invaderAABB.width / 2.f < 0)
 			resolve = -(aiComp->getTarget().x - invaderAABB.width / 2.f);
-		else if (aiComp->getTarget().x + invaderAABB.width / 2.f > m_viewSpace.getSize().x)
-			resolve = -(aiComp->getTarget().x + invaderAABB.width / 2.f - m_viewSpace.getSize().x);
+		else if (aiComp->getTarget().x + invaderAABB.width / 2.f > m_levelManager->getViewSpace().getSize().x)
+			resolve = -(aiComp->getTarget().x + invaderAABB.width / 2.f - m_levelManager->getViewSpace().getSize().x);
 		if (resolve != 0)
 		{
 			Message msg((MessageType)ActorMessageType::OutOfBounds);
@@ -83,18 +94,16 @@ void Sys_AIControl::update(const float& deltaTime)
 	}
 }
 
-void Sys_AIControl::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
+void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
 	if (!hasActor(actorId)) return;
 	switch (eventId)
 	{
 	case ActorEventType::Despawned:
-		removeActor(actorId);
-		if (m_actorIds.empty())
-			m_invadersDefeated.dispatch();
-		else
-			if (actorId == m_leftInvader || actorId == m_rightInvader)
-				selectTrackedInvaders();
+  		removeActor(actorId);
+		m_invaderDefeated.dispatch();
+		if (!m_actorIds.empty())
+			selectTrackedInvaders();
 		// increase speed
 		break;
 	case ActorEventType::CollidingOnX:
@@ -103,14 +112,14 @@ void Sys_AIControl::handleEvent(const ActorId& actorId, const ActorEventType& ev
 	}
 }
 
-void Sys_AIControl::debugOverlay(WindowManager* windowManager)
+void Sys_InvaderControl::debugOverlay(WindowManager* windowManager)
 {
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	sf::RenderWindow* window = windowManager->getRenderWindow();
 	for (auto& actorId : m_actorIds)
 	{
 		Actor* actor = actorManager->getActor(actorId);
-		Comp_AI* aiComp = actor->getComponent<Comp_AI>(CompType::AI);
+		Comp_Invader* aiComp = actor->getComponent<Comp_Invader>(CompType::Invader);
 		sf::CircleShape target(2.5f);
 		target.setOrigin(target.getRadius(), target.getRadius());
 		target.setFillColor(sf::Color::Red);
@@ -119,7 +128,7 @@ void Sys_AIControl::debugOverlay(WindowManager* windowManager)
 	}
 }
 
-void Sys_AIControl::notify(const Message& msg)
+void Sys_InvaderControl::notify(const Message& msg)
 {
 	if (!hasActor(msg.m_receiver)) return;
 	ActorMessageType msgType = (ActorMessageType)msg.m_type;
@@ -130,7 +139,7 @@ void Sys_AIControl::notify(const Message& msg)
 		for (auto& actorId : m_actorIds)
 		{
 			Actor* invader = m_systemManager->getActorManager()->getActor(actorId);
-			Comp_AI* aiComp = invader->getComponent<Comp_AI>(CompType::AI);
+			Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(CompType::Invader);
 			Comp_Collision* colComp = invader->getComponent<Comp_Collision>(CompType::Collision);
 			aiComp->setTarget(aiComp->getTarget() + sf::Vector2f(msg.m_xy.x, msg.m_xy.y + colComp->getAABB().height));
 		}
@@ -138,8 +147,9 @@ void Sys_AIControl::notify(const Message& msg)
 		break;
 		case ActorMessageType::Collision:
 		{
-			Actor* actor = m_systemManager->getActorManager()->getActor(msg.m_receiver);
-			Actor* other = m_systemManager->getActorManager()->getActor(msg.m_sender);
+			ActorManager* actorManager = m_systemManager->getActorManager();
+			Actor* actor = actorManager->getActor(msg.m_receiver);
+			Actor* other = actorManager->getActor(msg.m_sender);
 			if (other->getTag() == "player")
 			{
 				// player collided with invader
@@ -153,23 +163,24 @@ void Sys_AIControl::notify(const Message& msg)
 	}
 }
 
-void Sys_AIControl::setViewSpace(sf::FloatRect viewSpace)
+void Sys_InvaderControl::setLevelManager(LevelManager* levelManager)
 {
-	m_viewSpace = viewSpace;
+	m_levelManager = levelManager;
 }
 
-void Sys_AIControl::selectTrackedInvaders()
+void Sys_InvaderControl::selectTrackedInvaders()
 {
 	if (getActorCount() == 0) return;
-	float minX = m_viewSpace.getSize().x;
+	ActorManager* actorManager = m_systemManager->getActorManager();
+	float minX = m_levelManager->getViewSpace().getSize().x;
 	float maxX = 0.f;
 	m_leftInvader = -1;
 	m_rightInvader = -1;
 	for (auto& actorId : m_actorIds)
 	{
-		Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
+		Actor* actor = actorManager->getActor(actorId);
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
-		Comp_Sprite* sprite = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Sprite>(CompType::Sprite);
+		Comp_Sprite* sprite = actor->getComponent<Comp_Sprite>(CompType::Sprite);
 		if (sprite) sprite->setColor(sprite->getDefaultColor());
 		if (posComp->getPosition().x < minX)
 		{
@@ -182,8 +193,8 @@ void Sys_AIControl::selectTrackedInvaders()
 			maxX = posComp->getPosition().x;
 		}
 	}
-	Comp_Sprite* leftSprite = m_systemManager->getActorManager()->getActor(m_leftInvader)->getComponent<Comp_Sprite>(CompType::Sprite);
+	Comp_Sprite* leftSprite = actorManager->getActor(m_leftInvader)->getComponent<Comp_Sprite>(CompType::Sprite);
 	if (leftSprite) leftSprite->setColor(sf::Color::Red);
-	Comp_Sprite* rightSprite = m_systemManager->getActorManager()->getActor(m_rightInvader)->getComponent<Comp_Sprite>(CompType::Sprite);
+	Comp_Sprite* rightSprite = actorManager->getActor(m_rightInvader)->getComponent<Comp_Sprite>(CompType::Sprite);
 	if (rightSprite) rightSprite->setColor(sf::Color::Red);
 }
