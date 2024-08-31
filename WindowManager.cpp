@@ -6,8 +6,8 @@ WindowManager::WindowManager(const std::string& title, const sf::Vector2u& size)
 	m_windowSize = size;
 	m_isFullscreen = true;
 	m_isOpen = true;
-	m_hudView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
-	m_gameplayView.setViewport(sf::FloatRect(0.2f, 0.f, 0.6f, 1.f));
+	m_hudView.setViewport(sf::FloatRect(0, 0, 1, 1));
+	m_gameplayView.setViewport(sf::FloatRect(0.15f, 0, 0.7f, 1));
 	createWindow();
 	m_controller.setWindowManager(this);
 	m_controller.m_onEscape.addCallback("WindowManager_closeWindow", std::bind(&WindowManager::closeWindow, this));
@@ -40,7 +40,7 @@ void WindowManager::update()
 
 void WindowManager::drawStart()
 {
-	m_window.clear(sf::Color(0, 50, 50, 255));
+	m_window.clear();
 	m_window.setView(m_gameplayView);
 }
 

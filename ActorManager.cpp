@@ -13,6 +13,7 @@ ActorManager::ActorManager(SysManager* systemManager) :
 	addComponentType<Comp_Player>(CompType::Player);
 	addComponentType<Comp_Invader>(CompType::Invader);
 	addComponentType<Comp_Bullet>(CompType::Bullet);
+	addComponentType<Comp_Bullet>(CompType::Bunker);
 }
 
 ActorManager::~ActorManager()

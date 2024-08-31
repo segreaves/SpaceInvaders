@@ -8,7 +8,7 @@ enum class SystemType
 	PlayerControl,
 	State,
 	Animation,
-	AIControl,
-	Bounds,
-	BulletControl
+	InvaderControl,
+	BulletControl,
+	BunkerDegradation
 };

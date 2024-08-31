@@ -35,6 +35,27 @@ void LevelManager::setInvaderSpawnPoints(const sf::Vector2f& invaderSize)
 	}
 }
 
+std::vector<sf::Vector2f> LevelManager::getBunkerSpawnPoints()
+{
+	return m_bunkerSpawnPoints;
+}
+
+void LevelManager::setBunkerSpawnPoints()
+{
+	m_bunkerSpawnPoints.clear();
+	float bunkerSpacing = m_viewSpace.width / (m_nBunkers + 1);
+	float gridWidth = m_nBunkers * bunkerSpacing;
+	m_bunkerSpawnPoints = getGridFormation(1, m_nBunkers, bunkerSpacing, 0, 0);
+	float topBuffer = m_viewSpace.height * 0.8;
+	for (int i = 0; i < m_bunkerSpawnPoints.size(); i++)
+	{
+		// center the formation in the view space
+		m_bunkerSpawnPoints[i].x += m_viewSpace.width / 2.f - gridWidth / 2.f + bunkerSpacing / 2.f;
+		// move the formation down on the view space
+		m_bunkerSpawnPoints[i].y += topBuffer;
+	}
+}
+
 sf::Vector2f LevelManager::getPlayerSpawnPoint() const
 {
 	return sf::Vector2f(m_viewSpace.left + m_viewSpace.width / 2.f, m_viewSpace.top + m_viewSpace.height * 0.9f);
@@ -72,6 +93,8 @@ void LevelManager::loadProfiles(const std::string& path)
 			ss >> m_invaderPath;
 		else if (type == "bullet")
 			ss >> m_bulletPath;
+		else if (type == "bunker")
+			ss >> m_bunkerPath;
 		else
 			std::cerr << "Unknown type: " << type << std::endl;
 	}
@@ -80,9 +103,10 @@ void LevelManager::loadProfiles(const std::string& path)
 	std::cout << "Player path: " << m_playerPath << std::endl;
 	std::cout << "Invader path: " << m_invaderPath << std::endl;
 	std::cout << "Bullet path: " << m_bulletPath << std::endl;
+	std::cout << "Bunker path: " << m_bunkerPath << std::endl;
 }
 
-std::vector<sf::Vector2f> LevelManager::getGridFormation(unsigned int rows, unsigned int cols, float invaderSizeX, float invaderSizeY, float padding)
+std::vector<sf::Vector2f> LevelManager::getGridFormation(unsigned int rows, unsigned int cols, float deltaX, float deltaY, float padding)
 {
 	std::vector<sf::Vector2f> formationPoints;
 	formationPoints.reserve(rows * cols);
@@ -90,8 +114,8 @@ std::vector<sf::Vector2f> LevelManager::getGridFormation(unsigned int rows, unsi
 	{
 		for (int col = 0; col < cols; col++)
 		{
-			float x = (invaderSizeX + padding) * col;
-			float y = (invaderSizeY + padding) * row;
+			float x = (deltaX + padding) * col;
+			float y = (deltaY + padding) * row;
 			formationPoints.emplace_back(sf::Vector2f(x, y));
 		}
 	}

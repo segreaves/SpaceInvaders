@@ -7,6 +7,7 @@
 #include "Sys_Collision.h"
 #include "Sys_InvaderControl.h"
 #include "Sys_BulletControl.h"
+#include "Sys_BunkerDegradation.h"
 #include "MessageHandler.h"
 #include <map>
 #include <queue>

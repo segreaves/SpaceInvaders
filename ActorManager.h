@@ -9,6 +9,7 @@
 #include "Comp_Bullet.h"
 #include "Comp_Movement.h"
 #include "Comp_Collision.h"
+#include "Comp_Bunker.h"
 #include "ActorEventType.h"
 #include <functional>
 

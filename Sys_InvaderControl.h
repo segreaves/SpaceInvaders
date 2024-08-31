@@ -30,6 +30,7 @@ private:
 
 	LevelManager* m_levelManager;
 	bool m_movingRight;
+	const float m_maxTargetDistance = 50.0f;
 	ActorId m_leftInvader;
 	ActorId m_rightInvader;
 };

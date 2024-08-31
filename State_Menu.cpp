@@ -1,6 +1,6 @@
 #include "State_Menu.h"
 #include "StateManager.h"
-#include "Utilities.h"
+#include "Utils.h"
 
 State_Menu::State_Menu(StateManager* stateManager) :
 	State(stateManager)
@@ -25,7 +25,7 @@ void State_Menu::draw()
 
 void State_Menu::onCreate()
 {
-	m_font.loadFromFile(Utilities::getWorkingDirectory() + "assets/fonts/game_over.ttf");
+	m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
 	m_text.setFont(m_font);
 	m_text.setString({ "Menu" });
 	m_text.setCharacterSize(150);

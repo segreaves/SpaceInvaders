@@ -25,6 +25,7 @@ private:
 	void createPlayer();
 	void createBullets(unsigned int maxBullets);
 	void createInvaders();
+	void createBunkers();
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();
 	void incrementBullet();
@@ -33,17 +34,19 @@ private:
 	void updateHUD();
 	void drawHUD();
 	void setHUDStyle();
+	void setWindowOutline();
 
 	int m_playerId;
-	const sf::Vector2f m_playerSize = sf::Vector2f(50, 35);
+	const sf::Vector2f m_playerSize = sf::Vector2f(40, 35);
 	const sf::Vector2f m_bulletSize = sf::Vector2f(3, 15);
-	const sf::Vector2f m_invaderSize = sf::Vector2f(50, 35);
+	const sf::Vector2f m_invaderSize = sf::Vector2f(40, 35);
 	std::vector<ActorId> m_bullets;
 	std::vector<ActorId> m_invaders;
 	unsigned int m_remainingInvaders;
 	unsigned int m_bulletIndex;
 	LevelManager m_levelManager;
 	unsigned int m_kills;
+	sf::RectangleShape m_background;
 	// HUD elements
 	unsigned int m_fontSize = 50;
 	unsigned int m_hudPadding = 10;

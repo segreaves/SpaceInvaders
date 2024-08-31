@@ -10,5 +10,6 @@ enum class CompType
 	Collision,
 	Player,
 	Invader,
-	Bullet
+	Bullet,
+	Bunker
 };

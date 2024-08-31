@@ -70,7 +70,7 @@ void Sys_InvaderControl::update(const float& deltaTime)
 		// invader movement
 		aiComp->setTarget(aiComp->getTarget() + sf::Vector2f(m_movingRight ? controlComp->getMaxSpeed() : -controlComp->getMaxSpeed(), 0) * deltaTime);
 		sf::Vector2f direction = aiComp->getTarget() - posComp->getPosition();
-		controlComp->setMovementInput(direction);
+		controlComp->setMovementInput(direction / m_maxTargetDistance);
 		moveComp->accelerate(controlComp->getMovementDirection() * controlComp->getMaxAcceleration());
 
 		// check if invader is out of bounds
@@ -103,8 +103,16 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
   		removeActor(actorId);
 		m_invaderDefeated.dispatch();
 		if (!m_actorIds.empty())
+		{
 			selectTrackedInvaders();
-		// increase speed
+			ActorManager* actorManager = m_systemManager->getActorManager();
+			for (auto& id : m_actorIds)
+			{
+				Actor* invader = actorManager->getActor(id);
+				Comp_Control* controlComp = invader->getComponent<Comp_Control>(CompType::Control);
+				controlComp->setMaxSpeed(controlComp->getMaxSpeed() + m_levelManager->getDefeatSpeedIncrease());
+			}
+		}
 		break;
 	case ActorEventType::CollidingOnX:
 		m_movingRight = !m_movingRight;

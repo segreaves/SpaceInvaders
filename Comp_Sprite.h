@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Comp.h"
-#include <iostream>
+#include "Utils.h"
 
 class Comp_Sprite : public Comp
 {
@@ -9,6 +9,8 @@ public:
 	Comp_Sprite() :
 		Comp()
 	{
+		m_texture.loadFromFile(Utils::getWorkingDirectory() + "/assets/graphics/green_square.png");
+		m_sprite.setTexture(m_texture);
 		m_shape.setFillColor(m_defaultColor);
 		m_shape.setSize(sf::Vector2f(50.f, 50.f));
 		m_shape.setOrigin(m_shape.getSize() / 2.f);
@@ -55,6 +57,11 @@ public:
 		return m_shape.getSize();
 	}
 
+	sf::Sprite* getSprite()
+	{
+		return &m_sprite;
+	}
+
 	sf::FloatRect getDrawableBounds()
 	{
 		sf::Vector2f pos = getPosition();
@@ -63,5 +70,7 @@ public:
 	}
 private:
 	sf::RectangleShape m_shape;
+	sf::Texture m_texture;
+	sf::Sprite m_sprite;
 	const sf::Color m_defaultColor = sf::Color::White;
 };

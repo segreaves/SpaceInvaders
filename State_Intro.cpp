@@ -1,6 +1,6 @@
 #include "State_Intro.h"
 #include "StateManager.h"
-#include "Utilities.h"
+#include "Utils.h"
 
 State_Intro::State_Intro(StateManager* stateManager) :
 	State(stateManager) {}
@@ -21,7 +21,7 @@ void State_Intro::draw()
 
 void State_Intro::onCreate()
 {
-	m_font.loadFromFile(Utilities::getWorkingDirectory() + "assets/fonts/game_over.ttf");
+	m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
 	m_text.setFont(m_font);
 	m_text.setString({ "SPACE INVADERS" });
 	m_text.setCharacterSize(150);
