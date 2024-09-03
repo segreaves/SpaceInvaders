@@ -4,6 +4,7 @@
 #include "StateManager.h"
 #include "SysManager.h"
 #include "ActorManager.h"
+#include "TextureManager.h"
 
 class Engine
 {
@@ -23,4 +24,5 @@ private:
 	StateManager m_stateManager;
 	SysManager m_systemManager;
 	ActorManager m_entityManager;
+	TextureManager m_textureManager;
 };

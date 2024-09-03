@@ -5,6 +5,10 @@
 class Comp_Invader : public Comp
 {
 public:
+	void load(std::stringstream& ss) override
+	{
+	}
+
 	void setTarget(sf::Vector2f target)
 	{
 		m_target = target;

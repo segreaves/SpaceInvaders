@@ -36,15 +36,14 @@ private:
 	void setHUDStyle();
 	void setWindowOutline();
 
-	int m_playerId;
 	const sf::Vector2f m_playerSize = sf::Vector2f(40, 35);
 	const sf::Vector2f m_bulletSize = sf::Vector2f(3, 15);
 	const sf::Vector2f m_invaderSize = sf::Vector2f(40, 35);
 	std::vector<ActorId> m_bullets;
-	std::vector<ActorId> m_invaders;
 	unsigned int m_remainingInvaders;
 	unsigned int m_bulletIndex;
 	LevelManager m_levelManager;
+	unsigned int m_fps;
 	unsigned int m_kills;
 	sf::RectangleShape m_background;
 	// HUD elements
@@ -54,5 +53,6 @@ private:
 	sf::Text m_levelText;
 	sf::Text m_livesText;
 	sf::Text m_killsText;
+	sf::Text m_fpsText;
 	sf::Font m_font;
 };

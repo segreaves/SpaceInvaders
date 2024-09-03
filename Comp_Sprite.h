@@ -6,24 +6,23 @@
 class Comp_Sprite : public Comp
 {
 public:
-	Comp_Sprite() :
-		Comp()
+	void load(std::stringstream& ss) override
 	{
-		m_texture.loadFromFile(Utils::getWorkingDirectory() + "/assets/graphics/green_square.png");
+		std::string texturePath;
+		ss >> texturePath >> m_scale.x >> m_scale.y;
+		if (!m_texture.loadFromFile(Utils::getWorkingDirectory() + texturePath))
+		{
+			std::cerr << "LevelManager failed to load texture: " << texturePath << std::endl;
+			return;
+		}
 		m_sprite.setTexture(m_texture);
-		m_shape.setFillColor(m_defaultColor);
-		m_shape.setSize(sf::Vector2f(50.f, 50.f));
-		m_shape.setOrigin(m_shape.getSize() / 2.f);
+		m_sprite.setOrigin(m_texture.getSize().x / 2.f, m_texture.getSize().y / 2.f);
+		m_sprite.setScale(m_scale.x, m_scale.y);
 	}
-
-	~Comp_Sprite() {}
-
-	void awake() override {}
-	void onDestroy() override {}
 
 	void draw(sf::RenderWindow* window)
 	{
-		window->draw(m_shape);
+		window->draw(m_sprite);
 	}
 
 	sf::Color getDefaultColor() const
@@ -33,28 +32,27 @@ public:
 
 	void setColor(const sf::Color& color)
 	{
-		m_shape.setFillColor(color);
+		m_sprite.setColor(color);
 	}
 
 	void setPosition(const sf::Vector2f& pos)
 	{
-		m_shape.setPosition(pos);
+		m_sprite.setPosition(pos);
 	}
 
 	sf::Vector2f getPosition() const
 	{
-		return m_shape.getPosition();
+		return m_sprite.getPosition();
 	}
 
-	void setSize(const sf::Vector2f& size)
+	void setScale(const sf::Vector2f& scale)
 	{
-		m_shape.setSize(size);
-		m_shape.setOrigin(m_shape.getSize() / 2.f);
+		m_sprite.setScale(scale);
 	}
 
 	sf::Vector2f getSize() const
 	{
-		return m_shape.getSize();
+		return sf::Vector2f(m_sprite.getGlobalBounds().width, m_sprite.getGlobalBounds().height);
 	}
 
 	sf::Sprite* getSprite()
@@ -69,8 +67,8 @@ public:
 		return sf::FloatRect(pos.x - size.x / 2.f, pos.y - size.y / 2.f, size.x, size.y);
 	}
 private:
-	sf::RectangleShape m_shape;
 	sf::Texture m_texture;
 	sf::Sprite m_sprite;
+	sf::Vector2f m_scale = sf::Vector2f(1, 1);
 	const sf::Color m_defaultColor = sf::Color::White;
 };

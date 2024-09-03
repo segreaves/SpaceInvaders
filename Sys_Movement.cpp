@@ -20,8 +20,8 @@ void Sys_Movement::start()
 
 void Sys_Movement::setupRequirements()
 {
-	m_requirements.set((unsigned int)CompType::Position);
-	m_requirements.set((unsigned int)CompType::Movement);
+	m_requirements.set((unsigned int)ComponentType::Position);
+	m_requirements.set((unsigned int)ComponentType::Movement);
 }
 
 void Sys_Movement::subscribeToChannels()
@@ -48,7 +48,7 @@ void Sys_Movement::handleEvent(const ActorId& actorId, const ActorEventType& eve
 		removeActor(actorId);
 		break;
 	case ActorEventType::CollidingOnX:
-		Comp_Movement* moveComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Movement>(CompType::Movement);
+		Comp_Movement* moveComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
 		moveComp->setVelocity(0, moveComp->getVelocity().y);
 		moveComp->setAcceleration(0, moveComp->getAcceleration().y);
 		break;
@@ -66,8 +66,8 @@ void Sys_Movement::notify(const Message& msg)
 void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
 {
 	Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
-	Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
-	Comp_Movement* moveComp = actor->getComponent<Comp_Movement>(CompType::Movement);
+	Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+	Comp_Movement* moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
 	sf::Vector2f acceleration = sf::Vector2f(
 		moveComp->getAcceleration().x * !moveComp->getCollidingOnX(),
 		moveComp->getAcceleration().y * !moveComp->getCollidingOnY());

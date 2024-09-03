@@ -21,8 +21,8 @@ void Sys_Renderer::update(const float& deltaTime)
 	for (auto& id : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
-		Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
-		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(CompType::Sprite);
+		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
 		spriteComp->setPosition(posComp->getPosition());
 	}
 }
@@ -43,8 +43,8 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 	for (auto& id : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
-		Comp_Position* posComp = actor->getComponent<Comp_Position>(CompType::Position);
-		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(CompType::Sprite);
+		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
 		// culling
 		sf::FloatRect view = windowManager->getViewSpace();
 		if (view.intersects(spriteComp->getDrawableBounds()))
@@ -66,8 +66,8 @@ void Sys_Renderer::start()
 
 void Sys_Renderer::setupRequirements()
 {
-	m_requirements.set((unsigned int)CompType::Position);
-	m_requirements.set((unsigned int)CompType::Sprite);
+	m_requirements.set((unsigned int)ComponentType::Position);
+	m_requirements.set((unsigned int)ComponentType::Sprite);
 }
 
 void Sys_Renderer::subscribeToChannels()

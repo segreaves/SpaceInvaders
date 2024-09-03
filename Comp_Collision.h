@@ -5,9 +5,9 @@
 class Comp_Collision : public Comp
 {
 public:
-	Comp_Collision() :
-		Comp()
+	void load(std::stringstream& ss) override
 	{
+		ss >> m_AABB.width >> m_AABB.height;
 	}
 
 	void setPosition(const sf::Vector2f& pos)

@@ -1,6 +1,6 @@
 #pragma once
 
-enum class CompType
+enum class ComponentType
 {
 	Position = 0,
 	Sprite,

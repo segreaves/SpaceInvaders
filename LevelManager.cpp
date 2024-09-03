@@ -5,13 +5,101 @@
 #include <sstream>
 
 LevelManager::LevelManager() :
-	m_level(0)
+	m_level(0),
+	m_playerId(-1)
 {
-	loadProfiles("assets/game_data.dat");
 }
 
 LevelManager::~LevelManager()
 {
+}
+
+void LevelManager::loadActorProfile(const std::string actorName)
+{
+	std::string fullPath = Utils::getWorkingDirectory() + "assets/profiles/" + actorName + ".dat";
+	//std::cout << "loadActorProfile at: " << fullPath << std::endl;
+	std::fstream file;
+	file.open(fullPath);
+	if (!file.is_open())
+	{
+		std::cerr << "LevelManager failed to open file: " << fullPath << std::endl;
+		return;
+	}
+	ActorManager* actorManager = m_context->m_actorManager;
+	unsigned int actorId = actorManager->initializeActor(actorName);
+	Actor* actor = actorManager->getActor(actorId);
+	std::string line;
+	while (getline(file, line))
+	{
+		std::stringstream ss(line);
+		std::string attr;
+		ss >> attr;
+		if (line[0] == '#') continue;
+		if (attr == "Position")
+		{
+			actorManager->addComponent(actorId, ComponentType::Position);
+			Comp_Position* pos = actor->getComponent<Comp_Position>(ComponentType::Position);
+			ss >> *pos;
+		}
+		else if (attr == "Sprite")
+		{
+			actorManager->addComponent(actorId, ComponentType::Sprite);
+			Comp_Sprite* sprite = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
+			ss >> *sprite;
+		}
+		else if (attr == "State")
+		{
+			//actorManager->addComponent(actorId, ComponentType::State);
+			//Comp_State* state = actor->getComponent<Comp_State>(ComponentType::State);
+		}
+		else if (attr == "Movement")
+		{
+			actorManager->addComponent(actorId, ComponentType::Movement);
+			Comp_Movement* movement = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+			ss >> *movement;
+		}
+		else if (attr == "Control")
+		{
+			actorManager->addComponent(actorId, ComponentType::Control);
+			Comp_Control* control = actor->getComponent<Comp_Control>(ComponentType::Control);
+			ss >> *control;
+		}
+		else if (attr == "Collision")
+		{
+			actorManager->addComponent(actorId, ComponentType::Collision);
+			Comp_Collision* collision = actor->getComponent<Comp_Collision>(ComponentType::Collision);
+			ss >> *collision;
+		}
+		else if (attr == "Player")
+		{
+			actorManager->addComponent(actorId, ComponentType::Player);
+			Comp_Player* player = actor->getComponent<Comp_Player>(ComponentType::Player);
+			ss >> *player;
+			m_playerId = actorId;
+		}
+		else if (attr == "Invader")
+		{
+			actorManager->addComponent(actorId, ComponentType::Invader);
+			Comp_Invader* invader = actor->getComponent<Comp_Invader>(ComponentType::Invader);
+			m_invaders.push_back(actorId);
+			ss >> *invader;
+		}
+		else if (attr == "Bullet")
+		{
+			actorManager->addComponent(actorId, ComponentType::Bullet);
+			Comp_Bullet* bullet = actor->getComponent<Comp_Bullet>(ComponentType::Bullet);
+			ss >> *bullet;
+		}
+		else if (attr == "Bunker")
+		{
+			actorManager->addComponent(actorId, ComponentType::Bunker);
+			Comp_Bunker* bunker = actor->getComponent<Comp_Bunker>(ComponentType::Bunker);
+			ss >> *bunker;
+		}
+		else
+			std::cerr << "Unknown attribute: " << attr << std::endl;
+	}
+	file.close();
 }
 
 std::vector<sf::Vector2f> LevelManager::getInvaderSpawnPoints()
@@ -64,46 +152,6 @@ sf::Vector2f LevelManager::getPlayerSpawnPoint() const
 void LevelManager::setViewSpace(sf::FloatRect viewSpace)
 {
 	m_viewSpace = viewSpace;
-}
-
-void LevelManager::loadProfiles(const std::string& path)
-{
-	// create file stream
-	std::fstream file;
-	// open file
-	file.open(Utils::getWorkingDirectory() + path);
-	// if file is not open
-	if (!file.is_open())
-	{
-		// print error message
-		std::cerr << "Failed to open file: " << path << std::endl;
-	}
-	// create string line
-	std::string line;
-	// while getline from file stream
-	while (getline(file, line))
-	{
-		// parse line
-		std::stringstream ss(line);
-		std::string type;
-		ss >> type;
-		if (type == "player")
-			ss >> m_playerPath;
-		else if (type == "invader")
-			ss >> m_invaderPath;
-		else if (type == "bullet")
-			ss >> m_bulletPath;
-		else if (type == "bunker")
-			ss >> m_bunkerPath;
-		else
-			std::cerr << "Unknown type: " << type << std::endl;
-	}
-	// close file
-	file.close();
-	std::cout << "Player path: " << m_playerPath << std::endl;
-	std::cout << "Invader path: " << m_invaderPath << std::endl;
-	std::cout << "Bullet path: " << m_bulletPath << std::endl;
-	std::cout << "Bunker path: " << m_bunkerPath << std::endl;
 }
 
 std::vector<sf::Vector2f> LevelManager::getGridFormation(unsigned int rows, unsigned int cols, float deltaX, float deltaY, float padding)

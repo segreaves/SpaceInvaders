@@ -11,6 +11,7 @@
 #include "Comp_Collision.h"
 #include "Comp_Bunker.h"
 #include "ActorEventType.h"
+#include "TextureManager.h"
 #include <functional>
 
 class SysManager;
@@ -20,10 +21,12 @@ using ActorId = unsigned int;
 class ActorManager
 {
 public:
-	ActorManager(SysManager* systemManager);
+	ActorManager(SysManager* systemManager, TextureManager* textureManager);
 	~ActorManager();
 
 	int createActor(Bitmask components, std::string tag);
+	int initializeActor(std::string tag);
+	void addComponent(const ActorId& id, ComponentType compType);
 	bool destroyActor(ActorId id);
 	void destroyAllActors();
 	void enableActor(const ActorId& id);
@@ -34,13 +37,14 @@ public:
 	Actor* getActor(const ActorId& id);
 
 	template<class T>
-	void addComponentType(CompType compType)
+	void addComponentType(ComponentType compType)
 	{
 		m_componentFactory[compType] = []()->Comp* { return new T(); };
 	}
 private:
 	unsigned int m_idCounter;
 	std::unordered_map<ActorId, Actor*> m_actors;
-	std::unordered_map<CompType, std::function<Comp* (void)>> m_componentFactory;
+	std::unordered_map<ComponentType, std::function<Comp* (void)>> m_componentFactory;
 	SysManager* m_systemManager;
+	TextureManager* m_textureManager;
 };

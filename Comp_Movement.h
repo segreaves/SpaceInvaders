@@ -6,6 +6,10 @@
 class Comp_Movement : public Comp
 {
 public:
+	void load(std::stringstream& ss) override
+	{
+	}
+
 	const sf::Vector2f& getVelocity() const { return m_velocity; }
 
 	void setVelocity(const sf::Vector2f& velocity)

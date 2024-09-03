@@ -1,0 +1,4 @@
+PlayerSprite assets/graphics/playership.png
+InvaderSprite assets/graphics/invader1.png
+BulletSprite assets/graphics/bullet.png
+BunkerSprite assets/graphics/green_square.png

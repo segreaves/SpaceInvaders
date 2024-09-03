@@ -8,7 +8,7 @@ public:
 	WindowManager(const std::string& title, const sf::Vector2u& size);
 	~WindowManager();
 
-	void update();
+	void update(float deltaTime);
 	void drawStart();
 	void drawToGameplayView(sf::Drawable& drawable);
 	void drawToHudView(sf::Drawable& drawable);

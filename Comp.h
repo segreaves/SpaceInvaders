@@ -1,19 +1,15 @@
 #pragma once
-#include "CompType.h"
+#include "ComponentType.h"
+#include <sstream>
 
 class Comp
 {
 public:
-	Comp()
-	{
-		awake();
-	}
+	virtual void load(std::stringstream& ss) = 0;
 
-	~Comp()
+	friend std::stringstream& operator >>(std::stringstream& ss, Comp& comp)
 	{
-		onDestroy();
+		comp.load(ss);
+		return ss;
 	}
-
-	virtual void awake() {};
-	virtual void onDestroy() {};
 };

@@ -1,5 +1,6 @@
 #include "Controller.h"
 #include "WindowManager.h"
+#include <iostream>
 
 Controller::Controller() :
 	m_windowManager(nullptr),
@@ -7,29 +8,11 @@ Controller::Controller() :
 {
 }
 
-void Controller::update()
+void Controller::update(float deltaTime)
 {
-	sf::Vector2f movementInput(0.f, 0.f);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		movementInput += sf::Vector2f(-1.f, 0.f);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		movementInput += sf::Vector2f(1.f, 0.f);
-	if (sf::Joystick::isConnected(0))
-	{
-		float deadZone = 10.f;
-		float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
-		sf::Vector2f joystickXY(x, 0);
-		if (abs(x) <= deadZone)
-			joystickXY.x = 0.f;
-		else
-			joystickXY.x = x / 100.f;
-		movementInput += joystickXY;
-	}
-	int mouseX = sf::Mouse::getPosition(*m_windowManager->getRenderWindow()).x;
-	sf::Vector2f windowSize = sf::Vector2f(m_windowManager->getWindowSize());
-	sf::Vector2i screenCenter(windowSize.x / 2, windowSize.y / 2);
-	movementInput += m_mouseSensitivity * sf::Vector2f(mouseX - screenCenter.x, 0);
-	m_onMove.dispatch(movementInput);
+	// set mouse to center of screen
+	sf::RenderWindow* window = m_windowManager->getRenderWindow();
+	sf::Mouse::setPosition(sf::Vector2i(window->getSize().x / 2, window->getSize().y / 2), *window);
 }
 
 void Controller::handleEvent(sf::Event event)
@@ -45,6 +28,11 @@ void Controller::handleEvent(sf::Event event)
 		else if (event.key.code == sf::Keyboard::F5)
 			m_onToggleFullscreen.dispatch();
 	}
+	else if (event.type == sf::Event::MouseMoved)
+	{
+		float moveAmount = event.mouseMove.x - m_screenCenter.x;
+		m_onMove.dispatch(m_mouseSensitivity * sf::Vector2f(moveAmount, 0));
+	}
 	else if (event.type == sf::Event::MouseButtonPressed)
 	{
 		if (event.mouseButton.button == sf::Mouse::Left)
@@ -55,6 +43,8 @@ void Controller::handleEvent(sf::Event event)
 void Controller::setWindowManager(WindowManager* windowManager)
 {
 	m_windowManager = windowManager;
+	sf::Vector2f windowSize = sf::Vector2f(m_windowManager->getWindowSize());
+	m_screenCenter = sf::Vector2f(windowSize.x / 2, windowSize.y / 2);
 }
 
 bool Controller::setFocus(const bool& focus)

@@ -1,19 +1,20 @@
 #include "ActorManager.h"
 #include "SysManager.h"
 
-ActorManager::ActorManager(SysManager* systemManager) :
+ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureManager) :
 	m_systemManager(systemManager),
+	m_textureManager(textureManager),
 	m_idCounter(0)
 {
-	addComponentType<Comp_Position>(CompType::Position);
-	addComponentType<Comp_Sprite>(CompType::Sprite);
-	addComponentType<Comp_Movement>(CompType::Movement);
-	addComponentType<Comp_Control>(CompType::Control);
-	addComponentType<Comp_Collision>(CompType::Collision);
-	addComponentType<Comp_Player>(CompType::Player);
-	addComponentType<Comp_Invader>(CompType::Invader);
-	addComponentType<Comp_Bullet>(CompType::Bullet);
-	addComponentType<Comp_Bullet>(CompType::Bunker);
+	addComponentType<Comp_Position>(ComponentType::Position);
+	addComponentType<Comp_Sprite>(ComponentType::Sprite);
+	addComponentType<Comp_Movement>(ComponentType::Movement);
+	addComponentType<Comp_Control>(ComponentType::Control);
+	addComponentType<Comp_Collision>(ComponentType::Collision);
+	addComponentType<Comp_Player>(ComponentType::Player);
+	addComponentType<Comp_Invader>(ComponentType::Invader);
+	addComponentType<Comp_Bullet>(ComponentType::Bullet);
+	addComponentType<Comp_Bullet>(ComponentType::Bunker);
 }
 
 ActorManager::~ActorManager()
@@ -28,7 +29,7 @@ int ActorManager::createActor(Bitmask components, std::string tag)
 	{
 		if (components.test(i))
 		{
-			CompType compType = (CompType)i;
+			ComponentType compType = (ComponentType)i;
 			auto factory = m_componentFactory.find(compType);
 			if (factory == m_componentFactory.end())
 			{
@@ -48,6 +49,36 @@ int ActorManager::createActor(Bitmask components, std::string tag)
 	disableActor(m_idCounter);
 	
 	return m_idCounter++;
+}
+
+int ActorManager::initializeActor(std::string tag)
+{
+	Actor* actor = new Actor(m_idCounter, tag);
+	if (!m_actors.emplace(m_idCounter, actor).second)
+	{
+		std::cout << "! Error: ActorManager::initializeActor() failed to add new actor." << std::endl;
+		delete actor;
+		return -1;
+	}
+	disableActor(m_idCounter);
+	return m_idCounter++;
+}
+
+void ActorManager::addComponent(const ActorId& id, ComponentType compType)
+{
+	auto it = m_actors.find(id);
+	if (it == m_actors.end())
+	{
+		std::cout << "! Error: ActorManager::addComponent() actor with id " << id << " not found." << std::endl;
+		return;
+	}
+	auto factory = m_componentFactory.find(compType);
+	if (factory == m_componentFactory.end())
+	{
+		std::cout << "! Error: ActorManager::addComponent() component factory element " << (unsigned int)compType << " not found." << std::endl;
+		return;
+	}
+	it->second->addComponent(compType, factory->second());
 }
 
 bool ActorManager::destroyActor(ActorId id)

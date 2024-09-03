@@ -5,10 +5,16 @@
 class Comp_Control : public Comp
 {
 public:
+	void load(std::stringstream& ss) override
+	{
+		ss >> m_maxSpeed;
+		ss >> m_maxAcceleration;
+	}
+
 	void setMovementInput(const sf::Vector2f& movementInput)
 	{
 		m_movementInput = m_movementDirection = movementInput;
-		float magnitude = sqrt(pow(movementInput.x, 2) + pow(movementInput.y, 2));
+		float magnitude = sqrt(pow(m_movementDirection.x, 2) + pow(m_movementDirection.y, 2));
 		if (magnitude > 1)
 		{
 			m_movementDirection.x /= magnitude;

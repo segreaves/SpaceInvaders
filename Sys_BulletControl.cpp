@@ -20,23 +20,21 @@ void Sys_BulletControl::start()
 
 void Sys_BulletControl::setupRequirements()
 {
-	m_requirements.set((unsigned int)CompType::Position);
-	m_requirements.set((unsigned int)CompType::Movement);
-	m_requirements.set((unsigned int)CompType::Collision);
-	m_requirements.set((unsigned int)CompType::Sprite);
-	m_requirements.set((unsigned int)CompType::Bullet);
+	m_requirements.set((unsigned int)ComponentType::Position);
+	m_requirements.set((unsigned int)ComponentType::Movement);
+	m_requirements.set((unsigned int)ComponentType::Collision);
+	m_requirements.set((unsigned int)ComponentType::Sprite);
+	m_requirements.set((unsigned int)ComponentType::Bullet);
 }
 
 void Sys_BulletControl::subscribeToChannels()
 {
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Shoot, this);
-	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
 }
 
 void Sys_BulletControl::unsubscribeFromChannels()
 {
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Shoot, this);
-	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
 }
 
 void Sys_BulletControl::update(const float& deltaTime)
@@ -47,7 +45,7 @@ void Sys_BulletControl::update(const float& deltaTime)
 	{
 		Actor* bullet = actorManager->getActor(id);
 		// no need to update bullet movement as their velocity is constant and set up on creation
-		Comp_Collision* colComp = bullet->getComponent<Comp_Collision>(CompType::Collision);
+		Comp_Collision* colComp = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
 		sf::FloatRect bulletAABB = colComp->getAABB();
 		// check if bullet is out of bounds
 		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_levelManager->getViewSpace().getSize().y)
@@ -79,10 +77,6 @@ void Sys_BulletControl::notify(const Message& msg)
 			if (hasActor(msg.m_receiver))
 				shoot(msg.m_sender, msg.m_receiver, sf::Vector2f(msg.m_xy.x, msg.m_xy.y));
 			break;
-		case ActorMessageType::Collision:
-			if (hasActor(msg.m_receiver))
-				m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
-			break;
 	}
 }
 
@@ -96,20 +90,19 @@ void Sys_BulletControl::shoot(const ActorId& shooterId, const ActorId& bulletId,
 	if (m_actorIds.empty()) return;
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	Actor* shooter = actorManager->getActor(shooterId);
-	Comp_Position* shooterPos = shooter->getComponent<Comp_Position>(CompType::Position);
-	Comp_Collision* shooterCol = shooter->getComponent<Comp_Collision>(CompType::Collision);
-	Comp_Player* playerComp = shooter->getComponent<Comp_Player>(CompType::Player);
+	Comp_Position* shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
+	Comp_Collision* shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
 
 	Actor* bullet = actorManager->getActor(bulletId);
-	Comp_Position* bulletPos = bullet->getComponent<Comp_Position>(CompType::Position);
-	Comp_Collision* bulletCol = bullet->getComponent<Comp_Collision>(CompType::Collision);
+	Comp_Position* bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
+	Comp_Collision* bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
 	bulletPos->setPosition(shooterPos->getPosition() +
 		direction * (bulletCol->getAABB().getSize().y + shooterCol->getAABB().getSize().y) / 2.f);
-	Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(CompType::Movement);
-	if (playerComp)
+	Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
+	if (shooter->getTag() == "player")
 		bulletMove->setVelocity(direction * 1250.f);
 	else
 		bulletMove->setVelocity(direction * 750.f);
-	Comp_Sprite* bulletSprite = bullet->getComponent<Comp_Sprite>(CompType::Sprite);
+	Comp_Sprite* bulletSprite = bullet->getComponent<Comp_Sprite>(ComponentType::Sprite);
 	bulletSprite->setPosition(bulletPos->getPosition());
 }

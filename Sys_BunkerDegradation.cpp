@@ -19,10 +19,10 @@ void Sys_BunkerDegradation::start()
 
 void Sys_BunkerDegradation::setupRequirements()
 {
-	m_requirements.set((unsigned int)CompType::Position);
-	m_requirements.set((unsigned int)CompType::Collision);
-	m_requirements.set((unsigned int)CompType::Sprite);
-	m_requirements.set((unsigned int)CompType::Bunker);
+	m_requirements.set((unsigned int)ComponentType::Position);
+	m_requirements.set((unsigned int)ComponentType::Collision);
+	m_requirements.set((unsigned int)ComponentType::Sprite);
+	m_requirements.set((unsigned int)ComponentType::Bunker);
 }
 
 void Sys_BunkerDegradation::subscribeToChannels()
@@ -53,8 +53,8 @@ void Sys_BunkerDegradation::notify(const Message& msg)
 	switch ((ActorMessageType)msg.m_type)
 	{
 	case ActorMessageType::Collision:
-		sf::FloatRect collider = m_systemManager->getActorManager()->getActor(msg.m_sender)->getComponent<Comp_Collision>(CompType::Collision)->getAABB();
-		Comp_Sprite* spriteComp = m_systemManager->getActorManager()->getActor(msg.m_receiver)->getComponent<Comp_Sprite>(CompType::Sprite);
+		sf::FloatRect collider = m_systemManager->getActorManager()->getActor(msg.m_sender)->getComponent<Comp_Collision>(ComponentType::Collision)->getAABB();
+		Comp_Sprite* spriteComp = m_systemManager->getActorManager()->getActor(msg.m_receiver)->getComponent<Comp_Sprite>(ComponentType::Sprite);
 		// get the texture of the sprite
 		sf::Texture* texture = const_cast<sf::Texture*>(spriteComp->getSprite()->getTexture());
 		if (!texture) return;

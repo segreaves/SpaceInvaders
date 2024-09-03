@@ -3,7 +3,7 @@
 Engine::Engine() :
 	m_windowManager("Space Invaders", sf::Vector2u(1920, 1080)),
 	m_stateManager(&m_context),
-	m_entityManager(&m_systemManager)
+	m_entityManager(&m_systemManager, &m_textureManager)
 {
 	m_clock.restart();
 	srand(time(nullptr));
@@ -21,8 +21,9 @@ Engine::Engine() :
 
 void Engine::update()
 {
-	m_windowManager.update();
-	m_stateManager.update(m_elapsed.asSeconds());
+	float dt = m_elapsed.asSeconds();
+	m_windowManager.update(dt);
+	m_stateManager.update(dt);
 }
 
 void Engine::lateUpdate()

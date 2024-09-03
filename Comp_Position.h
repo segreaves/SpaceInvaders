@@ -5,6 +5,10 @@
 class Comp_Position : public Comp
 {
 public:
+	void load(std::stringstream& ss) override
+	{
+	}
+
 	sf::Vector2f getPosition()
 	{
 		return m_position;

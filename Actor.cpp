@@ -21,14 +21,14 @@ std::string Actor::getTag()
 	return m_tag;
 }
 
-void Actor::addComponent(CompType compType, Comp* component)
+void Actor::addComponent(ComponentType compType, Comp* component)
 {
 	if (m_components.find(compType) != m_components.end()) return;
 	m_components[compType] = component;
 	updateComponentBitmask();
 }
 
-void Actor::removeComponent(CompType compType)
+void Actor::removeComponent(ComponentType compType)
 {
 	if (m_components.find(compType) == m_components.end()) return;
 	delete m_components[compType];

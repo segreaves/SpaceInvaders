@@ -19,7 +19,7 @@ WindowManager::~WindowManager()
 	m_window.close();
 }
 
-void WindowManager::update()
+void WindowManager::update(float deltaTime)
 {
 	sf::Event event;
 	while (m_window.pollEvent(event))
@@ -33,9 +33,7 @@ void WindowManager::update()
 		else
 			m_controller.handleEvent(event);
 	}
-	m_controller.update();
-	// set mouse to center of screen
-	sf::Mouse::setPosition(sf::Vector2i(m_windowSize.x / 2, m_windowSize.y / 2), m_window);
+	m_controller.update(deltaTime);
 }
 
 void WindowManager::drawStart()

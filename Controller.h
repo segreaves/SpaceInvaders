@@ -11,7 +11,7 @@ class Controller
 public:
 	Controller();
 
-	void update();
+	void update(float deltaTime);
 	void handleEvent(sf::Event event);
 
 	void setWindowManager(WindowManager* windowManager);
@@ -25,5 +25,7 @@ public:
 private:
 	bool m_hasFocus;
 	WindowManager* m_windowManager;
-	const float m_mouseSensitivity = 2.f;
+	const float m_mouseSensitivity = 1e4;
+	sf::Vector2f m_movementInput;
+	sf::Vector2f m_screenCenter;
 };
