@@ -70,6 +70,12 @@
     <Filter Include="Header Files\Utils">
       <UniqueIdentifier>{f700e456-e6d6-4715-b614-0811c32187d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Media">
+      <UniqueIdentifier>{865d29ed-faf0-4e3d-b4bc-b9fdb94c613e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Media">
+      <UniqueIdentifier>{c12754d1-8448-4500-bf1e-88ddedb3b8e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceInvaders.cpp">
@@ -131,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="Sys_BunkerDegradation.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSheet.cpp">
+      <Filter>Source Files\Media</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +274,12 @@
     </ClInclude>
     <ClInclude Include="Comp_Player.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_SpriteSheet.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteSheet.h">
+      <Filter>Header Files\Media</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

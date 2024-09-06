@@ -2,6 +2,10 @@
 #include <SFML/System/Vector2.hpp>
 #include "Comp.h"
 
+/// <summary>
+/// Class used to store the control components of an actor.
+/// This class is accessed by the controls system to move the actor.
+/// </summary>
 class Comp_Control : public Comp
 {
 public:

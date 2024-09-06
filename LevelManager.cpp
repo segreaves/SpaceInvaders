@@ -6,7 +6,7 @@
 
 LevelManager::LevelManager() :
 	m_level(0),
-	m_playerId(-1)
+	m_actorManager(nullptr)
 {
 }
 
@@ -14,7 +14,7 @@ LevelManager::~LevelManager()
 {
 }
 
-void LevelManager::loadActorProfile(const std::string actorName)
+int LevelManager::loadActorProfile(const std::string actorName)
 {
 	std::string fullPath = Utils::getWorkingDirectory() + "assets/profiles/" + actorName + ".dat";
 	//std::cout << "loadActorProfile at: " << fullPath << std::endl;
@@ -23,11 +23,10 @@ void LevelManager::loadActorProfile(const std::string actorName)
 	if (!file.is_open())
 	{
 		std::cerr << "LevelManager failed to open file: " << fullPath << std::endl;
-		return;
+		return -1;
 	}
-	ActorManager* actorManager = m_context->m_actorManager;
-	unsigned int actorId = actorManager->initializeActor(actorName);
-	Actor* actor = actorManager->getActor(actorId);
+	unsigned int actorId = m_actorManager->initializeActor(actorName);
+	Actor* actor = m_actorManager->getActor(actorId);
 	std::string line;
 	while (getline(file, line))
 	{
@@ -37,13 +36,13 @@ void LevelManager::loadActorProfile(const std::string actorName)
 		if (line[0] == '#') continue;
 		if (attr == "Position")
 		{
-			actorManager->addComponent(actorId, ComponentType::Position);
+			m_actorManager->addComponent(actorId, ComponentType::Position);
 			Comp_Position* pos = actor->getComponent<Comp_Position>(ComponentType::Position);
 			ss >> *pos;
 		}
 		else if (attr == "Sprite")
 		{
-			actorManager->addComponent(actorId, ComponentType::Sprite);
+			m_actorManager->addComponent(actorId, ComponentType::Sprite);
 			Comp_Sprite* sprite = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
 			ss >> *sprite;
 		}
@@ -54,45 +53,43 @@ void LevelManager::loadActorProfile(const std::string actorName)
 		}
 		else if (attr == "Movement")
 		{
-			actorManager->addComponent(actorId, ComponentType::Movement);
+			m_actorManager->addComponent(actorId, ComponentType::Movement);
 			Comp_Movement* movement = actor->getComponent<Comp_Movement>(ComponentType::Movement);
 			ss >> *movement;
 		}
 		else if (attr == "Control")
 		{
-			actorManager->addComponent(actorId, ComponentType::Control);
+			m_actorManager->addComponent(actorId, ComponentType::Control);
 			Comp_Control* control = actor->getComponent<Comp_Control>(ComponentType::Control);
 			ss >> *control;
 		}
 		else if (attr == "Collision")
 		{
-			actorManager->addComponent(actorId, ComponentType::Collision);
+			m_actorManager->addComponent(actorId, ComponentType::Collision);
 			Comp_Collision* collision = actor->getComponent<Comp_Collision>(ComponentType::Collision);
 			ss >> *collision;
 		}
 		else if (attr == "Player")
 		{
-			actorManager->addComponent(actorId, ComponentType::Player);
+			m_actorManager->addComponent(actorId, ComponentType::Player);
 			Comp_Player* player = actor->getComponent<Comp_Player>(ComponentType::Player);
 			ss >> *player;
-			m_playerId = actorId;
 		}
 		else if (attr == "Invader")
 		{
-			actorManager->addComponent(actorId, ComponentType::Invader);
+			m_actorManager->addComponent(actorId, ComponentType::Invader);
 			Comp_Invader* invader = actor->getComponent<Comp_Invader>(ComponentType::Invader);
-			m_invaders.push_back(actorId);
 			ss >> *invader;
 		}
 		else if (attr == "Bullet")
 		{
-			actorManager->addComponent(actorId, ComponentType::Bullet);
+			m_actorManager->addComponent(actorId, ComponentType::Bullet);
 			Comp_Bullet* bullet = actor->getComponent<Comp_Bullet>(ComponentType::Bullet);
 			ss >> *bullet;
 		}
 		else if (attr == "Bunker")
 		{
-			actorManager->addComponent(actorId, ComponentType::Bunker);
+			m_actorManager->addComponent(actorId, ComponentType::Bunker);
 			Comp_Bunker* bunker = actor->getComponent<Comp_Bunker>(ComponentType::Bunker);
 			ss >> *bunker;
 		}
@@ -100,27 +97,7 @@ void LevelManager::loadActorProfile(const std::string actorName)
 			std::cerr << "Unknown attribute: " << attr << std::endl;
 	}
 	file.close();
-}
-
-std::vector<sf::Vector2f> LevelManager::getInvaderSpawnPoints()
-{
-	return m_invaderSpawnPoints;
-}
-
-void LevelManager::setInvaderSpawnPoints(const sf::Vector2f& invaderSize)
-{
-	m_invaderSpawnPoints.clear();
-	m_invaderSpawnPoints = getGridFormation(m_invaderRows, m_invaderCols, invaderSize.x, invaderSize.y, m_invaderPadding);
-	float gridWidth = m_invaderCols * (invaderSize.x + m_invaderPadding) - m_invaderPadding;
-	float gridHeight = m_invaderRows * (invaderSize.y + m_invaderPadding) - m_invaderPadding;
-	float topBuffer = 10.f;
-	for (int i = 0; i < m_invaderSpawnPoints.size(); i++)
-	{
-		// center the formation in the view space
-		m_invaderSpawnPoints[i].x += m_viewSpace.width / 2.f - gridWidth / 2.f + invaderSize.x / 2.f;
-		// move the formation down on the view space
-		m_invaderSpawnPoints[i].y += topBuffer + invaderSize.y / 2.f;
-	}
+	return actorId;
 }
 
 std::vector<sf::Vector2f> LevelManager::getBunkerSpawnPoints()
@@ -152,6 +129,34 @@ sf::Vector2f LevelManager::getPlayerSpawnPoint() const
 void LevelManager::setViewSpace(sf::FloatRect viewSpace)
 {
 	m_viewSpace = viewSpace;
+}
+
+void LevelManager::createInvaders(sf::FloatRect viewSpace)
+{
+	const int rows = m_invaderGridDims.x;
+	const int cols = m_invaderGridDims.y;
+	const int separationX = m_invaderSeparation.x;
+	const int separationY = m_invaderSeparation.y;
+	// offset is used to center the grid of invaders in the viewspace
+	float offset = (viewSpace.width - separationX * m_invaderGridDims.y) / 2.f;
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			int invaderId = loadActorProfile("invader");
+			if (invaderId == -1) continue;
+			m_invaders.emplace_back(invaderId);
+			float spawnX = j * separationX + offset;
+			float spawnY = (i + 1) * separationY;
+			m_invaderSpawn.emplace(invaderId, sf::Vector2f(spawnX, spawnY));
+		}
+	}
+}
+
+sf::Vector2f LevelManager::getInvaderSpawn(ActorId id)
+{
+	if (m_invaderSpawn.find(id) == m_invaderSpawn.end()) return sf::Vector2f();
+	return m_invaderSpawn[id];
 }
 
 std::vector<sf::Vector2f> LevelManager::getGridFormation(unsigned int rows, unsigned int cols, float deltaX, float deltaY, float padding)

@@ -11,9 +11,13 @@ State_Game::State_Game(StateManager* stateManager) :
 	State(stateManager),
 	m_bulletIndex(0),
 	m_remainingInvaders(0),
-	m_kills(0)
+	m_kills(0),
+	m_playerId(-1)
 {
-	m_levelManager.setContext(stateManager->getContext());
+	m_gameView.setViewport(sf::FloatRect(0.15f, 0, 0.7f, 1));
+	m_hudView.setViewport(sf::FloatRect(0, 0, 1, 1));
+
+	m_levelManager.setActorManager(stateManager->getContext()->m_actorManager);
 	setHUDStyle();
 	setWindowOutline();
 }
@@ -27,22 +31,21 @@ void State_Game::update(const float& deltaTime)
 
 void State_Game::draw()
 {
-	WindowManager* windowManager = m_stateManager->getContext()->m_windowManager;
-	windowManager->drawToGameplayView(m_background);
-	m_stateManager->getContext()->m_systemManager->draw(windowManager);
+	drawGame();
 	drawHUD();
 }
 
 void State_Game::onCreate()
 {
-	m_levelManager.setViewSpace(m_stateManager->getContext()->m_windowManager->getViewSpace());
+	WindowManager* windowManager = m_stateManager->getContext()->m_windowManager;
+	m_levelManager.setViewSpace(getGameViewSpace());
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->setLevelManager(&m_levelManager);
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_PlayerControl>(SystemType::PlayerControl)->setLevelManager(&m_levelManager);
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletControl>(SystemType::BulletControl)->setLevelManager(&m_levelManager);
 	createPlayer();
 	createBullets(100);
 	createInvaders();
-	createBunkers();
+	//createBunkers();
 	loadNextLevel();
 }
 
@@ -67,16 +70,19 @@ void State_Game::deactivate()
 void State_Game::loadNextLevel()
 {
 	m_levelManager.m_level++;
-	m_levelManager.setInvaderSpawnPoints(m_invaderSize);
-	m_remainingInvaders = m_levelManager.getTotalInvaders();
-	m_stateManager->getContext()->m_actorManager->enableActor(m_levelManager.getPlayerId());
+	m_stateManager->getContext()->m_actorManager->enableActor(m_playerId);
+	m_remainingInvaders = m_levelManager.getInvaderIds().size();
 	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
 	for (auto& invaderId : m_levelManager.getInvaderIds())
 	{
 		actorManager->enableActor(invaderId);
 		Actor* invader = actorManager->getActor(invaderId);
 		Comp_Control* controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
+		Comp_Position* posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
+		Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
 		controlComp->setMaxSpeed(m_levelManager.getInvaderStartSpeed() + (m_levelManager.m_level - 1) * m_levelManager.getLevelSpeedIncrease());
+		posComp->setPosition(m_levelManager.getInvaderSpawn(invaderId));
+		aiComp->setTarget(posComp->getPosition());
 	}
 	m_stateManager->getContext()->m_systemManager->start();
 }
@@ -103,8 +109,8 @@ void State_Game::createPlayer()
 	controlComp->setMaxSpeed(2500);
 	controlComp->setMaxAcceleration(50000);
 	posComp->setPosition(m_levelManager.getPlayerSpawnPoint());*/
-	m_levelManager.loadActorProfile("player");
-	Comp_Position* posComp = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Position>(ComponentType::Position);
+	m_playerId = m_levelManager.loadActorProfile("player");
+	Comp_Position* posComp = m_stateManager->getContext()->m_actorManager->getActor(m_playerId)->getComponent<Comp_Position>(ComponentType::Position);
 	posComp->setPosition(m_levelManager.getPlayerSpawnPoint());
 }
 
@@ -134,37 +140,12 @@ void State_Game::createBullets(unsigned int maxBullets)
 
 void State_Game::createInvaders()
 {
-	/*Bitmask mask;
-	mask.set((unsigned int)ComponentType::Position);
-	mask.set((unsigned int)ComponentType::Sprite);
-	mask.set((unsigned int)ComponentType::Movement);
-	mask.set((unsigned int)ComponentType::Collision);
-	mask.set((unsigned int)ComponentType::Control);
-	mask.set((unsigned int)ComponentType::Invader);
-	
-	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
-	int totalInvaders = m_levelManager.getTotalInvaders();
-	for (int i = 0; i < totalInvaders; i++)
-	{
-		int invaderId = actorManager->createActor(mask, "invader");
-		m_invaders.push_back(invaderId);
-		Comp_Collision* colComp = actorManager->getActor(invaderId)->getComponent<Comp_Collision>(ComponentType::Collision);
-		Comp_Sprite* spriteComp = actorManager->getActor(invaderId)->getComponent<Comp_Sprite>(ComponentType::Sprite);
-		Comp_Movement* moveComp = actorManager->getActor(invaderId)->getComponent<Comp_Movement>(ComponentType::Movement);
-		Comp_Control* controlComp = actorManager->getActor(invaderId)->getComponent<Comp_Control>(ComponentType::Control);
-		colComp->setSize(m_invaderSize);
-		controlComp->setMaxAcceleration(25000);
-		moveComp->setFrictionCoefficient(15.0f);
-	}*/
-	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
-	int totalInvaders = m_levelManager.getTotalInvaders();
-	for (int i = 0; i < totalInvaders; i++)
-		m_levelManager.loadActorProfile("invader");
+	m_levelManager.createInvaders(getGameViewSpace());
 }
 
 void State_Game::createBunkers()
 {
-	m_levelManager.setBunkerSpawnPoints();
+	/*m_levelManager.setBunkerSpawnPoints();
 	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
 	for (auto& spawnPoint : m_levelManager.getBunkerSpawnPoints())
 	{
@@ -181,12 +162,22 @@ void State_Game::createBunkers()
 		posComp->setPosition(spawnPoint);
 		colComp->setSize(m_levelManager.getBunkerSize());
 		actorManager->enableActor(bunkerId);
+	}*/
+	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
+	int totalBunkers = m_levelManager.getTotalBunkers();
+	m_levelManager.setBunkerSpawnPoints();
+	for (int i = 0; i < totalBunkers; i++)
+		m_levelManager.loadActorProfile("bunker");
+	for (auto& bunkerId : m_bunkers)
+	{
+		actorManager->enableActor(bunkerId);
+		Actor* bunker = actorManager->getActor(bunkerId);
 	}
 }
 
 void State_Game::onPlayerMove(sf::Vector2f xy)
 {
-	Comp_Control* controlComp = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Control>(ComponentType::Control);
+	Comp_Control* controlComp = m_stateManager->getContext()->m_actorManager->getActor(m_playerId)->getComponent<Comp_Control>(ComponentType::Control);
 	controlComp->setMovementInput(xy);
 }
 
@@ -194,7 +185,7 @@ void State_Game::onPlayerShoot()
 {
 	m_stateManager->getContext()->m_actorManager->enableActor(m_bullets[m_bulletIndex]);
 	Message msg((MessageType)ActorMessageType::Shoot);
-	msg.m_sender = m_levelManager.getPlayerId();
+	msg.m_sender = m_playerId;
 	msg.m_receiver = m_bullets[m_bulletIndex];
 	msg.m_xy.x = 0;
 	msg.m_xy.y = -1;
@@ -223,14 +214,22 @@ void State_Game::updateHUD()
 	m_fpsText.setString("FPS: " + std::to_string(m_fps));
 }
 
+void State_Game::drawGame()
+{
+	m_stateManager->getContext()->m_windowManager->getRenderWindow()->setView(m_gameView);
+	m_stateManager->getContext()->m_windowManager->getRenderWindow()->draw(m_background);
+	m_stateManager->getContext()->m_systemManager->draw(m_stateManager->getContext()->m_windowManager);
+}
+
 void State_Game::drawHUD()
 {
-
-	m_stateManager->getContext()->m_windowManager->drawToHudView(m_scoreText);
-	m_stateManager->getContext()->m_windowManager->drawToHudView(m_levelText);
-	m_stateManager->getContext()->m_windowManager->drawToHudView(m_livesText);
-	m_stateManager->getContext()->m_windowManager->drawToHudView(m_killsText);
-	m_stateManager->getContext()->m_windowManager->drawToHudView(m_fpsText);
+	WindowManager* windowManager = m_stateManager->getContext()->m_windowManager;
+	windowManager->getRenderWindow()->setView(m_hudView);
+	windowManager->getRenderWindow()->draw(m_scoreText);
+	windowManager->getRenderWindow()->draw(m_levelText);
+	windowManager->getRenderWindow()->draw(m_livesText);
+	windowManager->getRenderWindow()->draw(m_killsText);
+	windowManager->getRenderWindow()->draw(m_fpsText);
 }
 
 void State_Game::setHUDStyle()
@@ -255,9 +254,23 @@ void State_Game::setHUDStyle()
 
 void State_Game::setWindowOutline()
 {
-	m_background.setSize(m_stateManager->getContext()->m_windowManager->getGameplayViewSpace().getSize() - sf::Vector2f(2, 2));
+	m_background.setSize(m_gameView.getSize() - sf::Vector2f(2, 2));
 	m_background.setPosition(1, 1);
 	m_background.setFillColor(sf::Color::Black);
 	m_background.setOutlineColor(sf::Color::White);
 	m_background.setOutlineThickness(1);
+}
+
+sf::FloatRect State_Game::getGameViewSpace()
+{
+	sf::Vector2f viewCenter = m_gameView.getCenter();
+	sf::Vector2f viewSize = m_gameView.getSize();
+	return sf::FloatRect(viewCenter - viewSize / 2.f, viewSize);
+}
+
+sf::FloatRect State_Game::getHUDViewSpace()
+{
+	sf::Vector2f viewCenter = m_hudView.getCenter();
+	sf::Vector2f viewSize = m_hudView.getSize();
+	return sf::FloatRect(viewCenter - viewSize / 2.f, viewSize);
 }

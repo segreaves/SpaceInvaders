@@ -10,8 +10,6 @@ public:
 
 	void update(float deltaTime);
 	void drawStart();
-	void drawToGameplayView(sf::Drawable& drawable);
-	void drawToHudView(sf::Drawable& drawable);
 	void drawEnd();
 
 	bool isOpen();
@@ -19,9 +17,7 @@ public:
 
 	sf::RenderWindow* getRenderWindow();
 	sf::Vector2u getWindowSize();
-	sf::FloatRect getViewSpace();
-	sf::FloatRect getGameplayViewSpace();
-	sf::FloatRect getHudViewSpace();
+	sf::FloatRect getCurrentViewSpace();
 	Controller* getController();
 
 	void toggleFullscreen();
@@ -32,8 +28,6 @@ private:
 	sf::RenderWindow m_window;
 	sf::Vector2u m_windowSize;
 	std::string m_windowTitle;
-	sf::View m_hudView;
-	sf::View m_gameplayView;
 	bool m_isFocused;
 	bool m_isFullscreen;
 	bool m_isOpen;

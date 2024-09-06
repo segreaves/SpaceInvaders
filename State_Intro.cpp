@@ -3,7 +3,10 @@
 #include "Utils.h"
 
 State_Intro::State_Intro(StateManager* stateManager) :
-	State(stateManager) {}
+	State(stateManager)
+{
+	m_view.setViewport(sf::FloatRect(0, 0, 1, 1));
+}
 
 State_Intro::~State_Intro()
 {
@@ -32,7 +35,9 @@ void State_Intro::onCreate()
 	);
 
 	//sf::Vector2u windowSize = m_stateManager->getContext()->m_windowManager->getRenderWindow()->getSize();
-	sf::Vector2f windowSize = m_stateManager->getContext()->m_windowManager->getHudViewSpace().getSize();
+	WindowManager* windowManager = m_stateManager->getContext()->m_windowManager;
+	windowManager->getRenderWindow()->setView(m_view);
+	sf::Vector2f windowSize = windowManager->getCurrentViewSpace().getSize();
 	m_text.setPosition(windowSize.x / 2.0f, windowSize.y / 2.0f);
 
 	m_transparent = true;
@@ -48,6 +53,7 @@ void State_Intro::onDestroy()
 void State_Intro::activate()
 {
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Intro_onContinue", std::bind(&State_Intro::onContinue, this));
+	m_stateManager->getContext()->m_windowManager->getRenderWindow()->setView(m_view);
 }
 
 void State_Intro::deactivate()
@@ -57,6 +63,6 @@ void State_Intro::deactivate()
 
 void State_Intro::onContinue()
 {
-	m_stateManager->switchTo(StateType::Menu);
+	m_stateManager->switchTo(StateType::Game);
 	m_stateManager->remove(StateType::Intro);
 }

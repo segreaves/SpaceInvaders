@@ -46,7 +46,7 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
 		// culling
-		sf::FloatRect view = windowManager->getViewSpace();
+		sf::FloatRect view = windowManager->getCurrentViewSpace();
 		if (view.intersects(spriteComp->getDrawableBounds()))
 			spriteComp->draw(windowManager->getRenderWindow());
 	}

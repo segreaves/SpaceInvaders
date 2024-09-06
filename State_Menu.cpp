@@ -36,7 +36,7 @@ void State_Menu::onCreate()
 	);
 
 	//sf::Vector2u windowSize = m_stateManager->getContext()->m_windowManager->getRenderWindow()->getSize();
-	sf::Vector2f windowSize = m_stateManager->getContext()->m_windowManager->getHudViewSpace().getSize();
+	sf::Vector2f windowSize = m_stateManager->getContext()->m_windowManager->getCurrentViewSpace().getSize();
 	m_text.setPosition(windowSize.x / 2.0f, windowSize.y / 2.0f);
 
 	m_transparent = false;

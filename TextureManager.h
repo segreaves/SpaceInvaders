@@ -18,5 +18,6 @@ public:
 			texture = nullptr;
 			std::cerr << "TextureManager failed to load texture: " << path << std::endl;
 		}
+		return texture;
 	}
 };

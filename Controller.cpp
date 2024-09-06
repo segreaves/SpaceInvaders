@@ -8,7 +8,7 @@ Controller::Controller() :
 {
 }
 
-void Controller::update(float deltaTime)
+void Controller::update()
 {
 	// set mouse to center of screen
 	sf::RenderWindow* window = m_windowManager->getRenderWindow();

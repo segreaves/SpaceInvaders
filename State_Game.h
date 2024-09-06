@@ -8,6 +8,10 @@ class LevelManager;
 
 /// <summary>
 /// Runs gameplay.
+/// Receives player input and transmits to the handler systems.
+/// Counts number of invaders and resets when it reaches zero.
+/// Communicates with the LevelManager to distribute invaders in a grid and
+/// query their spawn points when resetting positions.
 /// </summary>
 class State_Game : public State
 {
@@ -32,14 +36,19 @@ private:
 	void onInvaderDefeated();
 
 	void updateHUD();
+	void drawGame();
 	void drawHUD();
 	void setHUDStyle();
 	void setWindowOutline();
+	sf::FloatRect getGameViewSpace();
+	sf::FloatRect getHUDViewSpace();
 
-	const sf::Vector2f m_playerSize = sf::Vector2f(40, 35);
-	const sf::Vector2f m_bulletSize = sf::Vector2f(3, 15);
-	const sf::Vector2f m_invaderSize = sf::Vector2f(40, 35);
+	sf::View m_gameView;
+	sf::View m_hudView;
+	const sf::Vector2f m_bulletSize = sf::Vector2f(3, 3);
+	int m_playerId;
 	std::vector<ActorId> m_bullets;
+	std::vector<ActorId> m_bunkers;
 	unsigned int m_remainingInvaders;
 	unsigned int m_bulletIndex;
 	LevelManager m_levelManager;

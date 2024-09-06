@@ -20,7 +20,7 @@ void Sys_InvaderControl::start()
 	srand(time(nullptr));
 	m_movingRight = rand() % 2;
 
-	ActorManager* actorManager = m_systemManager->getActorManager();
+	/*ActorManager* actorManager = m_systemManager->getActorManager();
 	std::vector<sf::Vector2f> spawnPoints = m_levelManager->getInvaderSpawnPoints();
 	for (int i = 0; i < spawnPoints.size(); i++)
 	{
@@ -29,7 +29,7 @@ void Sys_InvaderControl::start()
 		Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
 		posComp->setPosition(spawnPoints[i]);
 		aiComp->setTarget(posComp->getPosition());
-	}
+	}*/
 
 	selectTrackedInvaders();
 }
