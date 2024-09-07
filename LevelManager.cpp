@@ -5,8 +5,9 @@
 #include <sstream>
 
 LevelManager::LevelManager() :
+	m_actorManager(nullptr),
 	m_level(0),
-	m_actorManager(nullptr)
+	m_playerId(-1)
 {
 }
 
@@ -100,27 +101,6 @@ int LevelManager::loadActorProfile(const std::string actorName)
 	return actorId;
 }
 
-std::vector<sf::Vector2f> LevelManager::getBunkerSpawnPoints()
-{
-	return m_bunkerSpawnPoints;
-}
-
-void LevelManager::setBunkerSpawnPoints()
-{
-	m_bunkerSpawnPoints.clear();
-	float bunkerSpacing = m_viewSpace.width / (m_nBunkers + 1);
-	float gridWidth = m_nBunkers * bunkerSpacing;
-	m_bunkerSpawnPoints = getGridFormation(1, m_nBunkers, bunkerSpacing, 0, 0);
-	float topBuffer = m_viewSpace.height * 0.8;
-	for (int i = 0; i < m_bunkerSpawnPoints.size(); i++)
-	{
-		// center the formation in the view space
-		m_bunkerSpawnPoints[i].x += m_viewSpace.width / 2.f - gridWidth / 2.f + bunkerSpacing / 2.f;
-		// move the formation down on the view space
-		m_bunkerSpawnPoints[i].y += topBuffer;
-	}
-}
-
 sf::Vector2f LevelManager::getPlayerSpawnPoint() const
 {
 	return sf::Vector2f(m_viewSpace.left + m_viewSpace.width / 2.f, m_viewSpace.top + m_viewSpace.height * 0.9f);
@@ -131,25 +111,45 @@ void LevelManager::setViewSpace(sf::FloatRect viewSpace)
 	m_viewSpace = viewSpace;
 }
 
+void LevelManager::createPlayer()
+{
+	m_playerId = loadActorProfile("player");
+	Comp_Position* posComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Position>(ComponentType::Position);
+	posComp->setPosition(getPlayerSpawnPoint());
+}
+
 void LevelManager::createInvaders(sf::FloatRect viewSpace)
 {
-	const int rows = m_invaderGridDims.x;
-	const int cols = m_invaderGridDims.y;
-	const int separationX = m_invaderSeparation.x;
-	const int separationY = m_invaderSeparation.y;
-	// offset is used to center the grid of invaders in the viewspace
-	float offset = (viewSpace.width - separationX * m_invaderGridDims.y) / 2.f;
-	for (int i = 0; i < rows; i++)
+	float offset = (viewSpace.width - m_invaderSeparation.x * m_invaderCols) / 2.f;
+	for (int i = 0; i < m_invaderRows; i++)
 	{
-		for (int j = 0; j < cols; j++)
+		for (int j = 0; j < m_invaderCols; j++)
 		{
 			int invaderId = loadActorProfile("invader");
-			if (invaderId == -1) continue;
 			m_invaders.emplace_back(invaderId);
-			float spawnX = j * separationX + offset;
-			float spawnY = (i + 1) * separationY;
+			float spawnX = j * m_invaderSeparation.x + offset;// center in view space
+			float spawnY = (i + 1) * m_invaderSeparation.y;
 			m_invaderSpawn.emplace(invaderId, sf::Vector2f(spawnX, spawnY));
 		}
+	}
+}
+
+void LevelManager::createBullets()
+{
+	for (unsigned int i = 0; i < m_nBullets; i++)
+		m_bullets.push_back(loadActorProfile("bullet"));
+}
+
+void LevelManager::createBunkers(sf::FloatRect viewSpace)
+{
+	float offset = (viewSpace.width - m_bunkerSeparation * (m_nBunkers - 1)) / 2.f;
+	float spawnY = viewSpace.height - m_bunkerSpawnHeight;
+	for (int i = 0; i < m_nBunkers; i++)
+	{
+		int bunkerId = loadActorProfile("bunker");
+		m_bunkers.emplace_back(bunkerId);
+		float spawnX = i * m_bunkerSeparation + offset;// center in view space
+		m_bunkerSpawn.emplace(bunkerId, sf::Vector2f(spawnX, spawnY));
 	}
 }
 
@@ -157,6 +157,12 @@ sf::Vector2f LevelManager::getInvaderSpawn(ActorId id)
 {
 	if (m_invaderSpawn.find(id) == m_invaderSpawn.end()) return sf::Vector2f();
 	return m_invaderSpawn[id];
+}
+
+sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)
+{
+	if (m_bunkerSpawn.find(id) == m_bunkerSpawn.end()) return sf::Vector2f();
+	return m_bunkerSpawn[id];
 }
 
 std::vector<sf::Vector2f> LevelManager::getGridFormation(unsigned int rows, unsigned int cols, float deltaX, float deltaY, float padding)

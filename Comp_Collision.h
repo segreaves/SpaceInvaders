@@ -5,11 +5,6 @@
 class Comp_Collision : public Comp
 {
 public:
-	void load(std::stringstream& ss) override
-	{
-		ss >> m_AABB.width >> m_AABB.height;
-	}
-
 	void setPosition(const sf::Vector2f& pos)
 	{
 		m_AABB.left = pos.x - m_AABB.width / 2.f;
@@ -33,5 +28,10 @@ public:
 		return m_AABB;
 	}
 private:
+	void load(std::stringstream& ss) override
+	{
+		ss >> m_AABB.width >> m_AABB.height;
+	}
+
 	sf::FloatRect m_AABB;
 };

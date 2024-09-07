@@ -14,7 +14,7 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	addComponentType<Comp_Player>(ComponentType::Player);
 	addComponentType<Comp_Invader>(ComponentType::Invader);
 	addComponentType<Comp_Bullet>(ComponentType::Bullet);
-	addComponentType<Comp_Bullet>(ComponentType::Bunker);
+	addComponentType<Comp_Bunker>(ComponentType::Bunker);
 }
 
 ActorManager::~ActorManager()

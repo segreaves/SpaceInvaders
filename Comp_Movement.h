@@ -6,10 +6,6 @@
 class Comp_Movement : public Comp
 {
 public:
-	void load(std::stringstream& ss) override
-	{
-	}
-
 	const sf::Vector2f& getVelocity() const { return m_velocity; }
 
 	void setVelocity(const sf::Vector2f& velocity)
@@ -79,6 +75,11 @@ public:
 		m_collidingOnY = false;
 	}
 private:
+	void load(std::stringstream& ss) override
+	{
+		ss >> m_frictionCoefficient;
+	}
+
 	float m_frictionCoefficient = 100.f;
 	sf::Vector2f m_velocity;
 	sf::Vector2f m_acceleration;

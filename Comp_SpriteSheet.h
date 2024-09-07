@@ -3,7 +3,8 @@
 
 class Comp_SpriteSheet : public Comp
 {
-public:
 private:
-
+	void load(std::stringstream& ss) override
+	{
+	}
 };

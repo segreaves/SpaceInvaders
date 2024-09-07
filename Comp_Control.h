@@ -9,12 +9,6 @@
 class Comp_Control : public Comp
 {
 public:
-	void load(std::stringstream& ss) override
-	{
-		ss >> m_maxSpeed;
-		ss >> m_maxAcceleration;
-	}
-
 	void setMovementInput(const sf::Vector2f& movementInput)
 	{
 		m_movementInput = m_movementDirection = movementInput;
@@ -44,6 +38,12 @@ public:
 
 	float getMaxSpeed() const { return m_maxSpeed; }
 private:
+	void load(std::stringstream& ss) override
+	{
+		ss >> m_maxSpeed;
+		ss >> m_maxAcceleration;
+	}
+
 	sf::Vector2f m_movementInput;
 	sf::Vector2f m_movementDirection;
 	float m_maxAcceleration;
