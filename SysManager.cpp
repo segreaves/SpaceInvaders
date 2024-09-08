@@ -11,7 +11,7 @@ SysManager::SysManager() :
 	m_systems[SystemType::Collision] = new Sys_Collision(this);
 	m_systems[SystemType::InvaderControl] = new Sys_InvaderControl(this);
 	m_systems[SystemType::BulletControl] = new Sys_BulletControl(this);
-	m_systems[SystemType::BunkerDegradation] = new Sys_BunkerDegradation(this);
+	m_systems[SystemType::BunkerDamage] = new Sys_BunkerDamage(this);
 }
 
 SysManager::~SysManager()

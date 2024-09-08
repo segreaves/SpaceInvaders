@@ -135,11 +135,11 @@
     <ClCompile Include="Sys_BulletControl.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Sys_BunkerDegradation.cpp">
-      <Filter>Source Files\Core\ECS\Systems</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteSheet.cpp">
       <Filter>Source Files\Media</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys_BunkerDamage.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -266,7 +266,7 @@
     <ClInclude Include="Comp_Bunker.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Sys_BunkerDegradation.h">
+    <ClInclude Include="Sys_BunkerDamage.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">

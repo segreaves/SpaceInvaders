@@ -152,7 +152,7 @@
     <ClCompile Include="State_Menu.cpp" />
     <ClCompile Include="Sys.cpp" />
     <ClCompile Include="SysManager.cpp" />
-    <ClCompile Include="Sys_BunkerDegradation.cpp" />
+    <ClCompile Include="Sys_BunkerDamage.cpp" />
     <ClCompile Include="Sys_InvaderControl.cpp" />
     <ClCompile Include="Sys_Collision.cpp" />
     <ClCompile Include="Sys_BulletControl.cpp" />
@@ -184,7 +184,7 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Comp_SpriteSheet.h" />
     <ClInclude Include="SpriteSheet.h" />
-    <ClInclude Include="Sys_BunkerDegradation.h" />
+    <ClInclude Include="Sys_BunkerDamage.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Trigger.h" />
     <ClInclude Include="ISubscriber.h" />

@@ -36,6 +36,11 @@ public:
 		m_sprite.setScale(scale);
 	}
 
+	sf::Vector2f getScale() const
+	{
+		return m_sprite.getScale();
+	}
+
 	sf::Vector2f getSize() const
 	{
 		return sf::Vector2f(m_sprite.getGlobalBounds().width, m_sprite.getGlobalBounds().height);
