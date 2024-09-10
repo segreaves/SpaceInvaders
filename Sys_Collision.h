@@ -12,6 +12,9 @@ public:
 	Sys_Collision(SysManager* systemManager);
 	~Sys_Collision();
 
+	bool addActor(const ActorId& actorId) override;
+	bool removeActor(const ActorId& actorId) override;
+
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();
@@ -24,4 +27,8 @@ public:
 	void notify(const Message& msg);
 private:
 	void actorCollisions();
+	void detectCollisions();
+	bool detectActorCollision(const ActorId& actorId, Comp_Collision* colComp, Actor* otherActor);
+
+	std::unordered_map<std::string, std::vector<ActorId>> m_actorGroups;
 };

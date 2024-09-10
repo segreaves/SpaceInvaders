@@ -26,10 +26,10 @@ public:
 	virtual void debugOverlay(WindowManager* windowManager) = 0;
 	virtual void handleEvent(const ActorId& actorId, const ActorEventType& eventId) = 0;
 
-	bool addActor(const ActorId& actor);
-	bool removeActor(const ActorId& actor);
+	virtual bool addActor(const ActorId& actorId);
+	virtual bool removeActor(const ActorId& actorId);
 	void removeAllActors();
-	bool hasActor(const ActorId& actor);
+	bool hasActor(const ActorId& actorId);
 	bool fitsRequirements(const Bitmask& mask);
 
 	int getActorCount() const;

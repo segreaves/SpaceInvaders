@@ -70,8 +70,8 @@ void Sys_BunkerDamage::notify(const Message& msg)
 		intersection.top -= spriteRect.top;
 
 		// get the intersection start position in relation to the texture
-		unsigned int xStart = intersection.left / spriteRect.width * texture->getSize().x;
-		unsigned int yStart = intersection.top / spriteRect.height * texture->getSize().y;
+		unsigned int xStart = intersection.left / spriteComp->getScale().x;
+		unsigned int yStart = intersection.top / spriteComp->getScale().y;
 		// get the intersection width and height in relation to the texture
 		unsigned int width = intersection.width / spriteRect.width * texture->getSize().x;
 		unsigned int height = intersection.height / spriteRect.height * texture->getSize().y;
