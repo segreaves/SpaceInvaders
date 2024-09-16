@@ -5,5 +5,6 @@ enum class ActorMessageType
 	Move,
 	Shoot,
 	Collision,
-	OutOfBounds
+	OutOfBounds,
+	Explode
 };

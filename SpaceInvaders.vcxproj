@@ -153,6 +153,7 @@
     <ClCompile Include="Sys.cpp" />
     <ClCompile Include="SysManager.cpp" />
     <ClCompile Include="Sys_BunkerDamage.cpp" />
+    <ClCompile Include="Sys_Shockwave.cpp" />
     <ClCompile Include="Sys_InvaderControl.cpp" />
     <ClCompile Include="Sys_Collision.cpp" />
     <ClCompile Include="Sys_BulletControl.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Channel.h" />
     <ClInclude Include="Comp.h" />
     <ClInclude Include="ComponentType.h" />
+    <ClInclude Include="Comp_Shockwave.h" />
     <ClInclude Include="Comp_Invader.h" />
     <ClInclude Include="Comp_Bullet.h" />
     <ClInclude Include="Comp_Collision.h" />
@@ -185,6 +187,7 @@
     <ClInclude Include="Comp_SpriteSheet.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Sys_BunkerDamage.h" />
+    <ClInclude Include="Sys_Shockwave.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Trigger.h" />
     <ClInclude Include="ISubscriber.h" />

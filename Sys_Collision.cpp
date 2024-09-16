@@ -90,6 +90,11 @@ void Sys_Collision::notify(const Message& msg)
 {
 }
 
+/// <summary>
+/// Detects collisions between actors. This is a brute force method, as it checks for collisions
+/// between all actors. This is fine for small numbers of actors, but for larger numbers, the
+/// detectCollisions() method was implemented.
+/// </summary>
 void Sys_Collision::actorCollisions()
 {
 	for (auto id1 = m_actorIds.begin(); id1 != m_actorIds.end(); id1++)
@@ -153,11 +158,18 @@ void Sys_Collision::detectCollisions()
 				for (auto& playerId : m_actorGroups["player"])
 					if (detectActorCollision(invaderId, invaderCollider, actorManager->getActor(playerId)))
 						break;
-			// check collisions against explosions
-			if (m_actorGroups.find("explosion") != m_actorGroups.end())
-				for (auto& explosionId : m_actorGroups["explosion"])
-					if (detectActorCollision(invaderId, invaderCollider, actorManager->getActor(explosionId)))
-						break;
+		}
+	}
+	// check shockwave collisions
+	if (m_actorGroups.find("shockwave") != m_actorGroups.end())
+	{
+		for (auto& shockwaveId : m_actorGroups["shockwave"])
+		{
+			Comp_Collision* shockwaveCollider = actorManager->getActor(shockwaveId)->getComponent<Comp_Collision>(ComponentType::Collision);
+			// check collisions against invaders
+			if (m_actorGroups.find("invader") != m_actorGroups.end())
+				for (auto& invaderId : m_actorGroups["invader"])
+					detectActorCollision(shockwaveId, shockwaveCollider, actorManager->getActor(invaderId));
 		}
 	}
 	// check bunker collisions

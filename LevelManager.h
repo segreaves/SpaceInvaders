@@ -26,10 +26,12 @@ public:
 	void createInvaders(sf::FloatRect viewSpace);
 	void createBullets();
 	void createBunkers(sf::FloatRect viewSpace);
+	void createShockwaves();
 	int& getPlayerId() { return m_playerId; }
 	std::vector<ActorId>& getInvaderIds() { return m_invaders; }
 	std::vector<ActorId>& getBulletIds() { return m_bullets; }
 	std::vector<ActorId>& getBunkerIds() { return m_bunkers; }
+	std::vector<ActorId>& getShockwaveIds() { return m_shockwaves; }
 	sf::Vector2f getInvaderSpawn(ActorId id);
 	sf::Vector2f getBunkerSpawn(ActorId id);
 	float getInvaderStartSpeed() const { return m_invaderStartSpeed; }
@@ -46,6 +48,7 @@ private:
 	std::vector<ActorId> m_invaders;
 	std::vector<ActorId> m_bullets;
 	std::vector<ActorId> m_bunkers;
+	std::vector<ActorId> m_shockwaves;
 	std::unordered_map<ActorId, sf::Vector2f> m_invaderSpawn;
 	const int m_invaderRows = 5;
 	const int m_invaderCols = 12;

@@ -12,6 +12,7 @@ SysManager::SysManager() :
 	m_systems[SystemType::InvaderControl] = new Sys_InvaderControl(this);
 	m_systems[SystemType::BulletControl] = new Sys_BulletControl(this);
 	m_systems[SystemType::BunkerDamage] = new Sys_BunkerDamage(this);
+	m_systems[SystemType::Shockwave] = new Sys_Shockwave(this);
 }
 
 SysManager::~SysManager()

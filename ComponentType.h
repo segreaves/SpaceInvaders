@@ -11,5 +11,6 @@ enum class ComponentType
 	Player,
 	Invader,
 	Bullet,
-	Bunker
+	Bunker,
+	Shockwave
 };

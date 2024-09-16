@@ -10,6 +10,7 @@
 #include "Comp_Movement.h"
 #include "Comp_Collision.h"
 #include "Comp_Bunker.h"
+#include "Comp_Shockwave.h"
 #include "ActorEventType.h"
 #include "TextureManager.h"
 #include <functional>

@@ -29,7 +29,8 @@ private:
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();
 	void incrementBullet();
-	void onInvaderDefeated();
+	void incrementShockwave();
+	void onInvaderDefeated(sf::Vector2f position);
 
 	void updateHUD();
 	void drawGame();
@@ -45,6 +46,7 @@ private:
 	std::vector<ActorId> m_bunkers;
 	unsigned int m_remainingInvaders;
 	unsigned int m_bulletIndex;
+	unsigned int m_shockwaveIndex;
 	unsigned int m_fps;
 	unsigned int m_kills;
 	sf::RectangleShape m_background;

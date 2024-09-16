@@ -24,7 +24,7 @@ public:
 
 	void setLevelManager(LevelManager* levelManager);
 
-	Trigger<void> m_invaderDefeated;
+	Trigger<sf::Vector2f> m_invaderDefeated;
 private:
 	void selectTrackedInvaders();
 

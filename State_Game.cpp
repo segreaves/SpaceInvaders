@@ -42,6 +42,7 @@ void State_Game::onCreate()
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletControl>(SystemType::BulletControl)->setLevelManager(&m_levelManager);
 	m_levelManager.createPlayer();
 	m_levelManager.createBullets();
+	m_levelManager.createShockwaves();
 	m_levelManager.createInvaders(getGameViewSpace());
 	m_levelManager.createBunkers(getGameViewSpace());
 	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
@@ -63,7 +64,7 @@ void State_Game::activate()
 {
 	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
-	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderDefeated.addCallback("Game_onInvaderDefeated", std::bind(&State_Game::onInvaderDefeated, this));
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderDefeated.addCallback("Game_onInvaderDefeated", std::bind(&State_Game::onInvaderDefeated, this, std::placeholders::_1));
 }
 
 void State_Game::deactivate()
@@ -116,11 +117,27 @@ void State_Game::incrementBullet()
 	m_bulletIndex = ++m_bulletIndex % m_levelManager.getBulletIds().size();
 }
 
-void State_Game::onInvaderDefeated()
+void State_Game::incrementShockwave()
+{
+	m_shockwaveIndex = ++m_shockwaveIndex % m_levelManager.getShockwaveIds().size();
+}
+
+void State_Game::onInvaderDefeated(sf::Vector2f position)
 {
 	m_kills++;
 	if (--m_remainingInvaders == 0)
 		loadNextLevel();
+	else
+	{
+		const int shockwaveId = m_levelManager.getShockwaveIds()[m_shockwaveIndex];
+		m_stateManager->getContext()->m_actorManager->enableActor(shockwaveId);
+		Message msg((MessageType)ActorMessageType::Explode);
+		msg.m_receiver = shockwaveId;
+		msg.m_xy.x = position.x;
+		msg.m_xy.y = position.y;
+		m_stateManager->getContext()->m_systemManager->getMessageHandler()->dispatch(msg);
+		incrementShockwave();
+	}
 }
 
 void State_Game::updateHUD()

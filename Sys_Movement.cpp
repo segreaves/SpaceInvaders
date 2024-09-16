@@ -76,8 +76,5 @@ void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
 	moveComp->resetCollisionFlags();
 	if (moveComp->getFrictionCoefficient() > 0)
 		moveComp->applyBaseFriction(moveComp->getVelocity() * deltaTime);
-	float speed = sqrt(
-		pow(moveComp->getVelocity().x, 2) + 
-		pow(moveComp->getVelocity().y, 2));
 	posComp->move(moveComp->getVelocity() * deltaTime);
 }

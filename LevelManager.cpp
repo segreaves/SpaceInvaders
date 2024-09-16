@@ -94,6 +94,12 @@ int LevelManager::loadActorProfile(const std::string actorName)
 			Comp_Bunker* bunker = actor->getComponent<Comp_Bunker>(ComponentType::Bunker);
 			ss >> *bunker;
 		}
+		else if (attr == "Shockwave")
+		{
+			m_actorManager->addComponent(actorId, ComponentType::Shockwave);
+			Comp_Shockwave* shockwave = actor->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
+			ss >> *shockwave;
+		}
 		else
 			std::cerr << "Unknown attribute: " << attr << std::endl;
 	}
@@ -151,6 +157,12 @@ void LevelManager::createBunkers(sf::FloatRect viewSpace)
 		float spawnX = i * m_bunkerSeparation + offset;// center in view space
 		m_bunkerSpawn.emplace(bunkerId, sf::Vector2f(spawnX, spawnY));
 	}
+}
+
+void LevelManager::createShockwaves()
+{
+	for (unsigned int i = 0; i < m_nBullets; i++)
+		m_shockwaves.push_back(loadActorProfile("shockwave"));
 }
 
 sf::Vector2f LevelManager::getInvaderSpawn(ActorId id)

@@ -10,5 +10,6 @@ enum class SystemType
 	Animation,
 	InvaderControl,
 	BulletControl,
-	BunkerDamage
+	BunkerDamage,
+	Shockwave
 };

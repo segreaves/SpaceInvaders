@@ -141,6 +141,9 @@
     <ClCompile Include="Sys_BunkerDamage.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sys_Shockwave.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowManager.h">
@@ -280,6 +283,12 @@
     </ClInclude>
     <ClInclude Include="SpriteSheet.h">
       <Filter>Header Files\Media</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Shockwave.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_Shockwave.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
