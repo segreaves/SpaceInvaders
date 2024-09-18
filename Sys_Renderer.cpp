@@ -24,6 +24,9 @@ void Sys_Renderer::update(const float& deltaTime)
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
 		spriteComp->setPosition(posComp->getPosition());
+		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		if (spriteSheetComp)
+			spriteSheetComp->updatePosition(posComp->getPosition());
 	}
 }
 
@@ -45,10 +48,16 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
+		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		// culling
 		sf::FloatRect view = windowManager->getCurrentViewSpace();
 		if (view.intersects(spriteComp->getDrawableBounds()))
 			spriteComp->draw(windowManager->getRenderWindow());
+		if (spriteSheetComp)
+		{
+			if (view.intersects(spriteSheetComp->getDrawableBounds()))
+			spriteSheetComp->draw(windowManager->getRenderWindow());
+		}
 	}
 }
 

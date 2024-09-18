@@ -9,7 +9,7 @@
 
 State_Game::State_Game(StateManager* stateManager) :
 	State(stateManager),
-	m_bulletIndex(0),
+	m_playerBulletIndex(0),
 	m_remainingInvaders(0),
 	m_kills(0)
 {
@@ -41,7 +41,8 @@ void State_Game::onCreate()
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_PlayerControl>(SystemType::PlayerControl)->setLevelManager(&m_levelManager);
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletControl>(SystemType::BulletControl)->setLevelManager(&m_levelManager);
 	m_levelManager.createPlayer();
-	m_levelManager.createBullets();
+	m_levelManager.createPlayerBullets();
+	m_levelManager.createInvaderBullets();
 	m_levelManager.createShockwaves();
 	m_levelManager.createInvaders(getGameViewSpace());
 	m_levelManager.createBunkers(getGameViewSpace());
@@ -65,6 +66,7 @@ void State_Game::activate()
 	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderDefeated.addCallback("Game_onInvaderDefeated", std::bind(&State_Game::onInvaderDefeated, this, std::placeholders::_1));
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderShot.addCallback("Game_onInvaderShoot", std::bind(&State_Game::onInvaderShoot, this, std::placeholders::_1));
 }
 
 void State_Game::deactivate()
@@ -72,6 +74,7 @@ void State_Game::deactivate()
 	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onMove");
 	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onShoot");
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderDefeated.removeCallback("Game_onInvaderDefeated");
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderDefeated.removeCallback("Game_onInvaderShoot");
 }
 
 void State_Game::loadNextLevel()
@@ -81,14 +84,16 @@ void State_Game::loadNextLevel()
 	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
 	for (auto& invaderId : m_levelManager.getInvaderIds())
 	{
-		actorManager->enableActor(invaderId);
 		Actor* invader = actorManager->getActor(invaderId);
 		Comp_Control* controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
 		Comp_Position* posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
+		Comp_Movement* moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
 		Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
+		moveComp->setVelocity(sf::Vector2f(0, 0));
 		controlComp->setMaxSpeed(m_levelManager.getInvaderStartSpeed() + (m_levelManager.m_level - 1) * m_levelManager.getLevelSpeedIncrease());
 		posComp->setPosition(m_levelManager.getInvaderSpawn(invaderId));
 		aiComp->setTarget(posComp->getPosition());
+		actorManager->enableActor(invaderId);
 	}
 	m_stateManager->getContext()->m_systemManager->start();
 }
@@ -101,20 +106,40 @@ void State_Game::onPlayerMove(sf::Vector2f xy)
 
 void State_Game::onPlayerShoot()
 {
-	const int bulletId = m_levelManager.getBulletIds()[m_bulletIndex];
+	const int bulletId = m_levelManager.getPlayerBulletIds()[m_playerBulletIndex];
 	m_stateManager->getContext()->m_actorManager->enableActor(bulletId);
+	Comp_Bullet* bulletComp = m_stateManager->getContext()->m_actorManager->getActor(bulletId)->getComponent<Comp_Bullet>(ComponentType::Bullet);
 	Message msg((MessageType)ActorMessageType::Shoot);
 	msg.m_sender = m_levelManager.getPlayerId();
 	msg.m_receiver = bulletId;
 	msg.m_xy.x = 0;
 	msg.m_xy.y = -1;
 	m_stateManager->getContext()->m_systemManager->getMessageHandler()->dispatch(msg);
-	incrementBullet();
+	incrementPlayerBullet();
 }
 
-void State_Game::incrementBullet()
+void State_Game::onInvaderShoot(int invaderId)
 {
-	m_bulletIndex = ++m_bulletIndex % m_levelManager.getBulletIds().size();
+	const int bulletId = m_levelManager.getInvaderBulletIds()[m_invaderBulletIndex];
+	m_stateManager->getContext()->m_actorManager->enableActor(bulletId);
+	Comp_Bullet* bulletComp = m_stateManager->getContext()->m_actorManager->getActor(bulletId)->getComponent<Comp_Bullet>(ComponentType::Bullet);
+	Message msg((MessageType)ActorMessageType::Shoot);
+	msg.m_sender = invaderId;
+	msg.m_receiver = bulletId;
+	msg.m_xy.x = 0;
+	msg.m_xy.y = 1;
+	m_stateManager->getContext()->m_systemManager->getMessageHandler()->dispatch(msg);
+	incrementInvaderBullet();
+}
+
+void State_Game::incrementPlayerBullet()
+{
+	m_playerBulletIndex = ++m_playerBulletIndex % m_levelManager.getPlayerBulletIds().size();
+}
+
+void State_Game::incrementInvaderBullet()
+{
+	m_invaderBulletIndex = ++m_invaderBulletIndex % m_levelManager.getInvaderBulletIds().size();
 }
 
 void State_Game::incrementShockwave()

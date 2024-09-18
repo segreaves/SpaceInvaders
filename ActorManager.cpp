@@ -8,6 +8,7 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 {
 	addComponentType<Comp_Position>(ComponentType::Position);
 	addComponentType<Comp_Sprite>(ComponentType::Sprite);
+	addComponentType<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 	addComponentType<Comp_Movement>(ComponentType::Movement);
 	addComponentType<Comp_Control>(ComponentType::Control);
 	addComponentType<Comp_Collision>(ComponentType::Collision);
@@ -127,4 +128,98 @@ Actor* ActorManager::getActor(const ActorId& id)
 {
 	auto it = m_actors.find(id);
 	return it == m_actors.end() ? nullptr : it->second;
+}
+
+int ActorManager::loadActorProfile(const std::string actorName)
+{
+	std::string fullPath = Utils::getWorkingDirectory() + "assets/profiles/" + actorName + ".dat";
+	//std::cout << "loadActorProfile at: " << fullPath << std::endl;
+	std::fstream file;
+	file.open(fullPath);
+	if (!file.is_open())
+	{
+		std::cerr << "LevelManager failed to open file: " << fullPath << std::endl;
+		return -1;
+	}
+	unsigned int actorId = initializeActor(actorName);
+	Actor* actor = getActor(actorId);
+	std::string line;
+	while (getline(file, line))
+	{
+		std::stringstream ss(line);
+		std::string attr;
+		ss >> attr;
+		if (line[0] == '#') continue;
+		if (attr == "Position")
+		{
+			addComponent(actorId, ComponentType::Position);
+			Comp_Position* pos = actor->getComponent<Comp_Position>(ComponentType::Position);
+			ss >> *pos;
+		}
+		else if (attr == "Movement")
+		{
+			addComponent(actorId, ComponentType::Movement);
+			Comp_Movement* movement = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+			ss >> *movement;
+		}
+		else if (attr == "Control")
+		{
+			addComponent(actorId, ComponentType::Control);
+			Comp_Control* control = actor->getComponent<Comp_Control>(ComponentType::Control);
+			ss >> *control;
+		}
+		else if (attr == "Collision")
+		{
+			addComponent(actorId, ComponentType::Collision);
+			Comp_Collision* collision = actor->getComponent<Comp_Collision>(ComponentType::Collision);
+			ss >> *collision;
+		}
+		else if (attr == "Player")
+		{
+			addComponent(actorId, ComponentType::Player);
+			Comp_Player* player = actor->getComponent<Comp_Player>(ComponentType::Player);
+			ss >> *player;
+		}
+		else if (attr == "Invader")
+		{
+			addComponent(actorId, ComponentType::Invader);
+			Comp_Invader* invader = actor->getComponent<Comp_Invader>(ComponentType::Invader);
+			ss >> *invader;
+		}
+		else if (attr == "Bullet")
+		{
+			addComponent(actorId, ComponentType::Bullet);
+			Comp_Bullet* bullet = actor->getComponent<Comp_Bullet>(ComponentType::Bullet);
+			ss >> *bullet;
+		}
+		else if (attr == "Bunker")
+		{
+			addComponent(actorId, ComponentType::Bunker);
+			Comp_Bunker* bunker = actor->getComponent<Comp_Bunker>(ComponentType::Bunker);
+			ss >> *bunker;
+		}
+		else if (attr == "Shockwave")
+		{
+			addComponent(actorId, ComponentType::Shockwave);
+			Comp_Shockwave* shockwave = actor->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
+			ss >> *shockwave;
+		}
+		else if (attr == "Sprite")
+		{
+			addComponent(actorId, ComponentType::Sprite);
+			Comp_Sprite* sprite = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
+			ss >> *sprite;
+		}
+		else if (attr == "SpriteSheet")
+		{
+			addComponent(actorId, ComponentType::SpriteSheet);
+			Comp_SpriteSheet* spriteSheet = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+			ss >> *spriteSheet;
+			spriteSheet->create(m_textureManager);
+		}
+		else
+			std::cerr << "Unknown attribute: " << attr << std::endl;
+	}
+	file.close();
+	return actorId;
 }

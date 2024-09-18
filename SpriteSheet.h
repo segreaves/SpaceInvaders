@@ -23,6 +23,7 @@ public:
 	const sf::Vector2f& getSpriteSpacing() const;
 
 	bool loadSheet(const std::string& filePath);
+	void releaseSheet();
 private:
 	TextureManager* m_textureManager;
 	std::string m_texture;

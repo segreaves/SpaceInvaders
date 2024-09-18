@@ -144,8 +144,8 @@ void Sys_Collision::detectCollisions()
 			Comp_Position* invaderPosition = invader->getComponent<Comp_Position>(ComponentType::Position);
 			invaderCollider->setPosition(invaderPosition->getPosition());
 			// check collisions against bullets
-			if (m_actorGroups.find("bullet") != m_actorGroups.end())
-				for (auto& bulletId : m_actorGroups["bullet"])
+			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
+				for (auto& bulletId : m_actorGroups["bullet_player"])
 					if (detectActorCollision(invaderId, invaderCollider, actorManager->getActor(bulletId)))
 						break;
 			// check collisions against bunkers
@@ -182,8 +182,12 @@ void Sys_Collision::detectCollisions()
 			Comp_Position* bunkerPosition = bunker->getComponent<Comp_Position>(ComponentType::Position);
 			bunkerCollider->setPosition(bunkerPosition->getPosition());
 			// check collisions against bullets
-			if (m_actorGroups.find("bullet") != m_actorGroups.end())
-				for (auto& bulletId : m_actorGroups["bullet"])
+			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
+				for (auto& bulletId : m_actorGroups["bullet_player"])
+					if (detectActorCollision(bunkerId, bunkerCollider, actorManager->getActor(bulletId)))
+						break;
+			if (m_actorGroups.find("bullet_invader") != m_actorGroups.end())
+				for (auto& bulletId : m_actorGroups["bullet_invader"])
 					if (detectActorCollision(bunkerId, bunkerCollider, actorManager->getActor(bulletId)))
 						break;
 		}

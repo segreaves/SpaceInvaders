@@ -16,20 +16,20 @@ public:
 	LevelManager();
 	~LevelManager();
 
-	int loadActorProfile(const std::string actorName);
-
 	sf::Vector2f getPlayerSpawnPoint() const;
 
 	void setViewSpace(sf::FloatRect viewSpace);
 	sf::FloatRect getViewSpace() const { return m_viewSpace; }
 	void createPlayer();
 	void createInvaders(sf::FloatRect viewSpace);
-	void createBullets();
+	void createPlayerBullets();
+	void createInvaderBullets();
 	void createBunkers(sf::FloatRect viewSpace);
 	void createShockwaves();
 	int& getPlayerId() { return m_playerId; }
 	std::vector<ActorId>& getInvaderIds() { return m_invaders; }
-	std::vector<ActorId>& getBulletIds() { return m_bullets; }
+	std::vector<ActorId>& getPlayerBulletIds() { return m_playerBullets; }
+	std::vector<ActorId>& getInvaderBulletIds() { return m_invaderBullets; }
 	std::vector<ActorId>& getBunkerIds() { return m_bunkers; }
 	std::vector<ActorId>& getShockwaveIds() { return m_shockwaves; }
 	sf::Vector2f getInvaderSpawn(ActorId id);
@@ -46,7 +46,8 @@ private:
 	ActorManager* m_actorManager;
 	int m_playerId;
 	std::vector<ActorId> m_invaders;
-	std::vector<ActorId> m_bullets;
+	std::vector<ActorId> m_playerBullets;
+	std::vector<ActorId> m_invaderBullets;
 	std::vector<ActorId> m_bunkers;
 	std::vector<ActorId> m_shockwaves;
 	std::unordered_map<ActorId, sf::Vector2f> m_invaderSpawn;

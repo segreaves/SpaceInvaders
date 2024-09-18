@@ -99,10 +99,8 @@ void Sys_BulletControl::shoot(const ActorId& shooterId, const ActorId& bulletId,
 	bulletPos->setPosition(shooterPos->getPosition() +
 		direction * (bulletCol->getAABB().getSize().y + shooterCol->getAABB().getSize().y) / 2.f);
 	Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
-	if (shooter->getTag() == "player")
-		bulletMove->setVelocity(direction * 1250.f);
-	else
-		bulletMove->setVelocity(direction * 750.f);
+	Comp_Bullet* bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
+	bulletMove->setVelocity(direction * bulletComp->getbulletSpeed());
 	Comp_Sprite* bulletSprite = bullet->getComponent<Comp_Sprite>(ComponentType::Sprite);
 	bulletSprite->setPosition(bulletPos->getPosition());
 }

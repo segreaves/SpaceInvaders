@@ -4,7 +4,7 @@ enum class ComponentType
 {
 	Position = 0,
 	Sprite,
-	State,
+	SpriteSheet,
 	Movement,
 	Control,
 	Collision,

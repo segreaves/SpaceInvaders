@@ -52,34 +52,13 @@ void Sys_InvaderControl::update(const float& deltaTime)
 	{
 		Actor* invader = actorManager->getActor(id);
 		Comp_Position* posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
+		Comp_Invader* invComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
 		Comp_Movement* moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
 		Comp_Control* controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
-
-		// invader movement
-		aiComp->setTarget(aiComp->getTarget() + sf::Vector2f(m_movingRight ? controlComp->getMaxSpeed() : -controlComp->getMaxSpeed(), 0) * deltaTime);
-		sf::Vector2f direction = aiComp->getTarget() - posComp->getPosition();
-		controlComp->setMovementInput(direction / m_maxTargetDistance);
-		moveComp->accelerate(controlComp->getMovementDirection() * controlComp->getMaxAcceleration());
-
-		// check if invader is out of bounds
 		Comp_Collision* colComp = invader->getComponent<Comp_Collision>(ComponentType::Collision);
-		sf::FloatRect invaderAABB = colComp->getAABB();
 
-		float resolve = 0;
-		if (aiComp->getTarget().x - invaderAABB.width / 2.f < 0)
-			resolve = -(aiComp->getTarget().x - invaderAABB.width / 2.f);
-		else if (aiComp->getTarget().x + invaderAABB.width / 2.f > m_levelManager->getViewSpace().getSize().x)
-			resolve = -(aiComp->getTarget().x + invaderAABB.width / 2.f - m_levelManager->getViewSpace().getSize().x);
-		if (resolve != 0)
-		{
-			Message msg((MessageType)ActorMessageType::OutOfBounds);
-			msg.m_receiver = invader->getId();
-			msg.m_sender = invader->getId();
-			msg.m_xy.x = resolve;
-			msg.m_xy.y = 0;
-			m_systemManager->getMessageHandler()->dispatch(msg);
-		}
+		handleMovement(deltaTime, id, posComp, moveComp, controlComp, invComp, colComp);
+		handleShooting(deltaTime, id, invComp);
 	}
 }
 
@@ -153,7 +132,7 @@ void Sys_InvaderControl::notify(const Message& msg)
 			m_systemManager->addEvent(msg.m_sender, (EventId)ActorEventType::Despawned);
 			return;
 		}
-		else if (other->getTag() == "bullet")
+		else if (other->getTag() == "bullet_player")
 			m_systemManager->addEvent(msg.m_sender, (EventId)ActorEventType::Despawned);
 		m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
 		break;
@@ -194,4 +173,54 @@ void Sys_InvaderControl::selectTrackedInvaders()
 	if (leftSprite) leftSprite->setColor(sf::Color::Red);
 	Comp_Sprite* rightSprite = actorManager->getActor(m_rightInvader)->getComponent<Comp_Sprite>(ComponentType::Sprite);
 	if (rightSprite) rightSprite->setColor(sf::Color::Red);
+}
+
+void Sys_InvaderControl::handleMovement(const float& deltaTime, const ActorId& id, Comp_Position* posComp, Comp_Movement* moveComp, Comp_Control* controlComp, Comp_Invader* invComp, Comp_Collision* colComp)
+{
+	// invader movement
+	invComp->setTarget(invComp->getTarget() + sf::Vector2f(m_movingRight ? controlComp->getMaxSpeed() : -controlComp->getMaxSpeed(), 0) * deltaTime);
+	sf::Vector2f direction = invComp->getTarget() - posComp->getPosition();
+	controlComp->setMovementInput(direction / m_maxTargetDistance);
+	moveComp->accelerate(controlComp->getMovementDirection() * controlComp->getMaxAcceleration());
+
+	// check if invader is out of bounds
+	sf::FloatRect invaderAABB = colComp->getAABB();
+
+	float resolve = 0;
+	if (invComp->getTarget().x - invaderAABB.width / 2.f < 0)
+		resolve = -(invComp->getTarget().x - invaderAABB.width / 2.f);
+	else if (invComp->getTarget().x + invaderAABB.width / 2.f > m_levelManager->getViewSpace().getSize().x)
+		resolve = -(invComp->getTarget().x + invaderAABB.width / 2.f - m_levelManager->getViewSpace().getSize().x);
+	if (resolve != 0)
+	{
+		Message msg((MessageType)ActorMessageType::OutOfBounds);
+		msg.m_receiver = id;
+		msg.m_sender = id;
+		msg.m_xy.x = resolve;
+		msg.m_xy.y = 0;
+		m_systemManager->getMessageHandler()->dispatch(msg);
+	}
+}
+
+void Sys_InvaderControl::handleShooting(const float& deltaTime, const ActorId& id, Comp_Invader* invComp)
+{
+	if (invComp->canShoot())
+	{
+		if (invComp->getTimeToShoot() > 0)
+			invComp->decreaseTimeToShoot(deltaTime);
+		else
+		{
+			m_invaderShot.dispatch(id);
+			invComp->setCanShoot(false);
+		}
+	}
+	else
+	{
+		// get random time to shoot
+		srand(time(nullptr) + id);
+		float random = rand() % 100;
+		float waitTime = 1.f + 30.f * random / 100.f;
+		invComp->setTimeToShoot(waitTime);
+		invComp->setCanShoot(true);
+	}
 }

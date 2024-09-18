@@ -28,7 +28,9 @@ private:
 	void loadNextLevel();
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();
-	void incrementBullet();
+	void onInvaderShoot(int invaderId);
+	void incrementPlayerBullet();
+	void incrementInvaderBullet();
 	void incrementShockwave();
 	void onInvaderDefeated(sf::Vector2f position);
 
@@ -45,7 +47,8 @@ private:
 	sf::View m_hudView;
 	std::vector<ActorId> m_bunkers;
 	unsigned int m_remainingInvaders;
-	unsigned int m_bulletIndex;
+	unsigned int m_playerBulletIndex;
+	unsigned int m_invaderBulletIndex;
 	unsigned int m_shockwaveIndex;
 	unsigned int m_fps;
 	unsigned int m_kills;

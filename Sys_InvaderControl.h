@@ -25,8 +25,11 @@ public:
 	void setLevelManager(LevelManager* levelManager);
 
 	Trigger<sf::Vector2f> m_invaderDefeated;
+	Trigger<unsigned int> m_invaderShot;
 private:
 	void selectTrackedInvaders();
+	void handleMovement(const float& deltaTime, const ActorId& id, Comp_Position* posComp, Comp_Movement* moveComp, Comp_Control* controlComp, Comp_Invader* invComp, Comp_Collision* colComp);
+	void handleShooting(const float& deltaTime, const ActorId& id, Comp_Invader* invComp);
 
 	LevelManager* m_levelManager;
 	bool m_movingRight;

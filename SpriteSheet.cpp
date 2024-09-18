@@ -10,6 +10,7 @@ SpriteSheet::SpriteSheet(TextureManager* textureManager) :
 
 SpriteSheet::~SpriteSheet()
 {
+	releaseSheet();
 }
 
 void SpriteSheet::draw(sf::RenderWindow* window)
@@ -120,4 +121,9 @@ bool SpriteSheet::loadSheet(const std::string& filePath)
 	}
 	file.close();
 	return true;
+}
+
+void SpriteSheet::releaseSheet()
+{
+	m_textureManager->releaseResource(m_texture);
 }

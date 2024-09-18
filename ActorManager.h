@@ -3,6 +3,7 @@
 #include "ECS_Params.h"
 #include "Comp_Position.h"
 #include "Comp_Sprite.h"
+#include "Comp_SpriteSheet.h"
 #include "Comp_Control.h"
 #include "Comp_Player.h"
 #include "Comp_Invader.h"
@@ -36,6 +37,7 @@ public:
 	void disableAllActors();
 
 	Actor* getActor(const ActorId& id);
+	int loadActorProfile(const std::string actorName);
 
 	template<class T>
 	void addComponentType(ComponentType compType)

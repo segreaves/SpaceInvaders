@@ -64,7 +64,7 @@ private:
 		ss >> texturePath >> m_scale.x >> m_scale.y;
 		if (!m_texture.loadFromFile(Utils::getWorkingDirectory() + texturePath))
 		{
-			std::cerr << "LevelManager failed to load texture: " << texturePath << std::endl;
+			std::cerr << "Comp_Sprite failed to load texture: " << texturePath << std::endl;
 			return;
 		}
 		m_sprite.setTexture(m_texture);
