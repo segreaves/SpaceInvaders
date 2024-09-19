@@ -69,7 +69,7 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 	{
 	case ActorEventType::Despawned:
   		removeActor(actorId);
-		m_invaderDefeated.dispatch(m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Position>(ComponentType::Position)->getPosition());
+		m_invaderDefeated.dispatch(actorId);
 		if (!m_actorIds.empty())
 		{
 			selectTrackedInvaders();
@@ -127,7 +127,7 @@ void Sys_InvaderControl::notify(const Message& msg)
 		Actor* other = actorManager->getActor(msg.m_sender);
 		if (other->getTag() == "player")
 		{
-			// player collided with invader
+			// player collided with invader, player loses
 			std::cout << "Player invaded!" << std::endl;
 			m_systemManager->addEvent(msg.m_sender, (EventId)ActorEventType::Despawned);
 			return;

@@ -8,7 +8,10 @@ class Comp_SpriteSheet : public Comp
 {
 public:
 	Comp_SpriteSheet() : Comp(),
-		m_spriteSheet(nullptr)
+		m_spriteSheet(nullptr),
+		m_frameDuration(0.1f),
+		m_frameTime(0),
+		m_fps(0)
 	{
 	}
 
@@ -38,11 +41,6 @@ public:
 		m_spriteSheet->setSpritePosition(vec);
 	}
 
-	const sf::Vector2u& getSize()
-	{
-		return m_spriteSheet->getSpriteSize();
-	}
-
 	void draw(sf::RenderWindow* window)
 	{
 		if (!m_spriteSheet) return;
@@ -60,6 +58,64 @@ public:
 		sf::Vector2u size = m_spriteSheet->getSpriteSize();
 		return sf::FloatRect(pos.x - size.x / 2.f, pos.y - size.y / 2.f, size.x, size.y);
 	}
+
+	bool isAnimated()
+	{
+		return m_spriteSheet->getTotalFrames() > 1;
+	}
+
+	void frameStep()
+	{
+		m_spriteSheet->frameStep();
+	}
+
+	void resetFrameStep()
+	{
+		m_spriteSheet->resetFrame();
+	
+	}
+
+	void cropSprite()
+	{
+		m_spriteSheet->cropSprite();
+	}
+
+	float incrementFrameTime(const float& deltaTime)
+	{
+		m_frameTime += deltaTime;
+		return m_frameTime;
+	}
+
+	void setFrameTime(const float& frameTime)
+	{
+		m_frameTime = frameTime;
+	}
+
+	float getFrameTime() const
+	{
+		return m_frameTime;
+	}
+
+	float getFrameDuration() const
+	{
+		return m_frameDuration;
+	}
+
+	void setFPS(const float& fps)
+	{
+		m_fps = fps;
+		m_frameDuration = 1.f / m_fps;
+	}
+
+	float getFPS() const
+	{
+		return m_fps;
+	}
+
+	float getDefaultFPS()
+	{
+		return m_defaultFPS;
+	}
 private:
 	void load(std::stringstream& ss) override
 	{
@@ -68,6 +124,9 @@ private:
 
 	std::string m_sheetName;
 	SpriteSheet* m_spriteSheet;
-	sf::Vector2f m_scale = sf::Vector2f(1, 1);
 	const sf::Color m_defaultColor = sf::Color::White;
+	float m_frameDuration;
+	float m_frameTime;
+	float m_defaultFPS = 1.f;
+	float m_fps;
 };

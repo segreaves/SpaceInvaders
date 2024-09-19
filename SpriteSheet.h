@@ -12,8 +12,11 @@ public:
 	void draw(sf::RenderWindow* window);
 
 	void frameStep();
+	void resetFrame();
 	void cropSprite();
+	int getTotalFrames() const;
 	const sf::Vector2u& getSpriteSize() const;
+	const sf::Vector2f& getSpriteScale() const;
 	const sf::Vector2f& getSpritePosition() const;
 	void setSpriteSize(const sf::Vector2u& size);
 	void setSpritePosition(const sf::Vector2f& position);

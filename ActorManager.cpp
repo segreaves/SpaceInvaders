@@ -221,5 +221,6 @@ int ActorManager::loadActorProfile(const std::string actorName)
 			std::cerr << "Unknown attribute: " << attr << std::endl;
 	}
 	file.close();
+	m_systemManager->addEvent(actorId, (EventId)ActorEventType::Spawned);
 	return actorId;
 }

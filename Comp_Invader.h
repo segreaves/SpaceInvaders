@@ -8,6 +8,7 @@ public:
 	sf::Vector2f getTarget() { return m_target; }
 	void setTarget(sf::Vector2f target) { m_target = target; }
 
+	float getBaseSpeed() { return m_baseSpeed; }
 	float getTimeToShoot() { return m_timeToShoot; }
 	void setTimeToShoot(float timeToShoot) { m_timeToShoot = timeToShoot; }
 	void decreaseTimeToShoot(float deltaTime) { m_timeToShoot -= deltaTime; }
@@ -17,9 +18,11 @@ public:
 private:
 	void load(std::stringstream& ss) override
 	{
+		ss >> m_baseSpeed;
 	}
 
 	sf::Vector2f m_target;
+	float m_baseSpeed;
 	float m_timeToShoot = 0.0f;
 	bool m_canShoot = false;
 };

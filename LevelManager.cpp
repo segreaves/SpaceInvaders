@@ -30,6 +30,10 @@ void LevelManager::createPlayer()
 	m_playerId = m_actorManager->loadActorProfile("player");
 	Comp_Position* posComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Position>(ComponentType::Position);
 	posComp->setPosition(getPlayerSpawnPoint());
+	// get collider and adjust to sprite
+	Comp_Collision* colComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Collision>(ComponentType::Collision);
+	Comp_SpriteSheet* sprite = m_actorManager->getActor(m_playerId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+	adjustColliderToSprite(colComp, sprite);
 }
 
 void LevelManager::createInvaders(sf::FloatRect viewSpace)
@@ -44,6 +48,10 @@ void LevelManager::createInvaders(sf::FloatRect viewSpace)
 			float spawnX = j * m_invaderSeparation.x + offset;// center in view space
 			float spawnY = (i + 1) * m_invaderSeparation.y;
 			m_invaderSpawn.emplace(invaderId, sf::Vector2f(spawnX, spawnY));
+			// get collider and adjust to sprite
+			Comp_Collision* colComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Collision>(ComponentType::Collision);
+			Comp_SpriteSheet* sprite = m_actorManager->getActor(invaderId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+			adjustColliderToSprite(colComp, sprite);
 		}
 	}
 }
@@ -51,7 +59,13 @@ void LevelManager::createInvaders(sf::FloatRect viewSpace)
 void LevelManager::createPlayerBullets()
 {
 	for (unsigned int i = 0; i < m_nBullets; i++)
+	{
 		m_playerBullets.push_back(m_actorManager->loadActorProfile("bullet_player"));
+		// get collider and adjust to sprite
+		//Comp_Collision* colComp = m_actorManager->getActor(m_playerBullets[i])->getComponent<Comp_Collision>(ComponentType::Collision);
+		//Comp_SpriteSheet* sprite = m_actorManager->getActor(m_playerBullets[i])->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		//adjustColliderToSprite(colComp, sprite);
+	}
 }
 
 void LevelManager::createInvaderBullets()
@@ -70,6 +84,10 @@ void LevelManager::createBunkers(sf::FloatRect viewSpace)
 		m_bunkers.emplace_back(bunkerId);
 		float spawnX = i * m_bunkerSeparation + offset;// center in view space
 		m_bunkerSpawn.emplace(bunkerId, sf::Vector2f(spawnX, spawnY));
+		// get collider and adjust to sprite
+		Comp_Collision* colComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Collision>(ComponentType::Collision);
+		Comp_SpriteSheet* sprite = m_actorManager->getActor(bunkerId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		adjustColliderToSprite(colComp, sprite);
 	}
 }
 
@@ -105,4 +123,13 @@ std::vector<sf::Vector2f> LevelManager::getGridFormation(unsigned int rows, unsi
 		}
 	}
 	return formationPoints;
+}
+
+void LevelManager::adjustColliderToSprite(Comp_Collision* colComp, Comp_SpriteSheet* sprite)
+{
+	sf::Vector2f size = sf::Vector2f(
+		sprite->getSpriteSheet()->getSpriteScale().x * sprite->getSpriteSheet()->getSpriteSize().x,
+		sprite->getSpriteSheet()->getSpriteScale().y * sprite->getSpriteSheet()->getSpriteSize().y
+		);
+	colComp->setAABB(size);
 }

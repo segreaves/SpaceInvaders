@@ -152,6 +152,7 @@
     <ClCompile Include="State_Menu.cpp" />
     <ClCompile Include="Sys.cpp" />
     <ClCompile Include="SysManager.cpp" />
+    <ClCompile Include="Sys_Animator.cpp" />
     <ClCompile Include="Sys_BunkerDamage.cpp" />
     <ClCompile Include="Sys_Shockwave.cpp" />
     <ClCompile Include="Sys_InvaderControl.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Comp_SpriteSheet.h" />
     <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="Sys_Animator.h" />
     <ClInclude Include="Sys_BunkerDamage.h" />
     <ClInclude Include="Sys_Shockwave.h" />
     <ClInclude Include="TextureManager.h" />

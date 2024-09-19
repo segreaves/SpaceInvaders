@@ -5,14 +5,15 @@
 SysManager::SysManager() :
 	m_actorManager(nullptr)
 {
-	m_systems[SystemType::Renderer] = new Sys_Renderer(this);
 	m_systems[SystemType::PlayerControl] = new Sys_PlayerControl(this);
 	m_systems[SystemType::Movement] = new Sys_Movement(this);
-	m_systems[SystemType::Collision] = new Sys_Collision(this);
 	m_systems[SystemType::InvaderControl] = new Sys_InvaderControl(this);
 	m_systems[SystemType::BulletControl] = new Sys_BulletControl(this);
+	m_systems[SystemType::Collision] = new Sys_Collision(this);
 	m_systems[SystemType::BunkerDamage] = new Sys_BunkerDamage(this);
 	m_systems[SystemType::Shockwave] = new Sys_Shockwave(this);
+	m_systems[SystemType::Animator] = new Sys_Animator(this);
+	m_systems[SystemType::Renderer] = new Sys_Renderer(this);
 }
 
 SysManager::~SysManager()

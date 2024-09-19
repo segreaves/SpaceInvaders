@@ -11,12 +11,6 @@ public:
 		m_AABB.top = pos.y - m_AABB.height / 2.f;
 	}
 
-	void setSize(const sf::Vector2f& size)
-	{
-		m_AABB.width = size.x;
-		m_AABB.height = size.y;
-	}
-
 	void setAABB(const sf::Vector2f& size)
 	{
 		m_AABB.width = size.x;

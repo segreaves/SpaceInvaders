@@ -40,8 +40,7 @@ public:
 private:
 	void load(std::stringstream& ss) override
 	{
-		ss >> m_maxSpeed;
-		ss >> m_maxAcceleration;
+		ss >> m_maxSpeed >> m_maxAcceleration;
 	}
 
 	sf::Vector2f m_movementInput;

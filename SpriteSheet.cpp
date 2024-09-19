@@ -23,6 +23,11 @@ void SpriteSheet::frameStep()
 	m_frame = ++m_frame % m_totalFrames;
 }
 
+void SpriteSheet::resetFrame()
+{
+	m_frame = 0;
+}
+
 void SpriteSheet::cropSprite()
 {
 	sf::IntRect rect(
@@ -34,7 +39,17 @@ void SpriteSheet::cropSprite()
 	m_sprite.setTextureRect(rect);
 }
 
+int SpriteSheet::getTotalFrames() const
+{
+	return m_totalFrames;
+}
+
 const sf::Vector2u& SpriteSheet::getSpriteSize() const { return m_spriteSize; }
+
+const sf::Vector2f& SpriteSheet::getSpriteScale() const
+{
+	return m_spriteScale;
+}
 
 const sf::Vector2f& SpriteSheet::getSpritePosition() const { return m_sprite.getPosition(); }
 

@@ -144,6 +144,9 @@
     <ClCompile Include="Sys_Shockwave.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sys_Animator.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowManager.h">
@@ -288,6 +291,9 @@
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="Sys_Shockwave.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_Animator.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>

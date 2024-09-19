@@ -32,7 +32,8 @@ private:
 	void incrementPlayerBullet();
 	void incrementInvaderBullet();
 	void incrementShockwave();
-	void onInvaderDefeated(sf::Vector2f position);
+	void onInvaderDefeated(const int& invaderId);
+	void updateInvaderFPS();
 
 	void updateHUD();
 	void drawGame();
