@@ -68,8 +68,7 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 	switch (eventId)
 	{
 	case ActorEventType::Despawned:
-  		removeActor(actorId);
-		m_invaderDefeated.dispatch(actorId);
+		m_systemManager->getActorManager()->disableActor(actorId);
 		if (!m_actorIds.empty())
 		{
 			selectTrackedInvaders();
@@ -81,9 +80,13 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 				controlComp->setMaxSpeed(controlComp->getMaxSpeed() + m_levelManager->getDefeatSpeedIncrease());
 			}
 		}
+		m_invaderDefeated.dispatch(actorId);
 		break;
 	case ActorEventType::CollidingOnX:
 		m_movingRight = !m_movingRight;
+		break;
+	case ActorEventType::Shoot:
+		m_invaderShoot.dispatch(actorId);
 		break;
 	}
 }
@@ -117,7 +120,7 @@ void Sys_InvaderControl::notify(const Message& msg)
 			Actor* invader = m_systemManager->getActorManager()->getActor(actorId);
 			Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
 			Comp_Collision* colComp = invader->getComponent<Comp_Collision>(ComponentType::Collision);
-			aiComp->setTarget(aiComp->getTarget() + sf::Vector2f(msg.m_xy.x, msg.m_xy.y + colComp->getAABB().height));
+			aiComp->setTarget(aiComp->getTarget() + sf::Vector2f(msg.m_xy.x, msg.m_xy.y + m_dropDistance));
 		}
 		m_movingRight = !m_movingRight;
 		break;
@@ -210,7 +213,7 @@ void Sys_InvaderControl::handleShooting(const float& deltaTime, const ActorId& i
 			invComp->decreaseTimeToShoot(deltaTime);
 		else
 		{
-			m_invaderShot.dispatch(id);
+			m_systemManager->addEvent(id, (EventId)ActorEventType::Shoot);
 			invComp->setCanShoot(false);
 		}
 	}

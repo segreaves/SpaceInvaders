@@ -42,7 +42,6 @@ public:
 
 	unsigned int m_level;
 private:
-	std::vector<sf::Vector2f> getGridFormation(unsigned int rows, unsigned int cols, float deltaX, float deltaY, float padding);
 	void adjustColliderToSprite(Comp_Collision* colComp, Comp_SpriteSheet* sprite);
 
 	ActorManager* m_actorManager;
@@ -53,7 +52,6 @@ private:
 	std::vector<ActorId> m_bunkers;
 	std::vector<ActorId> m_shockwaves;
 	std::unordered_map<ActorId, sf::Vector2f> m_invaderSpawn;
-	const int m_invaderRows = 5;
 	const int m_invaderCols = 12;
 	const sf::Vector2i m_invaderSeparation = sf::Vector2i(55, 50);
 	const int m_nBullets = 100;

@@ -5,5 +5,6 @@ enum class ActorEventType
 	Spawned = 0,
 	Despawned,
 	Moving,
-	CollidingOnX
+	CollidingOnX,
+	Shoot
 };

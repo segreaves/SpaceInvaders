@@ -37,7 +37,7 @@ public:
 	void disableAllActors();
 
 	Actor* getActor(const ActorId& id);
-	int loadActorProfile(const std::string actorName);
+	int loadActorProfile(const std::string actorName, const std::string tag);
 
 	template<class T>
 	void addComponentType(ComponentType compType)

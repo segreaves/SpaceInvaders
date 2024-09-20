@@ -44,9 +44,6 @@ void Sys_Movement::handleEvent(const ActorId& actorId, const ActorEventType& eve
 	if (!hasActor(actorId)) return;
 	switch (eventId)
 	{
-	case ActorEventType::Despawned:
-		removeActor(actorId);
-		break;
 	case ActorEventType::CollidingOnX:
 		Comp_Movement* moveComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
 		moveComp->setVelocity(0, moveComp->getVelocity().y);

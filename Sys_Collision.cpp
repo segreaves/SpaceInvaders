@@ -61,13 +61,6 @@ void Sys_Collision::update(const float& deltaTime)
 
 void Sys_Collision::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
-	if (!hasActor(actorId)) return;
-	switch (eventId)
-	{
-	case ActorEventType::Despawned:
-		removeActor(actorId);
-		break;
-	}
 }
 
 void Sys_Collision::debugOverlay(WindowManager* windowManager)

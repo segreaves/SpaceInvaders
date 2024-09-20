@@ -43,8 +43,8 @@ void State_Game::onCreate()
 	m_levelManager.createPlayer();
 	m_levelManager.createPlayerBullets();
 	m_levelManager.createInvaderBullets();
-	m_levelManager.createShockwaves();
 	m_levelManager.createInvaders(getGameViewSpace());
+	m_levelManager.createShockwaves();
 	m_levelManager.createBunkers(getGameViewSpace());
 	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
 	actorManager->enableActor(m_levelManager.getPlayerId());
@@ -66,7 +66,7 @@ void State_Game::activate()
 	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderDefeated.addCallback("Game_onInvaderDefeated", std::bind(&State_Game::onInvaderDefeated, this, std::placeholders::_1));
-	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderShot.addCallback("Game_onInvaderShoot", std::bind(&State_Game::onInvaderShoot, this, std::placeholders::_1));
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderShoot.addCallback("Game_onInvaderShoot", std::bind(&State_Game::onInvaderShoot, this, std::placeholders::_1));
 }
 
 void State_Game::deactivate()
@@ -74,7 +74,7 @@ void State_Game::deactivate()
 	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onMove");
 	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onShoot");
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderDefeated.removeCallback("Game_onInvaderDefeated");
-	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderShot.removeCallback("Game_onInvaderShoot");
+	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->m_invaderShoot.removeCallback("Game_onInvaderShoot");
 }
 
 void State_Game::loadNextLevel()

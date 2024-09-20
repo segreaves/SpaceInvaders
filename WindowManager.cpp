@@ -37,7 +37,6 @@ void WindowManager::update(float deltaTime)
 void WindowManager::drawStart()
 {
 	m_window.clear();
-	//m_window.setView(m_gameplayView);
 }
 
 void WindowManager::drawEnd()

@@ -27,7 +27,7 @@ void LevelManager::setViewSpace(sf::FloatRect viewSpace)
 
 void LevelManager::createPlayer()
 {
-	m_playerId = m_actorManager->loadActorProfile("player");
+	m_playerId = m_actorManager->loadActorProfile("player", "player");
 	Comp_Position* posComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Position>(ComponentType::Position);
 	posComp->setPosition(getPlayerSpawnPoint());
 	// get collider and adjust to sprite
@@ -39,11 +39,12 @@ void LevelManager::createPlayer()
 void LevelManager::createInvaders(sf::FloatRect viewSpace)
 {
 	float offset = (viewSpace.width - m_invaderSeparation.x * m_invaderCols) / 2.f;
-	for (int i = 0; i < m_invaderRows; i++)
+	std::vector<std::string> invaderProfiles = { "invader1", "invader2", "invader3", "invader2", "invader1" };
+	for (int i = 0; i < invaderProfiles.size(); i++)
 	{
 		for (int j = 0; j < m_invaderCols; j++)
 		{
-			int invaderId = m_actorManager->loadActorProfile("invader");
+			int invaderId = m_actorManager->loadActorProfile(invaderProfiles[i], "invader");
 			m_invaders.emplace_back(invaderId);
 			float spawnX = j * m_invaderSeparation.x + offset;// center in view space
 			float spawnY = (i + 1) * m_invaderSeparation.y;
@@ -59,19 +60,13 @@ void LevelManager::createInvaders(sf::FloatRect viewSpace)
 void LevelManager::createPlayerBullets()
 {
 	for (unsigned int i = 0; i < m_nBullets; i++)
-	{
-		m_playerBullets.push_back(m_actorManager->loadActorProfile("bullet_player"));
-		// get collider and adjust to sprite
-		//Comp_Collision* colComp = m_actorManager->getActor(m_playerBullets[i])->getComponent<Comp_Collision>(ComponentType::Collision);
-		//Comp_SpriteSheet* sprite = m_actorManager->getActor(m_playerBullets[i])->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		//adjustColliderToSprite(colComp, sprite);
-	}
+		m_playerBullets.push_back(m_actorManager->loadActorProfile("bullet_player", "bullet_player"));
 }
 
 void LevelManager::createInvaderBullets()
 {
 	for (unsigned int i = 0; i < m_nBullets; i++)
-		m_invaderBullets.push_back(m_actorManager->loadActorProfile("bullet_invader"));
+		m_invaderBullets.push_back(m_actorManager->loadActorProfile("bullet_invader", "bullet_invader"));
 }
 
 void LevelManager::createBunkers(sf::FloatRect viewSpace)
@@ -80,7 +75,7 @@ void LevelManager::createBunkers(sf::FloatRect viewSpace)
 	float spawnY = viewSpace.height - m_bunkerSpawnHeight;
 	for (int i = 0; i < m_nBunkers; i++)
 	{
-		int bunkerId = m_actorManager->loadActorProfile("bunker");
+		int bunkerId = m_actorManager->loadActorProfile("bunker", "bunker");
 		m_bunkers.emplace_back(bunkerId);
 		float spawnX = i * m_bunkerSeparation + offset;// center in view space
 		m_bunkerSpawn.emplace(bunkerId, sf::Vector2f(spawnX, spawnY));
@@ -93,8 +88,8 @@ void LevelManager::createBunkers(sf::FloatRect viewSpace)
 
 void LevelManager::createShockwaves()
 {
-	for (unsigned int i = 0; i < m_nBullets; i++)
-		m_shockwaves.push_back(m_actorManager->loadActorProfile("shockwave"));
+	for (unsigned int i = 0; i < m_invaders.size(); i++)
+		m_shockwaves.push_back(m_actorManager->loadActorProfile("shockwave", "shockwave"));
 }
 
 sf::Vector2f LevelManager::getInvaderSpawn(ActorId id)
@@ -107,22 +102,6 @@ sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)
 {
 	if (m_bunkerSpawn.find(id) == m_bunkerSpawn.end()) return sf::Vector2f();
 	return m_bunkerSpawn[id];
-}
-
-std::vector<sf::Vector2f> LevelManager::getGridFormation(unsigned int rows, unsigned int cols, float deltaX, float deltaY, float padding)
-{
-	std::vector<sf::Vector2f> formationPoints;
-	formationPoints.reserve(rows * cols);
-	for (int row = 0; row < rows; row++)
-	{
-		for (int col = 0; col < cols; col++)
-		{
-			float x = (deltaX + padding) * col;
-			float y = (deltaY + padding) * row;
-			formationPoints.emplace_back(sf::Vector2f(x, y));
-		}
-	}
-	return formationPoints;
 }
 
 void LevelManager::adjustColliderToSprite(Comp_Collision* colComp, Comp_SpriteSheet* sprite)

@@ -130,7 +130,7 @@ Actor* ActorManager::getActor(const ActorId& id)
 	return it == m_actors.end() ? nullptr : it->second;
 }
 
-int ActorManager::loadActorProfile(const std::string actorName)
+int ActorManager::loadActorProfile(const std::string actorName, const std::string tag)
 {
 	std::string fullPath = Utils::getWorkingDirectory() + "assets/profiles/" + actorName + ".dat";
 	//std::cout << "loadActorProfile at: " << fullPath << std::endl;
@@ -141,7 +141,7 @@ int ActorManager::loadActorProfile(const std::string actorName)
 		std::cerr << "LevelManager failed to open file: " << fullPath << std::endl;
 		return -1;
 	}
-	unsigned int actorId = initializeActor(actorName);
+	unsigned int actorId = initializeActor(tag);
 	Actor* actor = getActor(actorId);
 	std::string line;
 	while (getline(file, line))

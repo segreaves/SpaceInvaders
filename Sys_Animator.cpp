@@ -32,12 +32,10 @@ void Sys_Animator::setupRequirements()
 
 void Sys_Animator::subscribeToChannels()
 {
-	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Explode, this);
 }
 
 void Sys_Animator::unsubscribeFromChannels()
 {
-	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Explode, this);
 }
 
 void Sys_Animator::update(const float& deltaTime)
@@ -63,13 +61,6 @@ void Sys_Animator::update(const float& deltaTime)
 
 void Sys_Animator::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
-	if (!hasActor(actorId)) return;
-	switch (eventId)
-	{
-	case ActorEventType::Despawned:
-		removeActor(actorId);
-		break;
-	}
 }
 
 void Sys_Animator::debugOverlay(WindowManager* windowManager)

@@ -59,7 +59,6 @@ void Sys_BulletControl::handleEvent(const ActorId& actorId, const ActorEventType
 	switch (eventId)
 	{
 	case ActorEventType::Despawned:
-		removeActor(actorId);
 		m_systemManager->getActorManager()->disableActor(actorId);
 		break;
 	}
