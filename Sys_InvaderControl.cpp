@@ -125,19 +125,23 @@ void Sys_InvaderControl::notify(const Message& msg)
 		m_movingRight = !m_movingRight;
 		break;
 	case ActorMessageType::Collision:
-		ActorManager* actorManager = m_systemManager->getActorManager();
-		Actor* actor = actorManager->getActor(msg.m_receiver);
-		Actor* other = actorManager->getActor(msg.m_sender);
-		if (other->getTag() == "player")
+		Actor* actor = m_systemManager->getActorManager()->getActor(msg.m_receiver);
+		Actor* other = m_systemManager->getActorManager()->getActor(msg.m_sender);
+		if (other->getTag() == "player")// invader collided with player, player loses
 		{
-			// player collided with invader, player loses
 			std::cout << "Player invaded!" << std::endl;
 			m_systemManager->addEvent(msg.m_sender, (EventId)ActorEventType::Despawned);
 			return;
 		}
-		else if (other->getTag() == "bullet_player")
-			m_systemManager->addEvent(msg.m_sender, (EventId)ActorEventType::Despawned);
-		m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
+		else if (other->getTag() == "bullet_player")// invader collided with player bullet, invader dies
+		{
+			m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
+			// inform bullet of collision
+			Message msgOther((MessageType)ActorMessageType::Collision);
+			msgOther.m_sender = msg.m_receiver;
+			msgOther.m_receiver = other->getId();
+			m_systemManager->getMessageHandler()->dispatch(msgOther);
+		}
 		break;
 	}
 }

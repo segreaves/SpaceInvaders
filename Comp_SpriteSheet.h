@@ -11,7 +11,8 @@ public:
 		m_spriteSheet(nullptr),
 		m_frameDuration(0.1f),
 		m_frameTime(0),
-		m_fps(0)
+		m_fps(0),
+		m_sharedMemory(true)
 	{
 	}
 
@@ -27,7 +28,7 @@ public:
 	void create(TextureManager* textureManager)
 	{
 		if (m_spriteSheet) return;
-		m_spriteSheet = new SpriteSheet(textureManager);
+		m_spriteSheet = new SpriteSheet(textureManager, m_sharedMemory);
 		m_spriteSheet->loadSheet("assets/profiles/" + m_sheetName + ".sheet");
 	}
 
@@ -119,11 +120,15 @@ public:
 private:
 	void load(std::stringstream& ss) override
 	{
-		ss >> m_sheetName;
+		std::string memoryUsage;
+		ss >> memoryUsage >> m_sheetName;
+		if (memoryUsage == "single_memory")
+			m_sharedMemory = false;
 	}
 
 	std::string m_sheetName;
 	SpriteSheet* m_spriteSheet;
+	bool m_sharedMemory;
 	const sf::Color m_defaultColor = sf::Color::White;
 	float m_frameDuration;
 	float m_frameTime;

@@ -6,7 +6,7 @@
 class SpriteSheet
 {
 public:
-	SpriteSheet(TextureManager* textureManager);
+	SpriteSheet(TextureManager* textureManager, bool sharedMemory);
 	~SpriteSheet();
 
 	void draw(sf::RenderWindow* window);
@@ -15,6 +15,8 @@ public:
 	void resetFrame();
 	void cropSprite();
 	int getTotalFrames() const;
+	const sf::Sprite* getSprite() const;
+	const sf::Texture* getTexture() const;
 	const sf::Vector2u& getSpriteSize() const;
 	const sf::Vector2f& getSpriteScale() const;
 	const sf::Vector2f& getSpritePosition() const;
@@ -24,17 +26,21 @@ public:
 	void setSpriteSpacing(const sf::Vector2f& spacing);
 	const sf::Vector2f& getSheetPadding() const;
 	const sf::Vector2f& getSpriteSpacing() const;
+	const sf::IntRect& getCropRect() const;
 
 	bool loadSheet(const std::string& filePath);
 	void releaseSheet();
 private:
 	TextureManager* m_textureManager;
-	std::string m_texture;
+	sf::Texture* m_texture;
+	std::string m_textureId;
 	sf::Sprite m_sprite;
 	sf::Vector2u m_spriteSize;
 	sf::Vector2f m_spriteScale;
 	sf::Vector2f m_sheetPadding;
 	sf::Vector2f m_spriteSpacing;
+	sf::IntRect m_cropRect;
 	int m_totalFrames;
 	int m_frame;
+	bool m_sharedMemory;
 };

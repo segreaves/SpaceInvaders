@@ -1,10 +1,12 @@
 #include "SpriteSheet.h"
 
-SpriteSheet::SpriteSheet(TextureManager* textureManager) :
+SpriteSheet::SpriteSheet(TextureManager* textureManager, bool sharedMemory = true) :
 	m_textureManager(textureManager),
 	m_spriteScale(1.0f, 1.0f),
 	m_totalFrames(0),
-	m_frame(0)
+	m_frame(0),
+	m_texture(nullptr),
+	m_sharedMemory(sharedMemory)
 {
 }
 
@@ -30,18 +32,28 @@ void SpriteSheet::resetFrame()
 
 void SpriteSheet::cropSprite()
 {
-	sf::IntRect rect(
+	m_cropRect = sf::IntRect(
 		(m_spriteSize.x * m_frame) + m_sheetPadding.x + (m_spriteSpacing.x * m_frame),
 		m_sheetPadding.y,
 		m_spriteSize.x,
 		m_spriteSize.y
 	);
-	m_sprite.setTextureRect(rect);
+	m_sprite.setTextureRect(m_cropRect);
 }
 
 int SpriteSheet::getTotalFrames() const
 {
 	return m_totalFrames;
+}
+
+const sf::Sprite* SpriteSheet::getSprite() const
+{
+	return &m_sprite;
+}
+
+const sf::Texture* SpriteSheet::getTexture() const
+{
+	return m_texture;
 }
 
 const sf::Vector2u& SpriteSheet::getSpriteSize() const { return m_spriteSize; }
@@ -78,6 +90,8 @@ const sf::Vector2f& SpriteSheet::getSheetPadding() const { return m_sheetPadding
 
 const sf::Vector2f& SpriteSheet::getSpriteSpacing() const { return m_spriteSpacing; }
 
+const sf::IntRect& SpriteSheet::getCropRect() const { return m_cropRect; }
+
 bool SpriteSheet::loadSheet(const std::string& filePath)
 {
 	std::ifstream file;
@@ -96,20 +110,36 @@ bool SpriteSheet::loadSheet(const std::string& filePath)
 		ss >> type;
 		if (type == "Texture")
 		{
-			if (m_texture != "")
+			if (m_textureId != "")
 			{
 				std::cerr << "Duplicate textures in: " << filePath << std::endl;
 				continue;
 			}
-			std::string texture;
-			ss >> texture;
-			if (!m_textureManager->requireResource(texture))
+			std::string textureId;
+			ss >> textureId;
+			m_textureId = textureId;
+			if (m_sharedMemory)
 			{
-				std::cerr << "SpriteSheet could not set up the texture: " << texture << std::endl;
-				continue;
+				if (!m_textureManager->requireResource(textureId))
+				{
+					std::cerr << "SpriteSheet could not set up the texture: " << textureId << std::endl;
+					continue;
+				}
+				m_texture = new sf::Texture();
+				m_texture = m_textureManager->getResource(m_textureId);
 			}
-			m_texture = texture;
-			m_sprite.setTexture(*m_textureManager->getResource(m_texture));
+			else
+			{
+				// load texture directly into separate memory
+				std::string texturePath = Utils::getWorkingDirectory() + m_textureManager->getPath(m_textureId);
+				m_texture = new sf::Texture();
+				if (!m_texture->loadFromFile(texturePath))
+				{
+					std::cerr << "SpriteSheet failed to load texture: " << texturePath << std::endl;
+					continue;
+				}
+			}
+			m_sprite.setTexture(*m_texture);
 		}
 		else if (type == "Frames")
 		{
@@ -140,5 +170,9 @@ bool SpriteSheet::loadSheet(const std::string& filePath)
 
 void SpriteSheet::releaseSheet()
 {
-	m_textureManager->releaseResource(m_texture);
+	if (m_sharedMemory)
+		m_textureManager->releaseResource(m_textureId);
+	else
+		delete m_texture;
+	m_texture = nullptr;
 }

@@ -70,12 +70,15 @@ void Sys_BulletControl::debugOverlay(WindowManager* windowManager)
 
 void Sys_BulletControl::notify(const Message& msg)
 {
+	if (!hasActor(msg.m_receiver)) return;
 	switch ((ActorMessageType)msg.m_type)
 	{
-		case ActorMessageType::Shoot:
-			if (hasActor(msg.m_receiver))
-				shoot(msg.m_sender, msg.m_receiver, sf::Vector2f(msg.m_xy.x, msg.m_xy.y));
-			break;
+	case ActorMessageType::Collision:
+		m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
+		break;
+	case ActorMessageType::Shoot:
+		shoot(msg.m_sender, msg.m_receiver, sf::Vector2f(msg.m_xy.x, msg.m_xy.y));
+		break;
 	}
 }
 
