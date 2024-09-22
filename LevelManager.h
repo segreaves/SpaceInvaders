@@ -53,7 +53,7 @@ private:
 	std::vector<ActorId> m_shockwaves;
 	std::unordered_map<ActorId, sf::Vector2f> m_invaderSpawn;
 	const int m_invaderCols = 12;
-	const sf::Vector2i m_invaderSeparation = sf::Vector2i(55, 50);
+	const sf::Vector2i m_invaderSeparation = sf::Vector2i(45, 45);
 	const int m_nBullets = 100;
 	const int m_nBunkers = 5;
 	const float m_bunkerSeparation = 170;

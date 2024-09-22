@@ -296,5 +296,8 @@
     <ClInclude Include="Sys_Animator.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteOriginType.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

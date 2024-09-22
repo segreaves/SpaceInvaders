@@ -120,7 +120,7 @@ void Sys_InvaderControl::notify(const Message& msg)
 			Actor* invader = m_systemManager->getActorManager()->getActor(actorId);
 			Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
 			Comp_Collision* colComp = invader->getComponent<Comp_Collision>(ComponentType::Collision);
-			aiComp->setTarget(aiComp->getTarget() + sf::Vector2f(msg.m_xy.x, msg.m_xy.y + m_dropDistance));
+			aiComp->setTarget(aiComp->getTarget() + sf::Vector2f(0, m_dropDistance));
 		}
 		m_movingRight = !m_movingRight;
 		break;
@@ -192,19 +192,12 @@ void Sys_InvaderControl::handleMovement(const float& deltaTime, const ActorId& i
 
 	// check if invader is out of bounds
 	sf::FloatRect invaderAABB = colComp->getAABB();
-
-	float resolve = 0;
-	if (invComp->getTarget().x - invaderAABB.width / 2.f < 0)
-		resolve = -(invComp->getTarget().x - invaderAABB.width / 2.f);
-	else if (invComp->getTarget().x + invaderAABB.width / 2.f > m_levelManager->getViewSpace().getSize().x)
-		resolve = -(invComp->getTarget().x + invaderAABB.width / 2.f - m_levelManager->getViewSpace().getSize().x);
-	if (resolve != 0)
+	if (invComp->getTarget().x - invaderAABB.width / 2.f < 0 ||
+		invComp->getTarget().x + invaderAABB.width / 2.f > m_levelManager->getViewSpace().getSize().x)
 	{
 		Message msg((MessageType)ActorMessageType::OutOfBounds);
 		msg.m_receiver = id;
 		msg.m_sender = id;
-		msg.m_xy.x = resolve;
-		msg.m_xy.y = 0;
 		m_systemManager->getMessageHandler()->dispatch(msg);
 	}
 }

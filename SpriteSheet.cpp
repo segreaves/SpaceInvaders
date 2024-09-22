@@ -68,7 +68,18 @@ const sf::Vector2f& SpriteSheet::getSpritePosition() const { return m_sprite.get
 void SpriteSheet::setSpriteSize(const sf::Vector2u& size)
 {
 	m_spriteSize = size;
-	m_sprite.setOrigin(m_spriteSize.x / 2.f, m_spriteSize.y / 2.f);
+	switch (m_originType)
+	{
+		case SpriteOriginType::Medium:
+			m_sprite.setOrigin(m_spriteSize.x / 2.f, m_spriteSize.y / 2.f);
+			break;
+		case SpriteOriginType::Bottom:
+			m_sprite.setOrigin(m_spriteSize.x / 2.f, m_spriteSize.y);
+			break;
+		case SpriteOriginType::Top:
+			m_sprite.setOrigin(m_spriteSize.x / 2.f, 0.f);
+			break;
+	}
 }
 
 void SpriteSheet::setSpritePosition(const sf::Vector2f& position)
@@ -84,6 +95,11 @@ void SpriteSheet::setSheetPadding(const sf::Vector2f& padding)
 void SpriteSheet::setSpriteSpacing(const sf::Vector2f& spacing)
 {
 	m_spriteSpacing = spacing;
+}
+
+void SpriteSheet::setSpriteOrigin(SpriteOriginType originType)
+{
+	m_originType = originType;
 }
 
 const sf::Vector2f& SpriteSheet::getSheetPadding() const { return m_sheetPadding; }

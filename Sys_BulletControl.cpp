@@ -29,11 +29,13 @@ void Sys_BulletControl::setupRequirements()
 
 void Sys_BulletControl::subscribeToChannels()
 {
+	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Shoot, this);
 }
 
 void Sys_BulletControl::unsubscribeFromChannels()
 {
+	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Shoot, this);
 }
 

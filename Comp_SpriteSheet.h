@@ -29,6 +29,12 @@ public:
 	{
 		if (m_spriteSheet) return;
 		m_spriteSheet = new SpriteSheet(textureManager, m_sharedMemory);
+		if (m_spriteOrigin == "top")
+			m_spriteSheet->setSpriteOrigin(SpriteOriginType::Top);
+		else if (m_spriteOrigin == "bottom")
+			m_spriteSheet->setSpriteOrigin(SpriteOriginType::Bottom);
+		else
+			m_spriteSheet->setSpriteOrigin(SpriteOriginType::Medium);
 		m_spriteSheet->loadSheet("assets/profiles/" + m_sheetName + ".sheet");
 	}
 
@@ -121,7 +127,7 @@ private:
 	void load(std::stringstream& ss) override
 	{
 		std::string memoryUsage;
-		ss >> memoryUsage >> m_sheetName;
+		ss >> memoryUsage >> m_spriteOrigin >> m_sheetName;
 		if (memoryUsage == "single_memory")
 			m_sharedMemory = false;
 	}
@@ -129,6 +135,7 @@ private:
 	std::string m_sheetName;
 	SpriteSheet* m_spriteSheet;
 	bool m_sharedMemory;
+	std::string m_spriteOrigin;
 	const sf::Color m_defaultColor = sf::Color::White;
 	float m_frameDuration;
 	float m_frameTime;
