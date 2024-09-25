@@ -24,7 +24,7 @@ public:
 
 	void setLevelManager(LevelManager* levelManager);
 private:
-	void shoot(const ActorId& shooterId, const ActorId& bulletId,sf::Vector2f direction);
+	void launch(const ActorId& shooterId, const ActorId& bulletId,sf::Vector2f direction);
 	
 	LevelManager* m_levelManager;
 	unsigned int m_currentBullet;

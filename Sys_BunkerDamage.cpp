@@ -6,6 +6,11 @@ Sys_BunkerDamage::Sys_BunkerDamage(SysManager* systemManager) :
 {
 	setupRequirements();
 	subscribeToChannels();
+
+	m_damageTexture.loadFromFile(Utils::getWorkingDirectory() + "assets/graphics/crack.png");
+	m_damageSprite.setTexture(m_damageTexture);
+	m_damageSprite.setScale(1.25f, 1.25f);
+	m_damageSprite.setOrigin(m_damageSprite.getLocalBounds().width / 2, m_damageSprite.getLocalBounds().height / 2);
 }
 
 Sys_BunkerDamage::~Sys_BunkerDamage()
@@ -62,83 +67,115 @@ void Sys_BunkerDamage::handleBunkerDamage(const ActorId& actorId, const ActorId&
 {
 	sf::FloatRect collider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision)->getAABB();
 	Comp_SpriteSheet* spriteComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-	// get the texture of the sprite
 	sf::Texture* texture = const_cast<sf::Texture*>(spriteComp->getSpriteSheet()->getTexture());
 	if (!texture) return;
-	// get the image of the texture
-	sf::Image image = texture->copyToImage();
-	// get the sprite's rectangle in global coordinates
-	sf::FloatRect spriteRect = spriteComp->getSpriteSheet()->getSprite()->getGlobalBounds();
-	// get the intersection of the sprite's rectangle and the collider
+	sf::Image imageBunker = texture->copyToImage();
+	sf::Sprite* bunkerSprite = const_cast<sf::Sprite*>(spriteComp->getSpriteSheet()->getSprite());
+	sf::FloatRect spriteRect = bunkerSprite->getGlobalBounds();
 	sf::FloatRect intersect;
+	// get the intersection of the other actor's collider and the bunker sprite
 	if (!spriteRect.intersects(collider, intersect)) return;
 	// get the intersection in relation to the sprite's rectangle
 	sf::FloatRect intersection(intersect.left - spriteRect.left, intersect.top - spriteRect.top, intersect.width, intersect.height);
-	//intersection.left -= spriteRect.left;
-	//intersection.top -= spriteRect.top;
 
-	// get the intersection start position in relation to the texture
-	unsigned int xStart = intersection.left / spriteComp->getSpriteSheet()->getSpriteScale().x;
-	unsigned int yStart = intersection.top / spriteComp->getSpriteSheet()->getSpriteScale().y;
-	// get the intersection width and height in relation to the texture
+	// get the intersection start position, width, and height in relation to the texture
+	unsigned int xStart = intersection.left / bunkerSprite->getScale().x;
+	unsigned int yStart = intersection.top / bunkerSprite->getScale().y;
 	unsigned int width = intersection.width / spriteRect.width * texture->getSize().x;
 	unsigned int height = intersection.height / spriteRect.height * texture->getSize().y;
 
-	// iterate over pixels in intersection and determine if any are not transparent
-	sf::Vector2i pixelCollisionCoord = pixelCollision(xStart, width, yStart, height, image);
-	if (pixelCollisionCoord != sf::Vector2i(-1, -1))
+	// check for collision against non-transparent pixels
+	if (pixelCollision(xStart, width, yStart, height, imageBunker))
 	{
-		std::cout << "Collision at: " << pixelCollisionCoord.x << ", " << pixelCollisionCoord.y << std::endl;
-		// main explosion
 		// create a FloatRect of pixels to turn off. This rectangle must be centered on the original bullet position on x and on the collision pixel on y
 		Comp_Position* posComp = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Position>(ComponentType::Position);
-		int explosionSize = 8;
-		sf::FloatRect explosionRect = sf::FloatRect(posComp->getPosition().x - explosionSize / 2, posComp->getPosition().y - explosionSize / 2, explosionSize, explosionSize);
+		sf::Vector2f collisionPos(posComp->getPosition().x, posComp->getPosition().y);
 
-		// get the intersection of the sprite's rectangle and the explosion rectangle
-		sf::FloatRect explosionIntersection;
-		if (!spriteRect.intersects(explosionRect, explosionIntersection)) return;
+		// place the m_damageSprite at the collision position
+		m_damageSprite.setPosition(collisionPos);
+		// rotate the sprite 90 degrees a random number of times
+		m_damageSprite.setRotation(90.f * (rand() % 4));
+		// flip the sprite horizontally a random number of times
+		if (rand() % 2) m_damageSprite.setScale(-m_damageSprite.getScale().x, m_damageSprite.getScale().y);
+
+		// turn off all pixels that overlap between the two sprites
+		const sf::Image& imageDamage = m_damageTexture.copyToImage();
+
+		// get the intersection of the two sprites
+		sf::FloatRect spriteOverlap;
+		if (!spriteRect.intersects(m_damageSprite.getGlobalBounds(), spriteOverlap)) return;
 		// get the intersection in relation to the sprite's rectangle
-		explosionIntersection.left -= spriteRect.left;
-		explosionIntersection.top -= spriteRect.top;
-		// get the intersection start position in relation to the texture
-		unsigned int explosionXStart = explosionIntersection.left / spriteComp->getSpriteSheet()->getSpriteScale().x;
-		unsigned int explosionYStart = explosionIntersection.top / spriteComp->getSpriteSheet()->getSpriteScale().y;
-		// get the intersection width and height in relation to the texture
-		unsigned int explosionWidth = explosionIntersection.width / spriteRect.width * texture->getSize().x;
-		unsigned int explosionHeight = explosionIntersection.height / spriteRect.height * texture->getSize().y;
-		// iterate over the pixels in the intersection
-		turnOffPixels(explosionXStart, explosionWidth, explosionYStart, explosionHeight, image);
-		// update the texture with the modified image
-		texture->update(image);
-		// message bullet of collision
-		m_systemManager->addEvent(otherId, (EventId)ActorEventType::Despawned);
+		sf::FloatRect spriteIntersection(spriteOverlap.left - spriteRect.left, spriteOverlap.top - spriteRect.top, spriteOverlap.width, spriteOverlap.height);
 
-		/*// iterate over the pixels in the intersection
-		turnOffPixels(xStart, width, yStart, height, image);
-		m_systemManager->addEvent(msg.m_sender, (EventId)ActorEventType::Despawned);
-		// update the texture with the modified image
-		texture->update(image);*/
+		// get the intersection start position, width, and height in relation to the texture
+		unsigned int xImageStart = spriteIntersection.left / bunkerSprite->getScale().x;
+		unsigned int yImageStart = spriteIntersection.top / bunkerSprite->getScale().y;
+		unsigned int imageWidth = spriteIntersection.width / spriteRect.width * texture->getSize().x;
+		unsigned int imageHeight = spriteIntersection.height / spriteRect.height * texture->getSize().y;
+
+		// loop through the overlapping area of both sprites
+		for (unsigned int x = xImageStart; x <= xImageStart + imageWidth; x++) {
+			for (unsigned int y = yImageStart; y <= yImageStart + imageHeight; y++) {
+				// calculate the corresponding coordinates on sprite1
+				sf::Vector2f coords = convertToScreenCoords(sf::Vector2i(x, y), bunkerSprite);
+				sf::Vector2i pixelPos = convertToPixelCoords(coords, &m_damageSprite);
+
+				// check if the coordinates are within sprite2's bounds
+				if (pixelPos.x < imageDamage.getSize().x && pixelPos.y < imageDamage.getSize().y) {
+					// Get the pixel color from both images
+					sf::Color pixelBunker = imageBunker.getPixel(x, y);
+					sf::Color pixelDamage = imageDamage.getPixel(pixelPos.x, pixelPos.y);
+
+					// If both pixels are non-transparent, modify the pixel in the first image
+					if (pixelBunker.a > 0 && pixelDamage.a > 0) {
+						// Set the pixel in the first image to transparent
+						imageBunker.setPixel(x, y, sf::Color(0, 0, 0, 0));
+					}
+				}
+			}
+		}
+		texture->update(imageBunker);
+		
+		// message bullet of collision
+		Message msg((MessageType)ActorMessageType::Collision);
+		msg.m_sender = actorId;
+		msg.m_receiver = otherId;
+		m_systemManager->getMessageHandler()->dispatch(msg);
 	}
 }
 
-sf::Vector2i Sys_BunkerDamage::pixelCollision(unsigned int xStart, unsigned int width, unsigned int yStart, unsigned int height, sf::Image& image)
+bool Sys_BunkerDamage::pixelCollision(unsigned int xStart, unsigned int width, unsigned int yStart, unsigned int height, sf::Image& image)
 {
-	sf::Vector2i collisionPixel(-1, -1);
 	for (unsigned int x = xStart; x <= xStart + width; x++)
 		for (unsigned int y = yStart; y <= yStart + height; y++)
 			if (image.getPixel(x, y).a > 0)
-			{
-				collisionPixel = sf::Vector2i(x, y);
-				return collisionPixel;
-			}
-	return collisionPixel;
+				return true;
+	return false;
 }
 
-void Sys_BunkerDamage::turnOffPixels(unsigned int xStart, unsigned int width, unsigned int yStart, unsigned int height, sf::Image& image)
+sf::Vector2i Sys_BunkerDamage::convertToPixelCoords(const sf::Vector2f& coords, const sf::Sprite* sprite)
 {
-	for (unsigned int x = xStart; x <= xStart + width; x++)
-		for (unsigned int y = yStart; y <= yStart + height; y++)
-			if (image.getPixel(x, y).a > 0)// if pixel is not transparent
-				image.setPixel(x, y, sf::Color(255, 255, 255, 0));// set pixel to transparent
+	sf::Vector2f pos = sprite->getPosition();
+	sf::Vector2f scale = sprite->getScale();
+	sf::Vector2f origin = sprite->getOrigin();
+	sf::Vector2f offset = coords - pos;
+	offset.x /= scale.x;
+	offset.y /= scale.y;
+	offset.x += origin.x;
+	offset.y += origin.y;
+	return sf::Vector2i(offset);
+}
+
+sf::Vector2f Sys_BunkerDamage::convertToScreenCoords(const sf::Vector2i& coords, const sf::Sprite* sprite)
+{
+	sf::Vector2f pos = sprite->getPosition();
+	sf::Vector2f scale = sprite->getScale();
+	sf::Vector2f origin = sprite->getOrigin();
+	sf::Vector2f offset(coords);
+	offset.x -= origin.x;
+	offset.y -= origin.y;
+	offset.x *= scale.x;
+	offset.y *= scale.y;
+	offset += pos;
+	return offset;
 }

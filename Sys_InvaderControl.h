@@ -37,4 +37,5 @@ private:
 	ActorId m_leftInvader;
 	ActorId m_rightInvader;
 	const float m_dropDistance = 32.f;
+	const float m_bounds = 10.f;
 };

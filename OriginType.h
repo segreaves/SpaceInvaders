@@ -1,6 +1,6 @@
 #pragma once
 
-enum class SpriteOriginType
+enum class OriginType
 {
 	Medium = 0,
 	Bottom,

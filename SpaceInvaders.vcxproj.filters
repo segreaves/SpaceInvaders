@@ -296,7 +296,10 @@
     <ClInclude Include="Sys_Animator.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteOriginType.h">
+    <ClInclude Include="OriginType.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Direction.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
   </ItemGroup>

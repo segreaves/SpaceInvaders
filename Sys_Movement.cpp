@@ -41,15 +41,6 @@ void Sys_Movement::update(const float& deltaTime)
 
 void Sys_Movement::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
-	if (!hasActor(actorId)) return;
-	switch (eventId)
-	{
-	case ActorEventType::CollidingOnX:
-		Comp_Movement* moveComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
-		moveComp->setVelocity(0, moveComp->getVelocity().y);
-		moveComp->setAcceleration(0, moveComp->getAcceleration().y);
-		break;
-	}
 }
 
 void Sys_Movement::debugOverlay(WindowManager* windowManager)

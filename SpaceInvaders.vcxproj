@@ -183,10 +183,11 @@
     <ClInclude Include="Comp_Sprite.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="Direction.h" />
     <ClInclude Include="ECS_Params.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Comp_SpriteSheet.h" />
-    <ClInclude Include="SpriteOriginType.h" />
+    <ClInclude Include="OriginType.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Sys_Animator.h" />
     <ClInclude Include="Sys_BunkerDamage.h" />

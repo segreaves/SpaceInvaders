@@ -34,13 +34,11 @@ void Sys_InvaderControl::setupRequirements()
 
 void Sys_InvaderControl::subscribeToChannels()
 {
-	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::OutOfBounds, this);
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
 }
 
 void Sys_InvaderControl::unsubscribeFromChannels()
 {
-	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::OutOfBounds, this);
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
 }
 
@@ -82,9 +80,6 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 		}
 		m_invaderDefeated.dispatch(actorId);
 		break;
-	case ActorEventType::CollidingOnX:
-		m_movingRight = !m_movingRight;
-		break;
 	case ActorEventType::Shoot:
 		m_invaderShoot.dispatch(actorId);
 		break;
@@ -109,21 +104,10 @@ void Sys_InvaderControl::debugOverlay(WindowManager* windowManager)
 
 void Sys_InvaderControl::notify(const Message& msg)
 {
-	if (!hasActor(msg.m_receiver)) return;
 	ActorMessageType msgType = (ActorMessageType)msg.m_type;
+	if (!hasActor(msg.m_receiver)) return;
 	switch (msgType)
 	{
-	case ActorMessageType::OutOfBounds:
-		// set new movement target for all invaders
-		for (auto& actorId : m_actorIds)
-		{
-			Actor* invader = m_systemManager->getActorManager()->getActor(actorId);
-			Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
-			Comp_Collision* colComp = invader->getComponent<Comp_Collision>(ComponentType::Collision);
-			aiComp->setTarget(aiComp->getTarget() + sf::Vector2f(0, m_dropDistance));
-		}
-		m_movingRight = !m_movingRight;
-		break;
 	case ActorMessageType::Collision:
 		Actor* actor = m_systemManager->getActorManager()->getActor(msg.m_receiver);
 		Actor* other = m_systemManager->getActorManager()->getActor(msg.m_sender);
@@ -190,15 +174,24 @@ void Sys_InvaderControl::handleMovement(const float& deltaTime, const ActorId& i
 	controlComp->setMovementInput(direction / m_maxTargetDistance);
 	moveComp->accelerate(controlComp->getMovementDirection() * controlComp->getMaxAcceleration());
 
-	// check if invader is out of bounds
+	// check if invader is out of bounds. This is done only for the tracked invaders
+	if (id != m_leftInvader && id != m_rightInvader) return;
 	sf::FloatRect invaderAABB = colComp->getAABB();
-	if (invComp->getTarget().x - invaderAABB.width / 2.f < 0 ||
-		invComp->getTarget().x + invaderAABB.width / 2.f > m_levelManager->getViewSpace().getSize().x)
+	bool boundsLeft = invComp->getTarget().x - invaderAABB.width / 2.f < m_bounds;
+	bool boundsRight = invComp->getTarget().x + invaderAABB.width / 2.f > m_levelManager->getViewSpace().getSize().x - m_bounds;
+	if (boundsLeft || boundsRight)
 	{
-		Message msg((MessageType)ActorMessageType::OutOfBounds);
-		msg.m_receiver = id;
-		msg.m_sender = id;
-		m_systemManager->getMessageHandler()->dispatch(msg);
+		float resolveX = boundsLeft ? (m_bounds + invaderAABB.width / 2.f - invComp->getTarget().x) : (m_levelManager->getViewSpace().getSize().x - m_bounds - invaderAABB.width / 2.f - invComp->getTarget().x);
+		float resolveY = m_dropDistance;
+		sf::Vector2f resolve = sf::Vector2f(resolveX, resolveY);
+		// set new movement target for all invaders
+		for (auto& actorId : m_actorIds)
+		{
+			Actor* invader = m_systemManager->getActorManager()->getActor(actorId);
+			Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
+			aiComp->setTarget(aiComp->getTarget() + resolve);
+		}
+		m_movingRight = boundsLeft ? true : false;
 	}
 }
 

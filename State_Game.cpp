@@ -114,7 +114,7 @@ void State_Game::onPlayerShoot()
 	const int bulletId = m_levelManager.getPlayerBulletIds()[m_playerBulletIndex];
 	m_stateManager->getContext()->m_actorManager->enableActor(bulletId);
 	Comp_Bullet* bulletComp = m_stateManager->getContext()->m_actorManager->getActor(bulletId)->getComponent<Comp_Bullet>(ComponentType::Bullet);
-	Message msg((MessageType)ActorMessageType::Shoot);
+	Message msg((MessageType)ActorMessageType::Launch);
 	msg.m_sender = m_levelManager.getPlayerId();
 	msg.m_receiver = bulletId;
 	msg.m_xy.x = 0;
@@ -128,7 +128,7 @@ void State_Game::onInvaderShoot(int invaderId)
 	const int bulletId = m_levelManager.getInvaderBulletIds()[m_invaderBulletIndex];
 	m_stateManager->getContext()->m_actorManager->enableActor(bulletId);
 	Comp_Bullet* bulletComp = m_stateManager->getContext()->m_actorManager->getActor(bulletId)->getComponent<Comp_Bullet>(ComponentType::Bullet);
-	Message msg((MessageType)ActorMessageType::Shoot);
+	Message msg((MessageType)ActorMessageType::Launch);
 	msg.m_sender = invaderId;
 	msg.m_receiver = bulletId;
 	msg.m_xy.x = 0;

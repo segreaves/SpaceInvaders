@@ -2,7 +2,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "TextureManager.h"
-#include "SpriteOriginType.h"
+#include "OriginType.h"
 
 class SpriteSheet
 {
@@ -25,7 +25,7 @@ public:
 	void setSpritePosition(const sf::Vector2f& position);
 	void setSheetPadding(const sf::Vector2f& padding);
 	void setSpriteSpacing(const sf::Vector2f& spacing);
-	void setSpriteOrigin(SpriteOriginType originType);
+	void setSpriteOrigin(OriginType origin);
 	const sf::Vector2f& getSheetPadding() const;
 	const sf::Vector2f& getSpriteSpacing() const;
 	const sf::IntRect& getCropRect() const;
@@ -34,7 +34,7 @@ public:
 	void releaseSheet();
 private:
 	TextureManager* m_textureManager;
-	SpriteOriginType m_originType;
+	OriginType m_origin;
 	sf::Texture* m_texture;
 	std::string m_textureId;
 	sf::Sprite m_sprite;

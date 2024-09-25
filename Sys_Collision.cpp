@@ -55,7 +55,6 @@ void Sys_Collision::unsubscribeFromChannels()
 void Sys_Collision::update(const float& deltaTime)
 {
 	if (m_actorIds.empty()) return;
-	//actorCollisions();
 	detectCollisions();
 }
 
