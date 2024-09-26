@@ -29,11 +29,9 @@ private:
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();
 	void onInvaderShoot(int invaderId);
-	void incrementPlayerBullet();
-	void incrementInvaderBullet();
-	void incrementShockwave();
+	void onActorShoot(const ActorId& shooterId, const ActorId& bulletId, const sf::Vector2f direction);
+	void instantiateShockwave(sf::Vector2f position);
 	void onInvaderDefeated(const int& invaderId);
-	void updateInvaderFPS();
 
 	void updateHUD();
 	void drawGame();
@@ -44,6 +42,7 @@ private:
 	sf::FloatRect getHUDViewSpace();
 
 	LevelManager m_levelManager;
+	float m_currentInvaderSpeed;
 	sf::View m_gameView;
 	sf::View m_hudView;
 	std::vector<ActorId> m_bunkers;

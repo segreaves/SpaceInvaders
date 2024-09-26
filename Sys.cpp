@@ -26,11 +26,6 @@ bool Sys::removeActor(const ActorId& actor)
 	return true;
 }
 
-void Sys::removeAllActors()
-{
-	m_actorIds.clear();
-}
-
 bool Sys::hasActor(const ActorId& actor)
 {
 	if (std::find(m_actorIds.begin(), m_actorIds.end(), actor) != m_actorIds.end()) return true;

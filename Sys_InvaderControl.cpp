@@ -15,14 +15,6 @@ Sys_InvaderControl::~Sys_InvaderControl()
 	unsubscribeFromChannels();
 }
 
-void Sys_InvaderControl::start()
-{
-	srand(time(nullptr));
-	m_movingRight = rand() % 2;
-
-	selectTrackedInvaders();
-}
-
 void Sys_InvaderControl::setupRequirements()
 {
 	m_requirements.set((unsigned int)ComponentType::Position);
@@ -30,6 +22,7 @@ void Sys_InvaderControl::setupRequirements()
 	m_requirements.set((unsigned int)ComponentType::Movement);
 	m_requirements.set((unsigned int)ComponentType::Control);
 	m_requirements.set((unsigned int)ComponentType::Invader);
+	m_requirements.set((unsigned int)ComponentType::SpriteSheet);
 }
 
 void Sys_InvaderControl::subscribeToChannels()
@@ -40,6 +33,31 @@ void Sys_InvaderControl::subscribeToChannels()
 void Sys_InvaderControl::unsubscribeFromChannels()
 {
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
+}
+
+void Sys_InvaderControl::start()
+{
+	srand(time(nullptr));
+	m_movingRight = rand() % 2;
+
+	m_currentInvaderSpeed = m_levelManager->getInvaderBaseSpeed() + (m_levelManager->m_level - 1) * m_levelManager->getLevelSpeedIncrease();
+
+	for (auto& id : m_actorIds)
+	{
+		Actor* invader = m_systemManager->getActorManager()->getActor(id);
+		Comp_Position* posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
+		posComp->setPosition(m_levelManager->getInvaderSpawn(id));
+		Comp_Movement* moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
+		moveComp->setVelocity(sf::Vector2f(0, 0));
+		Comp_Control* controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
+		controlComp->setMaxSpeed(m_currentInvaderSpeed);
+		Comp_Invader* invaderComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
+		invaderComp->setTarget(posComp->getPosition());
+		Comp_SpriteSheet* spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		spriteComp->updatePosition(posComp->getPosition());
+		spriteComp->setFPS(spriteComp->getDefaultFPS() * m_currentInvaderSpeed / m_levelManager->getInvaderBaseSpeed());
+	}
+	selectTrackedInvaders();
 }
 
 void Sys_InvaderControl::update(const float& deltaTime)
@@ -65,24 +83,18 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 	if (!hasActor(actorId)) return;
 	switch (eventId)
 	{
-	case ActorEventType::Despawned:
-		m_systemManager->getActorManager()->disableActor(actorId);
-		if (!m_actorIds.empty())
-		{
-			selectTrackedInvaders();
-			ActorManager* actorManager = m_systemManager->getActorManager();
-			for (auto& id : m_actorIds)
+		case ActorEventType::Despawned:
+			m_systemManager->getActorManager()->disableActor(actorId);
+			if (!m_actorIds.empty())
 			{
-				Actor* invader = actorManager->getActor(id);
-				Comp_Control* controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
-				controlComp->setMaxSpeed(controlComp->getMaxSpeed() + m_levelManager->getDefeatSpeedIncrease());
+				selectTrackedInvaders();
+				increaseInvaderSpeed();
 			}
-		}
-		m_invaderDefeated.dispatch(actorId);
-		break;
-	case ActorEventType::Shoot:
-		m_invaderShoot.dispatch(actorId);
-		break;
+			m_invaderDefeated.dispatch(actorId);
+			break;
+		case ActorEventType::Shoot:
+			m_invaderShoot.dispatch(actorId);
+			break;
 	}
 }
 
@@ -108,25 +120,25 @@ void Sys_InvaderControl::notify(const Message& msg)
 	if (!hasActor(msg.m_receiver)) return;
 	switch (msgType)
 	{
-	case ActorMessageType::Collision:
-		Actor* actor = m_systemManager->getActorManager()->getActor(msg.m_receiver);
-		Actor* other = m_systemManager->getActorManager()->getActor(msg.m_sender);
-		if (other->getTag() == "player")// invader collided with player, player loses
-		{
-			std::cout << "Player invaded!" << std::endl;
-			m_systemManager->addEvent(msg.m_sender, (EventId)ActorEventType::Despawned);
-			return;
-		}
-		else if (other->getTag() == "bullet_player")// invader collided with player bullet, invader dies
-		{
-			m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
-			// inform bullet of collision
-			Message msgOther((MessageType)ActorMessageType::Collision);
-			msgOther.m_sender = msg.m_receiver;
-			msgOther.m_receiver = other->getId();
-			m_systemManager->getMessageHandler()->dispatch(msgOther);
-		}
-		break;
+		case ActorMessageType::Collision:
+			Actor* actor = m_systemManager->getActorManager()->getActor(msg.m_receiver);
+			Actor* other = m_systemManager->getActorManager()->getActor(msg.m_sender);
+			if (other->getTag() == "player")// invader collided with player, player loses
+			{
+				std::cout << "Player invaded!" << std::endl;
+				m_systemManager->addEvent(msg.m_sender, (EventId)ActorEventType::Despawned);
+				return;
+			}
+			else if (other->getTag() == "bullet_player")// invader collided with player bullet, invader dies
+			{
+				m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
+				// inform bullet of collision
+				Message msgOther((MessageType)ActorMessageType::Collision);
+				msgOther.m_sender = msg.m_receiver;
+				msgOther.m_receiver = other->getId();
+				m_systemManager->getMessageHandler()->dispatch(msgOther);
+			}
+			break;
 	}
 }
 
@@ -147,23 +159,37 @@ void Sys_InvaderControl::selectTrackedInvaders()
 	{
 		Actor* actor = actorManager->getActor(actorId);
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Sprite* sprite = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
-		if (sprite) sprite->setColor(sprite->getDefaultColor());
-		if (posComp->getPosition().x < minX)
+		Comp_Collision* colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
+		if (posComp->getPosition().x - colComp->getAABB().width / 2 < minX)
 		{
 			m_leftInvader = actorId;
-			minX = posComp->getPosition().x;
+			minX = posComp->getPosition().x - colComp->getAABB().width;
 		}
-		if (posComp->getPosition().x > maxX)
+		if (posComp->getPosition().x + colComp->getAABB().width / 2 > maxX)
 		{
 			m_rightInvader = actorId;
-			maxX = posComp->getPosition().x;
+			maxX = posComp->getPosition().x + colComp->getAABB().width;
 		}
 	}
 	Comp_Sprite* leftSprite = actorManager->getActor(m_leftInvader)->getComponent<Comp_Sprite>(ComponentType::Sprite);
 	if (leftSprite) leftSprite->setColor(sf::Color::Red);
 	Comp_Sprite* rightSprite = actorManager->getActor(m_rightInvader)->getComponent<Comp_Sprite>(ComponentType::Sprite);
 	if (rightSprite) rightSprite->setColor(sf::Color::Red);
+}
+
+void Sys_InvaderControl::increaseInvaderSpeed()
+{
+	m_currentInvaderSpeed += m_levelManager->getDefeatSpeedIncrease();
+	ActorManager* actorManager = m_systemManager->getActorManager();
+	for (auto& invaderId : m_actorIds)
+	{
+		Actor* invader = actorManager->getActor(invaderId);
+		Comp_Movement* moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
+		Comp_Control* controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
+		Comp_SpriteSheet* spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		controlComp->setMaxSpeed(m_currentInvaderSpeed);
+		spriteComp->setFPS(spriteComp->getDefaultFPS() * m_currentInvaderSpeed / m_levelManager->getInvaderBaseSpeed());
+	}
 }
 
 void Sys_InvaderControl::handleMovement(const float& deltaTime, const ActorId& id, Comp_Position* posComp, Comp_Movement* moveComp, Comp_Control* controlComp, Comp_Invader* invComp, Comp_Collision* colComp)
@@ -181,9 +207,13 @@ void Sys_InvaderControl::handleMovement(const float& deltaTime, const ActorId& i
 	bool boundsRight = invComp->getTarget().x + invaderAABB.width / 2.f > m_levelManager->getViewSpace().getSize().x - m_bounds;
 	if (boundsLeft || boundsRight)
 	{
-		float resolveX = boundsLeft ? (m_bounds + invaderAABB.width / 2.f - invComp->getTarget().x) : (m_levelManager->getViewSpace().getSize().x - m_bounds - invaderAABB.width / 2.f - invComp->getTarget().x);
-		float resolveY = m_dropDistance;
-		sf::Vector2f resolve = sf::Vector2f(resolveX, resolveY);
+		// drop invaders
+		sf::Vector2f resolve(
+			boundsLeft ? (m_bounds + invaderAABB.width / 2.f - invComp->getTarget().x) : (m_levelManager->getViewSpace().getSize().x - m_bounds - invaderAABB.width / 2.f - invComp->getTarget().x),
+			m_dropDistance
+		);
+		// changer movement direction
+		m_movingRight = boundsLeft ? true : false;
 		// set new movement target for all invaders
 		for (auto& actorId : m_actorIds)
 		{
@@ -191,7 +221,6 @@ void Sys_InvaderControl::handleMovement(const float& deltaTime, const ActorId& i
 			Comp_Invader* aiComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
 			aiComp->setTarget(aiComp->getTarget() + resolve);
 		}
-		m_movingRight = boundsLeft ? true : false;
 	}
 }
 

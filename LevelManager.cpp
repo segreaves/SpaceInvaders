@@ -17,7 +17,7 @@ LevelManager::~LevelManager()
 
 sf::Vector2f LevelManager::getPlayerSpawnPoint() const
 {
-	return sf::Vector2f(m_viewSpace.left + m_viewSpace.width / 2.f, m_viewSpace.top + m_viewSpace.height * 0.9f);
+	return sf::Vector2f(m_viewSpace.left + m_viewSpace.width / 2.f, m_viewSpace.top + m_viewSpace.height * 0.925f);
 }
 
 void LevelManager::setViewSpace(sf::FloatRect viewSpace)

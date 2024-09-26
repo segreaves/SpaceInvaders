@@ -14,15 +14,6 @@ Sys_Animator::~Sys_Animator()
 	unsubscribeFromChannels();
 }
 
-void Sys_Animator::start()
-{
-	for (auto& id : m_actorIds)
-	{
-		Comp_SpriteSheet* spriteComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		spriteComp->cropSprite();
-	}
-}
-
 void Sys_Animator::setupRequirements()
 {
 	m_requirements.set((unsigned int)ComponentType::Position);
@@ -38,24 +29,30 @@ void Sys_Animator::unsubscribeFromChannels()
 {
 }
 
+void Sys_Animator::start()
+{
+	for (auto& id : m_actorIds)
+	{
+		Actor* invader = m_systemManager->getActorManager()->getActor(id);
+		Comp_SpriteSheet* spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		spriteComp->resetFrameStep();
+		spriteComp->cropSprite();
+		spriteComp->setFrameTime(0);
+	}
+}
+
 void Sys_Animator::update(const float& deltaTime)
 {
 	for (auto& id : m_actorIds)
 	{
-		Actor* actor = m_systemManager->getActorManager()->getActor(id);
-		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Movement* moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
-		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		spriteSheetComp->updatePosition(posComp->getPosition());
+		Comp_SpriteSheet* spriteSheetComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		if (spriteSheetComp->isAnimated())
-		{
 			if (spriteSheetComp->incrementFrameTime(deltaTime) >= spriteSheetComp->getFrameDuration())
 			{
 				spriteSheetComp->frameStep();
 				spriteSheetComp->cropSprite();
 				spriteSheetComp->setFrameTime(spriteSheetComp->getFrameTime() - spriteSheetComp->getFrameDuration());
 			}
-		}
 	}
 }
 

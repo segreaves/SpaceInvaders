@@ -11,7 +11,8 @@ State_Game::State_Game(StateManager* stateManager) :
 	State(stateManager),
 	m_playerBulletIndex(0),
 	m_remainingInvaders(0),
-	m_kills(0)
+	m_kills(0),
+	m_currentInvaderSpeed(0)
 {
 	m_gameView.setViewport(sf::FloatRect(0.15f, 0, 0.7f, 1));
 	m_hudView.setViewport(sf::FloatRect(0, 0, 1, 1));
@@ -79,27 +80,14 @@ void State_Game::deactivate()
 
 void State_Game::loadNextLevel()
 {
+	// increase level
 	m_levelManager.m_level++;
+	// reset invader count
 	m_remainingInvaders = m_levelManager.getInvaderIds().size();
-	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
+	// enable (or re-enable) all actors
 	for (auto& invaderId : m_levelManager.getInvaderIds())
-	{
-		Actor* invader = actorManager->getActor(invaderId);
-		Comp_Control* controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
-		Comp_Position* posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Movement* moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
-		Comp_Invader* invaderComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
-		Comp_SpriteSheet* spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		spriteComp->resetFrameStep();
-		spriteComp->setFrameTime(0);
-		moveComp->setVelocity(sf::Vector2f(0, 0));
-		float newSpeed = invaderComp->getBaseSpeed() + (m_levelManager.m_level - 1) * m_levelManager.getLevelSpeedIncrease();
-		controlComp->setMaxSpeed(newSpeed);
-		posComp->setPosition(m_levelManager.getInvaderSpawn(invaderId));
-		invaderComp->setTarget(posComp->getPosition());
-		actorManager->enableActor(invaderId);
-	}
-	updateInvaderFPS();
+		m_stateManager->getContext()->m_actorManager->enableActor(invaderId);
+	// start (or re-start) all systems
 	m_stateManager->getContext()->m_systemManager->start();
 }
 
@@ -113,42 +101,43 @@ void State_Game::onPlayerShoot()
 {
 	const int bulletId = m_levelManager.getPlayerBulletIds()[m_playerBulletIndex];
 	m_stateManager->getContext()->m_actorManager->enableActor(bulletId);
-	Comp_Bullet* bulletComp = m_stateManager->getContext()->m_actorManager->getActor(bulletId)->getComponent<Comp_Bullet>(ComponentType::Bullet);
-	Message msg((MessageType)ActorMessageType::Launch);
-	msg.m_sender = m_levelManager.getPlayerId();
-	msg.m_receiver = bulletId;
-	msg.m_xy.x = 0;
-	msg.m_xy.y = -1;
-	m_stateManager->getContext()->m_systemManager->getMessageHandler()->dispatch(msg);
-	incrementPlayerBullet();
+	onActorShoot(m_levelManager.getPlayerId(), bulletId, sf::Vector2f(0, -1));
+	m_playerBulletIndex = ++m_playerBulletIndex % m_levelManager.getPlayerBulletIds().size();
 }
 
 void State_Game::onInvaderShoot(int invaderId)
 {
 	const int bulletId = m_levelManager.getInvaderBulletIds()[m_invaderBulletIndex];
 	m_stateManager->getContext()->m_actorManager->enableActor(bulletId);
-	Comp_Bullet* bulletComp = m_stateManager->getContext()->m_actorManager->getActor(bulletId)->getComponent<Comp_Bullet>(ComponentType::Bullet);
-	Message msg((MessageType)ActorMessageType::Launch);
-	msg.m_sender = invaderId;
-	msg.m_receiver = bulletId;
-	msg.m_xy.x = 0;
-	msg.m_xy.y = 1;
-	m_stateManager->getContext()->m_systemManager->getMessageHandler()->dispatch(msg);
-	incrementInvaderBullet();
-}
-
-void State_Game::incrementPlayerBullet()
-{
-	m_playerBulletIndex = ++m_playerBulletIndex % m_levelManager.getPlayerBulletIds().size();
-}
-
-void State_Game::incrementInvaderBullet()
-{
+	onActorShoot(invaderId, bulletId, sf::Vector2f(0, 1));
 	m_invaderBulletIndex = ++m_invaderBulletIndex % m_levelManager.getInvaderBulletIds().size();
 }
 
-void State_Game::incrementShockwave()
+void State_Game::onActorShoot(const ActorId& shooterId, const ActorId& bulletId, const sf::Vector2f direction)
 {
+	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
+	Actor* bullet = actorManager->getActor(bulletId);
+	Actor* shooter = m_stateManager->getContext()->m_actorManager->getActor(shooterId);
+	Comp_Position* shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
+	Comp_Collision* shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
+
+	Comp_Position* bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
+	Comp_Collision* bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
+	bulletPos->setPosition(shooterPos->getPosition() +
+		direction * (bulletCol->getAABB().getSize().y / 2 + shooterCol->getAABB().getSize().y / 2.f));
+	Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
+	Comp_Bullet* bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
+	bulletMove->setVelocity(direction * bulletComp->getbulletSpeed());
+}
+
+void State_Game::instantiateShockwave(sf::Vector2f position)
+{
+	const int shockwaveId = m_levelManager.getShockwaveIds()[m_shockwaveIndex];
+	m_stateManager->getContext()->m_actorManager->enableActor(shockwaveId);
+	Comp_Position* shockwavePos = m_stateManager->getContext()->m_actorManager->getActor(shockwaveId)->getComponent<Comp_Position>(ComponentType::Position);
+	Comp_Collision* shockWaveCol = m_stateManager->getContext()->m_actorManager->getActor(shockwaveId)->getComponent<Comp_Collision>(ComponentType::Collision);
+	shockwavePos->setPosition(sf::Vector2f(position.x, position.y));
+	shockWaveCol->setPosition(position);
 	m_shockwaveIndex = ++m_shockwaveIndex % m_levelManager.getShockwaveIds().size();
 }
 
@@ -158,33 +147,7 @@ void State_Game::onInvaderDefeated(const int& invaderId)
 	if (--m_remainingInvaders == 0)
 		loadNextLevel();
 	else
-	{
-		Comp_Position* posComp = m_stateManager->getContext()->m_actorManager->getActor(invaderId)->getComponent<Comp_Position>(ComponentType::Position);
-		const int shockwaveId = m_levelManager.getShockwaveIds()[m_shockwaveIndex];
-		m_stateManager->getContext()->m_actorManager->enableActor(shockwaveId);
-		Message msg((MessageType)ActorMessageType::Explode);
-		msg.m_receiver = shockwaveId;
-		msg.m_sender = invaderId;
-		msg.m_xy.x = posComp->getPosition().x;
-		msg.m_xy.y = posComp->getPosition().y;
-		m_stateManager->getContext()->m_systemManager->getMessageHandler()->dispatch(msg);
-		incrementShockwave();
-		updateInvaderFPS();
-	}
-}
-
-void State_Game::updateInvaderFPS()
-{
-	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
-	for (auto& invaderId : m_levelManager.getInvaderIds())
-	{
-		Actor* invader = actorManager->getActor(invaderId);
-		Comp_Movement* moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
-		Comp_Invader* invaderComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
-		Comp_Control* controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
-		Comp_SpriteSheet* spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		spriteComp->setFPS(spriteComp->getDefaultFPS() * controlComp->getMaxSpeed() / invaderComp->getBaseSpeed());
-	}
+		instantiateShockwave(m_stateManager->getContext()->m_actorManager->getActor(invaderId)->getComponent<Comp_Position>(ComponentType::Position)->getPosition());
 }
 
 void State_Game::updateHUD()

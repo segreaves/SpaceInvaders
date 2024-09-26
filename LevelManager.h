@@ -36,6 +36,7 @@ public:
 	std::vector<ActorId>& getShockwaveIds() { return m_shockwaves; }
 	sf::Vector2f getInvaderSpawn(ActorId id);
 	sf::Vector2f getBunkerSpawn(ActorId id);
+	float getInvaderBaseSpeed() const { return m_invaderBaseSpeed; }
 	float getLevelSpeedIncrease() const { return m_levelSpeedIncrease; }
 	float getDefeatSpeedIncrease() const { return m_defeatSpeedIncrease; }
 	void setActorManager(ActorManager* actorManager) { m_actorManager = actorManager; }
@@ -53,14 +54,15 @@ private:
 	std::vector<ActorId> m_shockwaves;
 	std::unordered_map<ActorId, sf::Vector2f> m_invaderSpawn;
 	const int m_invaderCols = 12;
-	const sf::Vector2i m_invaderSeparation = sf::Vector2i(45, 45);
+	const sf::Vector2i m_invaderSeparation = sf::Vector2i(50, 45);
 	const int m_nBullets = 100;
 	const int m_nBunkers = 5;
 	const float m_bunkerSeparation = 170;
-	const float m_bunkerSpawnHeight = 250;
+	const float m_bunkerSpawnHeight = 160;
 	std::unordered_map<ActorId, sf::Vector2f> m_bunkerSpawn;
 	sf::FloatRect m_viewSpace;
 	const float m_invaderPadding = 10.f;
+	const float m_invaderBaseSpeed = 100;
 	const float m_levelSpeedIncrease = 10;
-	const float m_defeatSpeedIncrease = 2;
+	const float m_defeatSpeedIncrease = 3;
 };

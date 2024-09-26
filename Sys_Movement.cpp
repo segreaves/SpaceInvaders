@@ -14,10 +14,6 @@ Sys_Movement::~Sys_Movement()
 	unsubscribeFromChannels();
 }
 
-void Sys_Movement::start()
-{
-}
-
 void Sys_Movement::setupRequirements()
 {
 	m_requirements.set((unsigned int)ComponentType::Position);
@@ -29,6 +25,10 @@ void Sys_Movement::subscribeToChannels()
 }
 
 void Sys_Movement::unsubscribeFromChannels()
+{
+}
+
+void Sys_Movement::start()
 {
 }
 

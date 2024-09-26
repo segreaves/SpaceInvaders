@@ -26,7 +26,7 @@ void Sys_BunkerDamage::setupRequirements()
 {
 	m_requirements.set((unsigned int)ComponentType::Position);
 	m_requirements.set((unsigned int)ComponentType::Collision);
-	m_requirements.set((unsigned int)ComponentType::Sprite);
+	m_requirements.set((unsigned int)ComponentType::SpriteSheet);
 	m_requirements.set((unsigned int)ComponentType::Bunker);
 }
 

@@ -133,7 +133,6 @@ Actor* ActorManager::getActor(const ActorId& id)
 int ActorManager::loadActorProfile(const std::string actorName, const std::string tag)
 {
 	std::string fullPath = Utils::getWorkingDirectory() + "assets/profiles/" + actorName + ".dat";
-	//std::cout << "loadActorProfile at: " << fullPath << std::endl;
 	std::fstream file;
 	file.open(fullPath);
 	if (!file.is_open())

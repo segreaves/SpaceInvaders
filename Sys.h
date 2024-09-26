@@ -28,7 +28,6 @@ public:
 
 	virtual bool addActor(const ActorId& actorId);
 	virtual bool removeActor(const ActorId& actorId);
-	void removeAllActors();
 	bool hasActor(const ActorId& actorId);
 	bool fitsRequirements(const Bitmask& mask);
 

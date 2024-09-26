@@ -81,12 +81,6 @@ void SysManager::removeActor(const ActorId& actorId)
 		sys.second->removeActor(actorId);
 }
 
-void SysManager::removeAllActors()
-{
-	for (auto& sys : m_systems)
-		sys.second->removeAllActors();
-}
-
 void SysManager::setActorManager(ActorManager* actorManager)
 {
 	m_actorManager = actorManager;

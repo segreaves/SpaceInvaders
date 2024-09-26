@@ -15,20 +15,18 @@ Sys_Renderer::~Sys_Renderer()
 	unsubscribeFromChannels();
 }
 
+void Sys_Renderer::start()
+{
+}
+
 void Sys_Renderer::update(const float& deltaTime)
 {
-	if (m_actorIds.empty()) return;
 	for (auto& id : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
-		spriteComp->setPosition(posComp->getPosition());
 		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		if (spriteSheetComp)
-		{
-			spriteSheetComp->updatePosition(posComp->getPosition());
-		}
+		spriteSheetComp->updatePosition(posComp->getPosition());
 	}
 }
 
@@ -40,19 +38,11 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 {
 	for (auto& id : m_actorIds)
 	{
-		Actor* actor = m_systemManager->getActorManager()->getActor(id);
-		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Sprite* spriteComp = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
-		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		Comp_SpriteSheet* spriteSheetComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		// culling
 		sf::FloatRect view = windowManager->getCurrentViewSpace();
-		/*if (view.intersects(spriteComp->getDrawableBounds()))
-			spriteComp->draw(windowManager->getRenderWindow());*/
-		if (spriteSheetComp)
-		{
-			if (view.intersects(spriteSheetComp->getDrawableBounds()))
+		if (view.intersects(spriteSheetComp->getDrawableBounds()))
 			spriteSheetComp->draw(windowManager->getRenderWindow());
-		}
 	}
 }
 
@@ -64,14 +54,10 @@ void Sys_Renderer::notify(const Message& msg)
 {
 }
 
-void Sys_Renderer::start()
-{
-}
-
 void Sys_Renderer::setupRequirements()
 {
 	m_requirements.set((unsigned int)ComponentType::Position);
-	m_requirements.set((unsigned int)ComponentType::Sprite);
+	m_requirements.set((unsigned int)ComponentType::SpriteSheet);
 }
 
 void Sys_Renderer::subscribeToChannels()

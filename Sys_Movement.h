@@ -9,11 +9,11 @@ public:
 	Sys_Movement(SysManager* systemManager);
 	~Sys_Movement();
 
-	void start();
 	void setupRequirements();
 	void subscribeToChannels();
 	void unsubscribeFromChannels();
 
+	void start();
 	void update(const float& deltaTime);
 	void handleEvent(const ActorId& actorId, const ActorEventType& eventId);
 	void debugOverlay(WindowManager* windowManager);

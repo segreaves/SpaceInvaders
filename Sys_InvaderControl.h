@@ -28,11 +28,13 @@ public:
 	Trigger<unsigned int> m_invaderShoot;
 private:
 	void selectTrackedInvaders();
+	void increaseInvaderSpeed();
 	void handleMovement(const float& deltaTime, const ActorId& id, Comp_Position* posComp, Comp_Movement* moveComp, Comp_Control* controlComp, Comp_Invader* invComp, Comp_Collision* colComp);
 	void handleShooting(const float& deltaTime, const ActorId& id, Comp_Invader* invComp);
 
 	LevelManager* m_levelManager;
 	bool m_movingRight;
+	float m_currentInvaderSpeed;
 	const float m_maxTargetDistance = 50.0f;
 	ActorId m_leftInvader;
 	ActorId m_rightInvader;
