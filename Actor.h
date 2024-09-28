@@ -1,6 +1,6 @@
 #pragma once
 #include "Comp.h"
-#include "ECS_Params.h"
+#include "Params.h"
 #include <unordered_map>
 
 class Actor

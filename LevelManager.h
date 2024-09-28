@@ -27,7 +27,7 @@ public:
 	void createPlayerBullets();
 	void createInvaderBullets();
 	void createBunkers(sf::FloatRect viewSpace);
-	void createShockwaves();
+	void createShockwaves(const int& numInvaders);
 	int& getPlayerId() { return m_playerId; }
 	std::vector<ActorId>& getInvaderIds() { return m_invaders; }
 	std::vector<ActorId>& getPlayerBulletIds() { return m_playerBullets; }
@@ -36,15 +36,19 @@ public:
 	std::vector<ActorId>& getShockwaveIds() { return m_shockwaves; }
 	sf::Vector2f getInvaderSpawn(ActorId id);
 	sf::Vector2f getBunkerSpawn(ActorId id);
+	unsigned int getLevel() const { return m_level; }
 	float getInvaderBaseSpeed() const { return m_invaderBaseSpeed; }
 	float getLevelSpeedIncrease() const { return m_levelSpeedIncrease; }
 	float getDefeatSpeedIncrease() const { return m_defeatSpeedIncrease; }
 	void setActorManager(ActorManager* actorManager) { m_actorManager = actorManager; }
 
-	unsigned int m_level;
+	// overload the ++ operator
+	unsigned int operator++() { return ++m_level; }
+	unsigned int operator++(int) { return m_level++; }
 private:
 	void adjustColliderToSprite(Comp_Collision* colComp, Comp_SpriteSheet* sprite);
 
+	unsigned int m_level;
 	ActorManager* m_actorManager;
 	int m_playerId;
 	std::vector<ActorId> m_invaders;

@@ -5,6 +5,7 @@
 Sys::Sys(SysManager* systemManager) :
 	m_systemManager(systemManager)
 {
+	m_requirements = std::vector<Bitmask>();
 }
 
 Sys::~Sys()
@@ -34,10 +35,7 @@ bool Sys::hasActor(const ActorId& actor)
 
 bool Sys::fitsRequirements(const Bitmask& mask)
 {
-	for (int i = 0; i < m_requirements.size(); i++)
-		if (m_requirements.test(i) && !mask.test(i))
-			return false;
-	return true;
+	return std::find_if(m_requirements.begin(), m_requirements.end(), [&mask](const Bitmask& req) { return (req & mask) == req; }) != m_requirements.end();
 }
 
 int Sys::getActorCount() const

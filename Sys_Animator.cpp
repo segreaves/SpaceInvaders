@@ -16,9 +16,11 @@ Sys_Animator::~Sys_Animator()
 
 void Sys_Animator::setupRequirements()
 {
-	m_requirements.set((unsigned int)ComponentType::Position);
-	m_requirements.set((unsigned int)ComponentType::Movement);
-	m_requirements.set((unsigned int)ComponentType::SpriteSheet);
+	Bitmask req;
+	req.set((unsigned int)ComponentType::Position);
+	req.set((unsigned int)ComponentType::Movement);
+	req.set((unsigned int)ComponentType::SpriteSheet);
+	m_requirements.emplace_back(req);
 }
 
 void Sys_Animator::subscribeToChannels()
@@ -33,8 +35,8 @@ void Sys_Animator::start()
 {
 	for (auto& id : m_actorIds)
 	{
-		Actor* invader = m_systemManager->getActorManager()->getActor(id);
-		Comp_SpriteSheet* spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		Actor* actor = m_systemManager->getActorManager()->getActor(id);
+		Comp_SpriteSheet* spriteComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		spriteComp->resetFrameStep();
 		spriteComp->cropSprite();
 		spriteComp->setFrameTime(0);

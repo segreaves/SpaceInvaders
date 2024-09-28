@@ -16,8 +16,10 @@ Sys_Movement::~Sys_Movement()
 
 void Sys_Movement::setupRequirements()
 {
-	m_requirements.set((unsigned int)ComponentType::Position);
-	m_requirements.set((unsigned int)ComponentType::Movement);
+	Bitmask req;
+	req.set((unsigned int)ComponentType::Position);
+	req.set((unsigned int)ComponentType::Movement);
+	m_requirements.emplace_back(req);
 }
 
 void Sys_Movement::subscribeToChannels()

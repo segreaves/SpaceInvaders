@@ -40,8 +40,10 @@ void Sys_Collision::start()
 
 void Sys_Collision::setupRequirements()
 {
-	m_requirements.set((unsigned int)ComponentType::Position);
-	m_requirements.set((unsigned int)ComponentType::Collision);
+	Bitmask req;
+	req.set((unsigned int)ComponentType::Position);
+	req.set((unsigned int)ComponentType::Collision);
+	m_requirements.emplace_back(req);
 }
 
 void Sys_Collision::subscribeToChannels()
@@ -54,7 +56,6 @@ void Sys_Collision::unsubscribeFromChannels()
 
 void Sys_Collision::update(const float& deltaTime)
 {
-	if (m_actorIds.empty()) return;
 	detectCollisions();
 }
 
@@ -125,6 +126,7 @@ void Sys_Collision::actorCollisions()
 /// </summary>
 void Sys_Collision::detectCollisions()
 {
+	if (m_actorIds.empty()) return;
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	// check invader collisions
 	if (m_actorGroups.find("invader") != m_actorGroups.end())
@@ -157,7 +159,10 @@ void Sys_Collision::detectCollisions()
 	{
 		for (auto& shockwaveId : m_actorGroups["shockwave"])
 		{
-			Comp_Collision* shockwaveCollider = actorManager->getActor(shockwaveId)->getComponent<Comp_Collision>(ComponentType::Collision);
+			Actor* shockwave = actorManager->getActor(shockwaveId);
+			Comp_Collision* shockwaveCollider = shockwave->getComponent<Comp_Collision>(ComponentType::Collision);
+			Comp_Position* shockwavePosition = shockwave->getComponent<Comp_Position>(ComponentType::Position);
+			shockwaveCollider->setPosition(shockwavePosition->getPosition());
 			// check collisions against invaders
 			if (m_actorGroups.find("invader") != m_actorGroups.end())
 				for (auto& invaderId : m_actorGroups["invader"])
@@ -171,9 +176,6 @@ void Sys_Collision::detectCollisions()
 		{
 			Actor* bunker = actorManager->getActor(bunkerId);
 			Comp_Collision* bunkerCollider = bunker->getComponent<Comp_Collision>(ComponentType::Collision);
-			Comp_Position* bunkerPosition = bunker->getComponent<Comp_Position>(ComponentType::Position);
-			bunkerCollider->setPosition(bunkerPosition->getPosition());
-			// check collisions against bullets
 			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
 				for (auto& bulletId : m_actorGroups["bullet_player"])
 					if (detectActorCollision(bunkerId, bunkerCollider, actorManager->getActor(bulletId)))

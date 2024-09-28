@@ -24,10 +24,12 @@ void Sys_BunkerDamage::start()
 
 void Sys_BunkerDamage::setupRequirements()
 {
-	m_requirements.set((unsigned int)ComponentType::Position);
-	m_requirements.set((unsigned int)ComponentType::Collision);
-	m_requirements.set((unsigned int)ComponentType::SpriteSheet);
-	m_requirements.set((unsigned int)ComponentType::Bunker);
+	Bitmask req;
+	req.set((unsigned int)ComponentType::Position);
+	req.set((unsigned int)ComponentType::Collision);
+	req.set((unsigned int)ComponentType::SpriteSheet);
+	req.set((unsigned int)ComponentType::Bunker);
+	m_requirements.emplace_back(req);
 }
 
 void Sys_BunkerDamage::subscribeToChannels()

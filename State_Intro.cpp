@@ -1,6 +1,7 @@
 #include "State_Intro.h"
 #include "StateManager.h"
 #include "Utils.h"
+#include "Params.h"
 
 State_Intro::State_Intro(StateManager* stateManager) :
 	State(stateManager)
@@ -28,6 +29,7 @@ void State_Intro::onCreate()
 	m_text.setFont(m_font);
 	m_text.setString({ "SPACE INVADERS" });
 	m_text.setCharacterSize(150);
+	m_text.setFillColor(APP_COLOR);
 	sf::FloatRect textBounds = m_text.getLocalBounds();
 	m_text.setOrigin(
 		textBounds.left + textBounds.width / 2.0f,

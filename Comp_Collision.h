@@ -44,9 +44,14 @@ public:
 private:
 	void load(std::stringstream& ss) override
 	{
-		unsigned int origin = 0;
+		std::string origin;
 		ss >> m_AABB.width >> m_AABB.height  >> origin;
-		m_origin = (OriginType)origin;
+		if (origin == "Top")
+			m_origin = OriginType::Top;
+		else if (origin == "Bottom")
+			m_origin = OriginType::Bottom;
+		else
+			m_origin = OriginType::Medium;
 	}
 
 	sf::FloatRect m_AABB;

@@ -6,7 +6,8 @@ SpriteSheet::SpriteSheet(TextureManager* textureManager, bool sharedMemory = tru
 	m_totalFrames(0),
 	m_frame(0),
 	m_texture(nullptr),
-	m_sharedMemory(sharedMemory)
+	m_sharedMemory(sharedMemory),
+	m_origin(OriginType::Medium)
 {
 }
 
@@ -87,6 +88,12 @@ void SpriteSheet::setSpritePosition(const sf::Vector2f& position)
 	m_sprite.setPosition(position);
 }
 
+void SpriteSheet::setSpriteScale(const sf::Vector2f& scale)
+{
+	m_spriteScale = scale;
+	m_sprite.setScale(m_spriteScale);
+}
+
 void SpriteSheet::setSheetPadding(const sf::Vector2f& padding)
 {
 	m_sheetPadding = padding;
@@ -100,6 +107,16 @@ void SpriteSheet::setSpriteSpacing(const sf::Vector2f& spacing)
 void SpriteSheet::setSpriteOrigin(OriginType origin)
 {
 	m_origin = origin;
+}
+
+void SpriteSheet::setSpriteColor(const sf::Color& color)
+{
+	m_sprite.setColor(color);
+}
+
+void SpriteSheet::setSmooth(const bool& smooth)
+{
+	m_texture->setSmooth(smooth);
 }
 
 const sf::Vector2f& SpriteSheet::getSheetPadding() const { return m_sheetPadding; }

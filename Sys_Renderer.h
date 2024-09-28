@@ -22,4 +22,6 @@ public:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
+
+	void draw(WindowManager* windowManager, IDrawable* drawable);
 };

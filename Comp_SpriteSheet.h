@@ -1,13 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Comp.h"
+#include "IDrawable.h"
 #include "Utils.h"
 #include "SpriteSheet.h"
 
-class Comp_SpriteSheet : public Comp
+class Comp_SpriteSheet : public Comp, public IDrawable
 {
 public:
-	Comp_SpriteSheet() : Comp(),
+	Comp_SpriteSheet() :
+		IDrawable(),
 		m_spriteSheet(nullptr),
 		m_frameDuration(0.1f),
 		m_frameTime(0),
@@ -31,7 +32,11 @@ public:
 		if (m_spriteSheet) return;
 		m_spriteSheet = new SpriteSheet(textureManager, m_sharedMemory);
 		m_spriteSheet->setSpriteOrigin(m_origin);
-		m_spriteSheet->loadSheet("assets/profiles/" + m_sheetName + ".sheet");
+		if (m_spriteSheet->loadSheet("assets/profiles/" + m_sheetName + ".sheet"))
+		{
+			m_spriteSheet->setSpriteColor(getDefaultColor());
+			m_spriteSheet->setSmooth(false);
+		}
 	}
 
 	SpriteSheet* getSpriteSheet()
@@ -39,9 +44,9 @@ public:
 		return m_spriteSheet;
 	}
 
-	void updatePosition(const sf::Vector2f& vec)
+	void updatePosition(const sf::Vector2f& position)
 	{
-		m_spriteSheet->setSpritePosition(vec);
+		m_spriteSheet->setSpritePosition(position);
 	}
 
 	void draw(sf::RenderWindow* window)
@@ -50,16 +55,9 @@ public:
 		m_spriteSheet->draw(window);
 	}
 
-	sf::Color getDefaultColor() const
-	{
-		return m_defaultColor;
-	}
-
 	sf::FloatRect getDrawableBounds()
 	{
-		sf::Vector2f pos = m_spriteSheet->getSpritePosition();
-		sf::Vector2u size = m_spriteSheet->getSpriteSize();
-		return sf::FloatRect(pos.x - size.x / 2.f, pos.y - size.y / 2.f, size.x, size.y);
+		return m_spriteSheet->getSprite()->getGlobalBounds();
 	}
 
 	bool isAnimated()
@@ -75,7 +73,6 @@ public:
 	void resetFrameStep()
 	{
 		m_spriteSheet->resetFrame();
-	
 	}
 
 	void cropSprite()
@@ -123,18 +120,22 @@ private:
 	void load(std::stringstream& ss) override
 	{
 		std::string memoryUsage;
-		unsigned int origin = 0;
-		ss >> memoryUsage >> origin >> m_sheetName;
-		m_origin = (OriginType)origin;
+		std::string origin;
+		ss >> memoryUsage >> m_sheetName >> origin;
 		if (memoryUsage == "single_memory")
 			m_sharedMemory = false;
+		if (origin == "Top")
+			m_origin = OriginType::Top;
+		else if (origin == "Bottom")
+			m_origin = OriginType::Bottom;
+		else
+			m_origin = OriginType::Medium;
 	}
 
 	std::string m_sheetName;
 	SpriteSheet* m_spriteSheet;
 	bool m_sharedMemory;
 	OriginType m_origin;
-	const sf::Color m_defaultColor = sf::Color::White;
 	float m_frameDuration;
 	float m_frameTime;
 	float m_defaultFPS = 1.f;

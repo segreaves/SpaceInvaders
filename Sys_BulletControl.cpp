@@ -20,11 +20,12 @@ void Sys_BulletControl::start()
 
 void Sys_BulletControl::setupRequirements()
 {
-	m_requirements.set((unsigned int)ComponentType::Position);
-	m_requirements.set((unsigned int)ComponentType::Movement);
-	m_requirements.set((unsigned int)ComponentType::Collision);
-	m_requirements.set((unsigned int)ComponentType::SpriteSheet);
-	m_requirements.set((unsigned int)ComponentType::Bullet);
+	Bitmask req;
+	req.set((unsigned int)ComponentType::Position);
+	req.set((unsigned int)ComponentType::Movement);
+	req.set((unsigned int)ComponentType::Collision);
+	req.set((unsigned int)ComponentType::Bullet);
+	m_requirements.emplace_back(req);
 }
 
 void Sys_BulletControl::subscribeToChannels()

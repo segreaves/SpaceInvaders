@@ -10,6 +10,7 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	addComponentType<Comp_Sprite>(ComponentType::Sprite);
 	addComponentType<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 	addComponentType<Comp_Movement>(ComponentType::Movement);
+	addComponentType<Comp_Target>(ComponentType::Target);
 	addComponentType<Comp_Control>(ComponentType::Control);
 	addComponentType<Comp_Collision>(ComponentType::Collision);
 	addComponentType<Comp_Player>(ComponentType::Player);
@@ -130,7 +131,7 @@ Actor* ActorManager::getActor(const ActorId& id)
 	return it == m_actors.end() ? nullptr : it->second;
 }
 
-int ActorManager::loadActorProfile(const std::string actorName, const std::string tag)
+unsigned int ActorManager::loadActorProfile(const std::string actorName, const std::string tag)
 {
 	std::string fullPath = Utils::getWorkingDirectory() + "assets/profiles/" + actorName + ".dat";
 	std::fstream file;
@@ -160,6 +161,12 @@ int ActorManager::loadActorProfile(const std::string actorName, const std::strin
 			addComponent(actorId, ComponentType::Movement);
 			Comp_Movement* movement = actor->getComponent<Comp_Movement>(ComponentType::Movement);
 			ss >> *movement;
+		}
+		else if (attr == "MoveTarget")
+		{
+			addComponent(actorId, ComponentType::Target);
+			Comp_Target* target = actor->getComponent<Comp_Target>(ComponentType::Target);
+			ss >> *target;
 		}
 		else if (attr == "Control")
 		{

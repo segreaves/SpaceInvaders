@@ -3,6 +3,10 @@
 #include "Comp.h"
 #include "Utils.h"
 
+/// <summary>
+/// (Deprecated - Use Comp_SpriteSheet) Component for drawing a sprite.
+/// This component is no longer in use because it uses unmanaged memory.
+/// </summary>
 class Comp_Sprite : public Comp
 {
 public:

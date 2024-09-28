@@ -185,9 +185,6 @@
     <ClInclude Include="MessageHandler.h">
       <Filter>Header Files\Core\ECS\Messaging</Filter>
     </ClInclude>
-    <ClInclude Include="ECS_Params.h">
-      <Filter>Header Files\Core\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="State_Game.h">
       <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
@@ -301,6 +298,18 @@
     </ClInclude>
     <ClInclude Include="Direction.h">
       <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="IDrawable.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeType.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Params.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Target.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

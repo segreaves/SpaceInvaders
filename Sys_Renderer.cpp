@@ -25,7 +25,7 @@ void Sys_Renderer::update(const float& deltaTime)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		IDrawable* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		spriteSheetComp->updatePosition(posComp->getPosition());
 	}
 }
@@ -38,11 +38,9 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 {
 	for (auto& id : m_actorIds)
 	{
-		Comp_SpriteSheet* spriteSheetComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		// culling
-		sf::FloatRect view = windowManager->getCurrentViewSpace();
-		if (view.intersects(spriteSheetComp->getDrawableBounds()))
-			spriteSheetComp->draw(windowManager->getRenderWindow());
+		Actor* actor = m_systemManager->getActorManager()->getActor(id);
+		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		draw(windowManager, static_cast<IDrawable*>(spriteSheetComp));
 	}
 }
 
@@ -54,10 +52,19 @@ void Sys_Renderer::notify(const Message& msg)
 {
 }
 
+void Sys_Renderer::draw(WindowManager* windowManager, IDrawable* drawable)
+{
+	if (!drawable) return;
+	if (windowManager->getCurrentViewSpace().intersects(drawable->getDrawableBounds()))
+		drawable->draw(windowManager->getRenderWindow());
+}
+
 void Sys_Renderer::setupRequirements()
 {
-	m_requirements.set((unsigned int)ComponentType::Position);
-	m_requirements.set((unsigned int)ComponentType::SpriteSheet);
+	Bitmask req;
+	req.set((unsigned int)ComponentType::Position);
+	req.set((unsigned int)ComponentType::SpriteSheet);
+	m_requirements.emplace_back(req);
 }
 
 void Sys_Renderer::subscribeToChannels()

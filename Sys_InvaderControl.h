@@ -29,7 +29,7 @@ public:
 private:
 	void selectTrackedInvaders();
 	void increaseInvaderSpeed();
-	void handleMovement(const float& deltaTime, const ActorId& id, Comp_Position* posComp, Comp_Movement* moveComp, Comp_Control* controlComp, Comp_Invader* invComp, Comp_Collision* colComp);
+	void handleMovement(const float& deltaTime, const ActorId& id, Comp_Position* posComp, Comp_Movement* moveComp, Comp_Control* controlComp, Comp_Target* targetComp, Comp_Collision* colComp);
 	void handleShooting(const float& deltaTime, const ActorId& id, Comp_Invader* invComp);
 
 	LevelManager* m_levelManager;

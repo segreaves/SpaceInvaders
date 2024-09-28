@@ -1,6 +1,6 @@
 #pragma once
 #include "ISubscriber.h"
-#include "ECS_Params.h"
+#include "Params.h"
 #include "ActorManager.h"
 #include <vector>
 
@@ -33,7 +33,7 @@ public:
 
 	int getActorCount() const;
 protected:
-	Bitmask m_requirements;
+	std::vector<Bitmask> m_requirements;
 	std::vector<ActorId> m_actorIds;
 	SysManager* m_systemManager;
 };

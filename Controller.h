@@ -25,7 +25,7 @@ public:
 private:
 	bool m_hasFocus;
 	WindowManager* m_windowManager;
-	const float m_mouseSensitivity = 1e4;
+	const float m_mouseSensitivity = 1;
 	sf::Vector2f m_movementInput;
 	sf::Vector2f m_screenCenter;
 };

@@ -45,7 +45,7 @@ void State_Game::onCreate()
 	m_levelManager.createPlayerBullets();
 	m_levelManager.createInvaderBullets();
 	m_levelManager.createInvaders(getGameViewSpace());
-	m_levelManager.createShockwaves();
+	m_levelManager.createShockwaves(m_levelManager.getInvaderIds().size());
 	m_levelManager.createBunkers(getGameViewSpace());
 	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
 	actorManager->enableActor(m_levelManager.getPlayerId());
@@ -81,7 +81,7 @@ void State_Game::deactivate()
 void State_Game::loadNextLevel()
 {
 	// increase level
-	m_levelManager.m_level++;
+	m_levelManager++;
 	// reset invader count
 	m_remainingInvaders = m_levelManager.getInvaderIds().size();
 	// enable (or re-enable) all actors
@@ -95,6 +95,8 @@ void State_Game::onPlayerMove(sf::Vector2f xy)
 {
 	Comp_Control* controlComp = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Control>(ComponentType::Control);
 	controlComp->setMovementInput(xy);
+	Comp_Target* targetComp = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Target>(ComponentType::Target);
+	targetComp->setTarget(targetComp->getTarget() + xy);
 }
 
 void State_Game::onPlayerShoot()
@@ -132,28 +134,28 @@ void State_Game::onActorShoot(const ActorId& shooterId, const ActorId& bulletId,
 
 void State_Game::instantiateShockwave(sf::Vector2f position)
 {
-	const int shockwaveId = m_levelManager.getShockwaveIds()[m_shockwaveIndex];
-	m_stateManager->getContext()->m_actorManager->enableActor(shockwaveId);
+	const int shockwaveId = m_levelManager.getShockwaveIds()[m_shockwaveIndex++ % m_levelManager.getShockwaveIds().size()];
 	Comp_Position* shockwavePos = m_stateManager->getContext()->m_actorManager->getActor(shockwaveId)->getComponent<Comp_Position>(ComponentType::Position);
-	Comp_Collision* shockWaveCol = m_stateManager->getContext()->m_actorManager->getActor(shockwaveId)->getComponent<Comp_Collision>(ComponentType::Collision);
-	shockwavePos->setPosition(sf::Vector2f(position.x, position.y));
-	shockWaveCol->setPosition(position);
-	m_shockwaveIndex = ++m_shockwaveIndex % m_levelManager.getShockwaveIds().size();
+	Comp_Collision* shockwaveCol = m_stateManager->getContext()->m_actorManager->getActor(shockwaveId)->getComponent<Comp_Collision>(ComponentType::Collision);
+	shockwavePos->setPosition(position);
+	Comp_Shockwave* shockwaveComp = m_stateManager->getContext()->m_actorManager->getActor(shockwaveId)->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
+	shockwaveComp->setRadius(0);
+	shockwaveComp->resetTime();
+	m_stateManager->getContext()->m_actorManager->enableActor(shockwaveId);
 }
 
 void State_Game::onInvaderDefeated(const int& invaderId)
 {
 	m_kills++;
+	instantiateShockwave(m_stateManager->getContext()->m_actorManager->getActor(invaderId)->getComponent<Comp_Position>(ComponentType::Position)->getPosition());
 	if (--m_remainingInvaders == 0)
 		loadNextLevel();
-	else
-		instantiateShockwave(m_stateManager->getContext()->m_actorManager->getActor(invaderId)->getComponent<Comp_Position>(ComponentType::Position)->getPosition());
 }
 
 void State_Game::updateHUD()
 {
 	m_scoreText.setString("Score: " + std::to_string(0));
-	m_levelText.setString("Level: " + std::to_string(m_levelManager.m_level));
+	m_levelText.setString("Level: " + std::to_string(m_levelManager.getLevel()));
 	m_livesText.setString("Lives: " + std::to_string(3));
 	m_killsText.setString("Kills: " + std::to_string(m_kills));
 	m_fpsText.setString("FPS: " + std::to_string(m_fps));
@@ -183,27 +185,33 @@ void State_Game::setHUDStyle()
 	m_scoreText.setFont(m_font);
 	m_scoreText.setCharacterSize(m_fontSize);
 	m_scoreText.setPosition(m_hudPadding, m_hudPadding);
+	m_scoreText.setFillColor(APP_COLOR);
 	m_levelText.setFont(m_font);
 	m_levelText.setCharacterSize(m_fontSize);
 	m_levelText.setPosition(m_hudPadding, m_hudPadding + m_fontSize);
+	m_levelText.setFillColor(APP_COLOR);
 	m_livesText.setFont(m_font);
 	m_livesText.setCharacterSize(m_fontSize);
 	m_livesText.setPosition(m_hudPadding, m_hudPadding + 2 * m_fontSize);
+	m_livesText.setFillColor(APP_COLOR);
 	m_killsText.setFont(m_font);
 	m_killsText.setCharacterSize(m_fontSize);
 	m_killsText.setPosition(m_hudPadding, m_hudPadding + 3 * m_fontSize);
+	m_killsText.setFillColor(APP_COLOR);
 	m_fpsText.setFont(m_font);
 	m_fpsText.setCharacterSize(m_fontSize);
 	m_fpsText.setPosition(m_hudPadding, m_hudPadding + 4 * m_fontSize);
+	m_fpsText.setFillColor(APP_COLOR);
 }
 
 void State_Game::setWindowOutline()
 {
-	m_background.setSize(m_gameView.getSize() - sf::Vector2f(2, 2));
-	m_background.setPosition(1, 1);
+	int outlineThickness = 2;
+	m_background.setSize(m_gameView.getSize() - sf::Vector2f(2 * outlineThickness, 2 * outlineThickness));
+	m_background.setPosition(outlineThickness, outlineThickness);
 	m_background.setFillColor(sf::Color::Black);
-	m_background.setOutlineColor(sf::Color::White);
-	m_background.setOutlineThickness(1);
+	m_background.setOutlineColor(APP_COLOR);
+	m_background.setOutlineThickness(outlineThickness);
 }
 
 sf::FloatRect State_Game::getGameViewSpace()

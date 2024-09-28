@@ -86,10 +86,17 @@ void LevelManager::createBunkers(sf::FloatRect viewSpace)
 	}
 }
 
-void LevelManager::createShockwaves()
+void LevelManager::createShockwaves(const int& numInvaders)
 {
-	for (unsigned int i = 0; i < m_invaders.size(); i++)
-		m_shockwaves.push_back(m_actorManager->loadActorProfile("shockwave", "shockwave"));
+	for (unsigned int i = 0; i < numInvaders; i++)
+	{
+		unsigned int shockwaveId = m_actorManager->loadActorProfile("shockwave", "shockwave");
+		m_shockwaves.push_back(shockwaveId);
+		Comp_SpriteSheet* sprite = m_actorManager->getActor(shockwaveId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		sf::Color shockwaveColor = APP_COLOR;
+		shockwaveColor.a = 50;
+		sprite->getSpriteSheet()->setSpriteColor(shockwaveColor);
+	}
 }
 
 sf::Vector2f LevelManager::getInvaderSpawn(ActorId id)

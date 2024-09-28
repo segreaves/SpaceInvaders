@@ -6,6 +6,7 @@ enum class ComponentType
 	Sprite,
 	SpriteSheet,
 	Movement,
+	Target,
 	Control,
 	Collision,
 	Player,

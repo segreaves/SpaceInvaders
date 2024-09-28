@@ -23,9 +23,12 @@ public:
 	const sf::Vector2f& getSpritePosition() const;
 	void setSpriteSize(const sf::Vector2u& size);
 	void setSpritePosition(const sf::Vector2f& position);
+	void setSpriteScale(const sf::Vector2f& scale);
 	void setSheetPadding(const sf::Vector2f& padding);
 	void setSpriteSpacing(const sf::Vector2f& spacing);
 	void setSpriteOrigin(OriginType origin);
+	void setSpriteColor(const sf::Color& color);
+	void setSmooth(const bool& smooth);
 	const sf::Vector2f& getSheetPadding() const;
 	const sf::Vector2f& getSpriteSpacing() const;
 	const sf::IntRect& getCropRect() const;
