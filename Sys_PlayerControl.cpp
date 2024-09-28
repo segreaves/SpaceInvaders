@@ -58,10 +58,14 @@ void Sys_PlayerControl::update(const float& deltaTime)
 		float lowerBound = m_levelManager->getViewSpace().getPosition().x;
 		float upperBound = m_levelManager->getViewSpace().getPosition().x + m_levelManager->getViewSpace().getSize().x;
 		targetComp->setTarget(sf::Vector2f(targetComp->getTarget().x < lowerBound ? lowerBound : (targetComp->getTarget().x > upperBound ? upperBound : targetComp->getTarget().x), targetComp->getTarget().y));
+		
 		Comp_Control* controlComp = player->getComponent<Comp_Control>(ComponentType::Control);
-		Comp_Movement* moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
+		Comp_Position* posComp = player->getComponent<Comp_Position>(ComponentType::Position);
+		sf::Vector2f direction = targetComp->getTarget() - posComp->getPosition();
 
-		moveComp->accelerate(controlComp->getMovementInput());
+		Comp_Movement* moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
+		controlComp->setMovementInput(direction);
+		moveComp->accelerate(controlComp->getMovementInput() * controlComp->getMaxAcceleration());
 
 		// check if player is out of bounds
 		Comp_Collision* colComp = player->getComponent<Comp_Collision>(ComponentType::Collision);

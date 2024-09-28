@@ -29,7 +29,7 @@ private:
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();
 	void onInvaderShoot(int invaderId);
-	void onActorShoot(const ActorId& shooterId, const ActorId& bulletId, const sf::Vector2f direction);
+	void onActorShoot(const ActorId& shooterId, const ActorId& bulletId, const sf::Vector2f direction, const float& knockbackForce);
 	void instantiateShockwave(sf::Vector2f position);
 	void onInvaderDefeated(const int& invaderId);
 

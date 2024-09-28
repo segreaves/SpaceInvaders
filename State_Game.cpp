@@ -93,8 +93,6 @@ void State_Game::loadNextLevel()
 
 void State_Game::onPlayerMove(sf::Vector2f xy)
 {
-	Comp_Control* controlComp = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Control>(ComponentType::Control);
-	controlComp->setMovementInput(xy);
 	Comp_Target* targetComp = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Target>(ComponentType::Target);
 	targetComp->setTarget(targetComp->getTarget() + xy);
 }
@@ -103,7 +101,7 @@ void State_Game::onPlayerShoot()
 {
 	const int bulletId = m_levelManager.getPlayerBulletIds()[m_playerBulletIndex];
 	m_stateManager->getContext()->m_actorManager->enableActor(bulletId);
-	onActorShoot(m_levelManager.getPlayerId(), bulletId, sf::Vector2f(0, -1));
+	onActorShoot(m_levelManager.getPlayerId(), bulletId, sf::Vector2f(0, -1), 1000000);
 	m_playerBulletIndex = ++m_playerBulletIndex % m_levelManager.getPlayerBulletIds().size();
 }
 
@@ -111,11 +109,11 @@ void State_Game::onInvaderShoot(int invaderId)
 {
 	const int bulletId = m_levelManager.getInvaderBulletIds()[m_invaderBulletIndex];
 	m_stateManager->getContext()->m_actorManager->enableActor(bulletId);
-	onActorShoot(invaderId, bulletId, sf::Vector2f(0, 1));
+	onActorShoot(invaderId, bulletId, sf::Vector2f(0, 1), 25000);
 	m_invaderBulletIndex = ++m_invaderBulletIndex % m_levelManager.getInvaderBulletIds().size();
 }
 
-void State_Game::onActorShoot(const ActorId& shooterId, const ActorId& bulletId, const sf::Vector2f direction)
+void State_Game::onActorShoot(const ActorId& shooterId, const ActorId& bulletId, const sf::Vector2f direction, const float& knockbackForce)
 {
 	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
 	Actor* bullet = actorManager->getActor(bulletId);
@@ -130,6 +128,9 @@ void State_Game::onActorShoot(const ActorId& shooterId, const ActorId& bulletId,
 	Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
 	Comp_Bullet* bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
 	bulletMove->setVelocity(direction * bulletComp->getbulletSpeed());
+	// knock-back
+	Comp_Movement* moveComp = m_stateManager->getContext()->m_actorManager->getActor(shooterId)->getComponent<Comp_Movement>(ComponentType::Movement);
+	moveComp->accelerate(sf::Vector2f(0, -knockbackForce * direction.y));
 }
 
 void State_Game::instantiateShockwave(sf::Vector2f position)
