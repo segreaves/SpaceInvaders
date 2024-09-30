@@ -1,5 +1,6 @@
 #pragma once
 #include "Sys.h"
+#include "Trigger.h"
 
 class SysManager;
 class LevelManager;
@@ -24,4 +25,6 @@ public:
 	void setLevelManager(LevelManager* levelManager);
 private:
 	LevelManager* m_levelManager;
+
+	unsigned int m_playerBulletIndex;
 };

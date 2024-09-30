@@ -20,4 +20,10 @@ public:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
+private:
+	void handleAnimation(Comp_SpriteSheet* spriteSheetComp, const float& deltaTime);
+	void handleBlinking(Comp_SpriteSheet* spriteSheetComp, const float& deltaTime);
+
+	const float m_maxDmgBlinkTime = 0.15;
+	const int m_dmgBlinkFrames = 7;
 };

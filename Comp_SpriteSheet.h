@@ -9,12 +9,14 @@ class Comp_SpriteSheet : public Comp, public IDrawable
 public:
 	Comp_SpriteSheet() :
 		IDrawable(),
+		m_enabled(true),
 		m_spriteSheet(nullptr),
 		m_frameDuration(0.1f),
 		m_frameTime(0),
 		m_fps(0),
 		m_sharedMemory(true),
-		m_origin(OriginType::Medium)
+		m_origin(OriginType::Medium),
+		m_dmgBlinks(0)
 	{
 	}
 
@@ -51,7 +53,7 @@ public:
 
 	void draw(sf::RenderWindow* window)
 	{
-		if (!m_spriteSheet) return;
+		if (!m_spriteSheet || !m_enabled) return;
 		m_spriteSheet->draw(window);
 	}
 
@@ -63,6 +65,16 @@ public:
 	bool isAnimated()
 	{
 		return m_spriteSheet->getTotalFrames() > 1;
+	}
+
+	bool isEnabled()
+	{
+		return m_enabled;
+	}
+
+	void setEnabled(bool enabled)
+	{
+		m_enabled = enabled;
 	}
 
 	void frameStep()
@@ -116,6 +128,29 @@ public:
 	{
 		return m_defaultFPS;
 	}
+
+	void startDmgBlink()
+	{
+		m_enabled = false;
+		m_dmgBlinkTime = 0;
+		m_dmgBlinks = 0;
+		m_isBlinking = true;
+	}
+
+	void stopDmgBlink()
+	{
+		m_isBlinking = false;
+	}
+
+	float incrementBlinkTime(const float& deltaTime)
+	{
+		m_dmgBlinkTime += deltaTime;
+		return m_dmgBlinkTime;
+	}
+
+	bool m_isBlinking;
+	float m_dmgBlinkTime;
+	int m_dmgBlinks;
 private:
 	void load(std::stringstream& ss) override
 	{
@@ -132,6 +167,7 @@ private:
 			m_origin = OriginType::Medium;
 	}
 
+	bool m_enabled;
 	std::string m_sheetName;
 	SpriteSheet* m_spriteSheet;
 	bool m_sharedMemory;

@@ -150,10 +150,11 @@
     <ClCompile Include="State_Game.cpp" />
     <ClCompile Include="State_Intro.cpp" />
     <ClCompile Include="State_Menu.cpp" />
+    <ClCompile Include="State_Paused.cpp" />
     <ClCompile Include="Sys.cpp" />
     <ClCompile Include="SysManager.cpp" />
     <ClCompile Include="Sys_Animator.cpp" />
-    <ClCompile Include="Sys_BunkerDamage.cpp" />
+    <ClCompile Include="Sys_BunkerControl.cpp" />
     <ClCompile Include="Sys_Shockwave.cpp" />
     <ClCompile Include="Sys_InvaderControl.cpp" />
     <ClCompile Include="Sys_Collision.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Channel.h" />
     <ClInclude Include="Comp.h" />
     <ClInclude Include="ComponentType.h" />
+    <ClInclude Include="Comp_Health.h" />
     <ClInclude Include="Comp_Target.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="Comp_Shockwave.h" />
@@ -192,8 +194,9 @@
     <ClInclude Include="OriginType.h" />
     <ClInclude Include="ShapeType.h" />
     <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="State_Paused.h" />
     <ClInclude Include="Sys_Animator.h" />
-    <ClInclude Include="Sys_BunkerDamage.h" />
+    <ClInclude Include="Sys_BunkerControl.h" />
     <ClInclude Include="Sys_Shockwave.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Trigger.h" />

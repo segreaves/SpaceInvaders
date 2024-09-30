@@ -1,4 +1,5 @@
 #include "WindowManager.h"
+#include "Params.h"
 
 WindowManager::WindowManager(const std::string& title, const sf::Vector2u& size)
 {
@@ -36,7 +37,7 @@ void WindowManager::update(float deltaTime)
 
 void WindowManager::drawStart()
 {
-	m_window.clear();
+	m_window.clear(BGD_COLOR);
 }
 
 void WindowManager::drawEnd()

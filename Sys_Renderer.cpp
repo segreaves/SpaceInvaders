@@ -40,7 +40,8 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
 		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		draw(windowManager, static_cast<IDrawable*>(spriteSheetComp));
+		if (spriteSheetComp->isEnabled())
+			draw(windowManager, static_cast<IDrawable*>(spriteSheetComp));
 	}
 }
 

@@ -7,7 +7,7 @@
 #include "Sys_Collision.h"
 #include "Sys_InvaderControl.h"
 #include "Sys_BulletControl.h"
-#include "Sys_BunkerDamage.h"
+#include "Sys_BunkerControl.h"
 #include "Sys_Shockwave.h"
 #include "Sys_Animator.h"
 #include "MessageHandler.h"

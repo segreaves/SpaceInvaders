@@ -18,6 +18,7 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	addComponentType<Comp_Bullet>(ComponentType::Bullet);
 	addComponentType<Comp_Bunker>(ComponentType::Bunker);
 	addComponentType<Comp_Shockwave>(ComponentType::Shockwave);
+	addComponentType<Comp_Health>(ComponentType::Health);
 }
 
 ActorManager::~ActorManager()
@@ -117,6 +118,7 @@ void ActorManager::enableAllActors()
 void ActorManager::disableActor(const ActorId& id)
 {
 	m_systemManager->actorModified(id, Bitmask(0));
+	m_actorDisabled.dispatch(id);
 }
 
 void ActorManager::disableAllActors()
@@ -222,6 +224,12 @@ unsigned int ActorManager::loadActorProfile(const std::string actorName, const s
 			Comp_SpriteSheet* spriteSheet = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 			ss >> *spriteSheet;
 			spriteSheet->create(m_textureManager);
+		}
+		else if (attr == "Health")
+		{
+			addComponent(actorId, ComponentType::Health);
+			Comp_Health* health = actor->getComponent<Comp_Health>(ComponentType::Health);
+			ss >> *health;
 		}
 		else
 			std::cerr << "Unknown attribute: " << attr << std::endl;

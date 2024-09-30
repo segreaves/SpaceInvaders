@@ -1,15 +1,15 @@
 #include "StateManager.h"
 #include "State_Intro.h"
-#include "State_Menu.h"
 #include "State_Game.h"
+#include "State_Paused.h"
 #include <iostream>
 
 StateManager::StateManager(Context* context) :
 	m_context(context)
 {
 	registerState<State_Intro>(StateType::Intro);
-	registerState<State_Menu>(StateType::Menu);
 	registerState<State_Game>(StateType::Game);
+	registerState<State_Paused>(StateType::Paused);
 }
 
 StateManager::~StateManager()

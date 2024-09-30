@@ -19,6 +19,5 @@ private:
 	sf::View m_view;
 	sf::Font m_font;
 	sf::Text m_text;
-	sf::RectangleShape m_panel;
 	std::string m_continueInput = "Intro_Continue";
 };

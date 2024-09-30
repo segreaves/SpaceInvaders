@@ -28,7 +28,7 @@ public:
 private:
 	void actorCollisions();
 	void detectCollisions();
-	bool detectActorCollision(const ActorId& actorId, Comp_Collision* colComp, Actor* otherActor);
+	bool detectActorCollision(const ActorId& actorId, const ActorId& otherActor);
 
 	std::unordered_map<std::string, std::vector<ActorId>> m_actorGroups;
 };

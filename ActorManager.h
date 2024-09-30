@@ -13,8 +13,10 @@
 #include "Comp_Bunker.h"
 #include "Comp_Shockwave.h"
 #include "Comp_Target.h"
+#include "Comp_Health.h"
 #include "ActorEventType.h"
 #include "TextureManager.h"
+#include "Trigger.h"
 #include <functional>
 
 class SysManager;
@@ -47,6 +49,8 @@ public:
 			std::cout << "! Fatal Error: ComponentFactory has reached maximum capacity." << std::endl;
 		m_componentFactory[compType] = []()->Comp* { return new T(); };
 	}
+
+	Trigger<unsigned int> m_actorDisabled;
 private:
 	unsigned int m_idCounter;
 	std::unordered_map<ActorId, Actor*> m_actors;

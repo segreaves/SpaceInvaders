@@ -88,17 +88,41 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 	switch (eventId)
 	{
 		case ActorEventType::Despawned:
+		{
 			m_systemManager->getActorManager()->disableActor(actorId);
+			Comp_Position* posComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Position>(ComponentType::Position);
+			instantiateShockwave(posComp->getPosition());
 			if (!m_actorIds.empty())
 			{
 				selectTrackedInvaders();
 				increaseInvaderSpeed();
 			}
-			m_invaderDefeated.dispatch(actorId);
 			break;
+		}
 		case ActorEventType::Shoot:
-			m_invaderShoot.dispatch(actorId);
+		{
+			const int bulletId = m_levelManager->getInvaderBulletIds()[m_invaderBulletIndex++ % m_levelManager->getInvaderBulletIds().size()];
+			ActorManager* actorManager = m_systemManager->getActorManager();
+			actorManager->enableActor(bulletId);
+			sf::Vector2f shootDirection(0, 1);
+			Actor* bullet = actorManager->getActor(bulletId);
+			Actor* shooter = actorManager->getActor(actorId);
+			Comp_Position* shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
+			Comp_Collision* shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
+			// set bullet just below invader
+			Comp_Position* bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
+			Comp_Collision* bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
+			bulletPos->setPosition(shooterPos->getPosition() +
+				shootDirection * (bulletCol->getAABB().getSize().y / 2 + shooterCol->getAABB().getSize().y / 2.f));
+			Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
+			Comp_Bullet* bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
+			bulletMove->setVelocity(shootDirection * bulletComp->getbulletSpeed());
+			// knock-back
+			float knockback = 25000;
+			Comp_Movement* moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
+			moveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
 			break;
+		}
 	}
 }
 
@@ -136,11 +160,6 @@ void Sys_InvaderControl::notify(const Message& msg)
 			else if (other->getTag() == "bullet_player")// invader collided with player bullet, invader dies
 			{
 				m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
-				// inform bullet of collision
-				Message msgOther((MessageType)ActorMessageType::Collision);
-				msgOther.m_sender = msg.m_receiver;
-				msgOther.m_receiver = other->getId();
-				m_systemManager->getMessageHandler()->dispatch(msgOther);
 			}
 			break;
 	}
@@ -179,6 +198,19 @@ void Sys_InvaderControl::selectTrackedInvaders()
 	if (leftSprite) leftSprite->setColor(sf::Color::Red);
 	Comp_Sprite* rightSprite = actorManager->getActor(m_rightInvader)->getComponent<Comp_Sprite>(ComponentType::Sprite);
 	if (rightSprite) rightSprite->setColor(sf::Color::Red);
+}
+
+void Sys_InvaderControl::instantiateShockwave(sf::Vector2f position)
+{
+	const int shockwaveId = m_levelManager->getShockwaveIds()[m_shockwaveIndex++ % m_levelManager->getShockwaveIds().size()];
+	ActorManager* actorManager = m_systemManager->getActorManager();
+	Comp_Position* shockwavePos = actorManager->getActor(shockwaveId)->getComponent<Comp_Position>(ComponentType::Position);
+	Comp_Collision* shockwaveCol = actorManager->getActor(shockwaveId)->getComponent<Comp_Collision>(ComponentType::Collision);
+	shockwavePos->setPosition(position);
+	Comp_Shockwave* shockwaveComp = actorManager->getActor(shockwaveId)->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
+	shockwaveComp->setRadius(0);
+	shockwaveComp->resetTime();
+	actorManager->enableActor(shockwaveId);
 }
 
 void Sys_InvaderControl::increaseInvaderSpeed()

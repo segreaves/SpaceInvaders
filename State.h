@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Utils.h"
 
 class StateManager;
 
@@ -11,6 +12,7 @@ public:
 		m_stateManager(stateManager),
 		m_transparent(false)
 	{
+		m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
 	}
 
 	virtual void update(const float& deltaTime) = 0;
@@ -27,4 +29,6 @@ public:
 protected:
 	StateManager* m_stateManager;
 	bool m_transparent;
+	sf::Font m_font;
+	std::vector<sf::Text> m_screenTexts = std::vector<sf::Text>();
 };

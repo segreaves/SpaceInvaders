@@ -56,6 +56,15 @@ void Sys_Collision::unsubscribeFromChannels()
 
 void Sys_Collision::update(const float& deltaTime)
 {
+	// update all collision components with the current position
+	for (auto& id : m_actorIds)
+	{
+		Actor* actor = m_systemManager->getActorManager()->getActor(id);
+		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		Comp_Collision* colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
+		colComp->setPosition(posComp->getPosition());
+	}
+	// check collisions between specific actor groups
 	detectCollisions();
 }
 
@@ -127,30 +136,46 @@ void Sys_Collision::actorCollisions()
 void Sys_Collision::detectCollisions()
 {
 	if (m_actorIds.empty()) return;
-	ActorManager* actorManager = m_systemManager->getActorManager();
+	// check player collisions
+	if (m_actorGroups.find("player") != m_actorGroups.end())
+	{
+		for (auto& playerId : m_actorGroups["player"])
+		{
+			// check collisions against bullets
+			if (m_actorGroups.find("bullet_invader") != m_actorGroups.end())
+				for (auto& bulletId : m_actorGroups["bullet_invader"])
+					if (detectActorCollision(playerId, bulletId))
+					{
+						// inform bullet of collision
+						Message msg((MessageType)ActorMessageType::Collision);
+						msg.m_sender = playerId;
+						msg.m_receiver = bulletId;
+						m_systemManager->getMessageHandler()->dispatch(msg);
+						break;
+					}
+		}
+	}
 	// check invader collisions
 	if (m_actorGroups.find("invader") != m_actorGroups.end())
 	{
 		for (auto& invaderId : m_actorGroups["invader"])
 		{
-			Actor* invader = actorManager->getActor(invaderId);
-			Comp_Collision* invaderCollider = invader->getComponent<Comp_Collision>(ComponentType::Collision);
-			Comp_Position* invaderPosition = invader->getComponent<Comp_Position>(ComponentType::Position);
-			invaderCollider->setPosition(invaderPosition->getPosition());
 			// check collisions against bullets
 			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
 				for (auto& bulletId : m_actorGroups["bullet_player"])
-					if (detectActorCollision(invaderId, invaderCollider, actorManager->getActor(bulletId)))
+					if (detectActorCollision(invaderId, bulletId))
+					{
+						// inform bullet of collision
+						Message msg((MessageType)ActorMessageType::Collision);
+						msg.m_sender = invaderId;
+						msg.m_receiver = bulletId;
+						m_systemManager->getMessageHandler()->dispatch(msg);
 						break;
-			// check collisions against bunkers
-			if (m_actorGroups.find("bunker") != m_actorGroups.end())
-				for (auto& bunkerId : m_actorGroups["bunker"])
-					if (detectActorCollision(invaderId, invaderCollider, actorManager->getActor(bunkerId)))
-						break;
+					}
 			// check collisions against player
 			if (m_actorGroups.find("player") != m_actorGroups.end())
 				for (auto& playerId : m_actorGroups["player"])
-					if (detectActorCollision(invaderId, invaderCollider, actorManager->getActor(playerId)))
+					if (detectActorCollision(invaderId, playerId))
 						break;
 		}
 	}
@@ -159,14 +184,10 @@ void Sys_Collision::detectCollisions()
 	{
 		for (auto& shockwaveId : m_actorGroups["shockwave"])
 		{
-			Actor* shockwave = actorManager->getActor(shockwaveId);
-			Comp_Collision* shockwaveCollider = shockwave->getComponent<Comp_Collision>(ComponentType::Collision);
-			Comp_Position* shockwavePosition = shockwave->getComponent<Comp_Position>(ComponentType::Position);
-			shockwaveCollider->setPosition(shockwavePosition->getPosition());
 			// check collisions against invaders
 			if (m_actorGroups.find("invader") != m_actorGroups.end())
 				for (auto& invaderId : m_actorGroups["invader"])
-					detectActorCollision(shockwaveId, shockwaveCollider, actorManager->getActor(invaderId));
+					detectActorCollision(shockwaveId, invaderId);
 		}
 	}
 	// check bunker collisions
@@ -174,32 +195,49 @@ void Sys_Collision::detectCollisions()
 	{
 		for (auto& bunkerId : m_actorGroups["bunker"])
 		{
-			Actor* bunker = actorManager->getActor(bunkerId);
-			Comp_Collision* bunkerCollider = bunker->getComponent<Comp_Collision>(ComponentType::Collision);
 			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
-				for (auto& bulletId : m_actorGroups["bullet_player"])
-					if (detectActorCollision(bunkerId, bunkerCollider, actorManager->getActor(bulletId)))
+				for (auto& playerBulletId : m_actorGroups["bullet_player"])
+					if (detectActorCollision(bunkerId, playerBulletId))
 						break;
 			if (m_actorGroups.find("bullet_invader") != m_actorGroups.end())
-				for (auto& bulletId : m_actorGroups["bullet_invader"])
-					if (detectActorCollision(bunkerId, bunkerCollider, actorManager->getActor(bulletId)))
+				for (auto& invaderBulletId : m_actorGroups["bullet_invader"])
+					if (detectActorCollision(bunkerId, invaderBulletId))
 						break;
 		}
 	}
+	// check player bullet collisions
+	if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
+		for (auto& playerBulletId : m_actorGroups["bullet_player"])
+		{
+			if (m_actorGroups.find("bullet_invader") != m_actorGroups.end())
+				for (auto& invaderBulletId : m_actorGroups["bullet_invader"])
+					if (detectActorCollision(playerBulletId, invaderBulletId))
+					{
+						// inform other bullet of collision
+						Message msg((MessageType)ActorMessageType::Collision);
+						msg.m_sender = playerBulletId;
+						msg.m_receiver = invaderBulletId;
+						m_systemManager->getMessageHandler()->dispatch(msg);
+						break;
+					}
+		}
 	// check mystery ship collisions
 	if (m_actorGroups.find("mystery") != m_actorGroups.end())
 	{
 		for (auto& mysteryId : m_actorGroups["mystery"])
 		{
-			Actor* mystery = actorManager->getActor(mysteryId);
-			Comp_Collision* mysteryCollider = mystery->getComponent<Comp_Collision>(ComponentType::Collision);
-			Comp_Position* mysteryPosition = mystery->getComponent<Comp_Position>(ComponentType::Position);
-			mysteryCollider->setPosition(mysteryPosition->getPosition());
 			// check collisions against bullets
-			if (m_actorGroups.find("bullet") != m_actorGroups.end())
-				for (auto& bulletId : m_actorGroups["bullet"])
-					if (detectActorCollision(mysteryId, mysteryCollider, actorManager->getActor(bulletId)))
+			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
+				for (auto& bulletId : m_actorGroups["bullet_player"])
+					if (detectActorCollision(mysteryId, bulletId))
+					{
+						// inform other bullet of collision
+						Message msg((MessageType)ActorMessageType::Collision);
+						msg.m_sender = mysteryId;
+						msg.m_receiver = bulletId;
+						m_systemManager->getMessageHandler()->dispatch(msg);
 						break;
+					}
 		}
 	}
 }
@@ -212,15 +250,16 @@ void Sys_Collision::detectCollisions()
 /// <param name="colComp"></param>
 /// <param name="otherActor"></param>
 /// <returns></returns>
-bool Sys_Collision::detectActorCollision(const ActorId& actorId, Comp_Collision* colComp, Actor* otherActor)
+bool Sys_Collision::detectActorCollision(const ActorId& actorId, const ActorId& otherId)
 {
-	Comp_Collision* otherCollider = otherActor->getComponent<Comp_Collision>(ComponentType::Collision);
-	Comp_Position* otherPosition = otherActor->getComponent<Comp_Position>(ComponentType::Position);
+	Comp_Collision* actorCollider = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Collision>(ComponentType::Collision);
+	Comp_Collision* otherCollider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision);
+	Comp_Position* otherPosition = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Position>(ComponentType::Position);
 	otherCollider->setPosition(otherPosition->getPosition());
-	if (colComp->getAABB().intersects(otherCollider->getAABB()))
+	if (actorCollider->getAABB().intersects(otherCollider->getAABB()))
 	{
 		Message msg((MessageType)ActorMessageType::Collision);
-		msg.m_sender = otherActor->getId();
+		msg.m_sender = otherId;
 		msg.m_receiver = actorId;
 		m_systemManager->getMessageHandler()->dispatch(msg);
 		return true;

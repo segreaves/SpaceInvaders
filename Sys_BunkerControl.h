@@ -4,11 +4,11 @@
 
 class SysManager;
 
-class Sys_BunkerDamage : public Sys
+class Sys_BunkerControl : public Sys
 {
 	public:
-	Sys_BunkerDamage(SysManager* systemManager);
-	~Sys_BunkerDamage();
+	Sys_BunkerControl(SysManager* systemManager);
+	~Sys_BunkerControl();
 
 	void start();
 	void setupRequirements();

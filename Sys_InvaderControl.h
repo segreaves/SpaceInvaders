@@ -1,6 +1,5 @@
 #pragma once
 #include "Sys.h"
-#include "Trigger.h"
 #include "LevelManager.h"
 
 class LevelManager;
@@ -23,11 +22,9 @@ public:
 	void notify(const Message& msg);
 
 	void setLevelManager(LevelManager* levelManager);
-
-	Trigger<unsigned int> m_invaderDefeated;
-	Trigger<unsigned int> m_invaderShoot;
 private:
 	void selectTrackedInvaders();
+	void instantiateShockwave(sf::Vector2f position);
 	void increaseInvaderSpeed();
 	void handleMovement(const float& deltaTime, const ActorId& id, Comp_Position* posComp, Comp_Movement* moveComp, Comp_Control* controlComp, Comp_Target* targetComp, Comp_Collision* colComp);
 	void handleShooting(const float& deltaTime, const ActorId& id, Comp_Invader* invComp);
@@ -35,6 +32,8 @@ private:
 	LevelManager* m_levelManager;
 	bool m_movingRight;
 	float m_currentInvaderSpeed;
+	unsigned int m_invaderBulletIndex;
+	unsigned int m_shockwaveIndex;
 	const float m_maxTargetDistance = 50.0f;
 	ActorId m_leftInvader;
 	ActorId m_rightInvader;

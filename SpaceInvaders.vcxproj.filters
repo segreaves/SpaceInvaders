@@ -138,7 +138,7 @@
     <ClCompile Include="SpriteSheet.cpp">
       <Filter>Source Files\Media</Filter>
     </ClCompile>
-    <ClCompile Include="Sys_BunkerDamage.cpp">
+    <ClCompile Include="Sys_BunkerControl.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Sys_Shockwave.cpp">
@@ -146,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="Sys_Animator.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="State_Paused.cpp">
+      <Filter>Source Files\Core\Engine States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -269,7 +272,7 @@
     <ClInclude Include="Comp_Bunker.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Sys_BunkerDamage.h">
+    <ClInclude Include="Sys_BunkerControl.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">
@@ -310,6 +313,12 @@
     </ClInclude>
     <ClInclude Include="Comp_Target.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Health.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="State_Paused.h">
+      <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

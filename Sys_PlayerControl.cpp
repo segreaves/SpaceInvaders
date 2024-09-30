@@ -37,15 +37,18 @@ void Sys_PlayerControl::setupRequirements()
 	req.set((unsigned int)ComponentType::Movement);
 	req.set((unsigned int)ComponentType::Target);
 	req.set((unsigned int)ComponentType::Player);
+	req.set((unsigned int)ComponentType::Health);
 	m_requirements.emplace_back(req);
 }
 
 void Sys_PlayerControl::subscribeToChannels()
 {
+	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
 }
 
 void Sys_PlayerControl::unsubscribeFromChannels()
 {
+	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
 }
 
 void Sys_PlayerControl::update(const float& deltaTime)
@@ -90,6 +93,37 @@ void Sys_PlayerControl::update(const float& deltaTime)
 
 void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
+	if (!hasActor(actorId)) return;
+	switch (eventId)
+	{
+	case ActorEventType::Despawned:
+		m_systemManager->getActorManager()->disableActor(actorId);
+		break;
+	case ActorEventType::Shoot:
+	{
+		const int bulletId = m_levelManager->getPlayerBulletIds()[m_playerBulletIndex++ % m_levelManager->getPlayerBulletIds().size()];
+		ActorManager* actorManager = m_systemManager->getActorManager();
+		actorManager->enableActor(bulletId);
+		sf::Vector2f shootDirection(0, -1);
+		Actor* bullet = actorManager->getActor(bulletId);
+		Actor* shooter = actorManager->getActor(actorId);
+		Comp_Position* shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
+		Comp_Collision* shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
+		// set bullet just above player
+		Comp_Position* bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
+		Comp_Collision* bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
+		bulletPos->setPosition(shooterPos->getPosition() +
+			shootDirection * (bulletCol->getAABB().getSize().y / 2 + shooterCol->getAABB().getSize().y / 2.f));
+		Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
+		Comp_Bullet* bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
+		bulletMove->setVelocity(shootDirection * bulletComp->getbulletSpeed());
+		// knock-back
+		float knockback = 1000000;
+		Comp_Movement* moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
+		moveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
+		break;
+	}
+	}
 }
 
 void Sys_PlayerControl::debugOverlay(WindowManager* windowManager)
@@ -114,14 +148,25 @@ void Sys_PlayerControl::notify(const Message& msg)
 	ActorMessageType msgType = (ActorMessageType)msg.m_type;
 	switch (msgType)
 	{
-	case ActorMessageType::Collision:
-		ActorManager* actorManager = m_systemManager->getActorManager();
-		Actor* actor = actorManager->getActor(msg.m_receiver);
-		Actor* other = actorManager->getActor(msg.m_sender);
-		if (other->getTag() == "bullet")
-			m_systemManager->addEvent(msg.m_sender, (EventId)ActorEventType::Despawned);
-		m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
-		break;
+		case ActorMessageType::Collision:
+		{
+			ActorManager* actorManager = m_systemManager->getActorManager();
+			Actor* actor = actorManager->getActor(msg.m_receiver);
+			Actor* other = actorManager->getActor(msg.m_sender);
+			if (other->getTag() == "bullet_invader")
+			{
+				Comp_Health* playerHealth = actor->getComponent<Comp_Health>(ComponentType::Health);
+				if (playerHealth->takeDamage() < 0)
+					m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
+				else
+				{
+					Message msg((MessageType)ActorMessageType::Damage);
+					msg.m_receiver = actor->getId();
+					m_systemManager->getMessageHandler()->dispatch(msg);
+				}
+			}
+			break;
+		}
 	}
 }
 

@@ -28,10 +28,9 @@ private:
 	void loadNextLevel();
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();
-	void onInvaderShoot(int invaderId);
-	void onActorShoot(const ActorId& shooterId, const ActorId& bulletId, const sf::Vector2f direction, const float& knockbackForce);
-	void instantiateShockwave(sf::Vector2f position);
 	void onInvaderDefeated(const int& invaderId);
+	void onPlayerDefeated();
+	void onActorDisabled(unsigned int actorId);
 
 	void updateHUD();
 	void drawGame();
@@ -52,8 +51,11 @@ private:
 	unsigned int m_shockwaveIndex;
 	unsigned int m_fps;
 	unsigned int m_kills;
+	unsigned int m_lives;
 	sf::RectangleShape m_background;
 	// HUD elements
+	const float m_hudUpdateInterval = 0.2;
+	float m_hudUpdateTimer;
 	unsigned int m_fontSize = 50;
 	unsigned int m_hudPadding = 10;
 	sf::Text m_scoreText;
@@ -61,5 +63,4 @@ private:
 	sf::Text m_livesText;
 	sf::Text m_killsText;
 	sf::Text m_fpsText;
-	sf::Font m_font;
 };

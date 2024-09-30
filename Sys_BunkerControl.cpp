@@ -1,7 +1,7 @@
-#include "Sys_BunkerDamage.h"
+#include "Sys_BunkerControl.h"
 #include "SysManager.h"
 
-Sys_BunkerDamage::Sys_BunkerDamage(SysManager* systemManager) :
+Sys_BunkerControl::Sys_BunkerControl(SysManager* systemManager) :
 	Sys(systemManager)
 {
 	setupRequirements();
@@ -13,16 +13,16 @@ Sys_BunkerDamage::Sys_BunkerDamage(SysManager* systemManager) :
 	m_damageSprite.setOrigin(m_damageSprite.getLocalBounds().width / 2, m_damageSprite.getLocalBounds().height / 2);
 }
 
-Sys_BunkerDamage::~Sys_BunkerDamage()
+Sys_BunkerControl::~Sys_BunkerControl()
 {
 	unsubscribeFromChannels();
 }
 
-void Sys_BunkerDamage::start()
+void Sys_BunkerControl::start()
 {
 }
 
-void Sys_BunkerDamage::setupRequirements()
+void Sys_BunkerControl::setupRequirements()
 {
 	Bitmask req;
 	req.set((unsigned int)ComponentType::Position);
@@ -32,29 +32,29 @@ void Sys_BunkerDamage::setupRequirements()
 	m_requirements.emplace_back(req);
 }
 
-void Sys_BunkerDamage::subscribeToChannels()
+void Sys_BunkerControl::subscribeToChannels()
 {
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
 }
 
-void Sys_BunkerDamage::unsubscribeFromChannels()
+void Sys_BunkerControl::unsubscribeFromChannels()
 {
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
 }
 
-void Sys_BunkerDamage::update(const float& deltaTime)
+void Sys_BunkerControl::update(const float& deltaTime)
 {
 }
 
-void Sys_BunkerDamage::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
+void Sys_BunkerControl::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
 }
 
-void Sys_BunkerDamage::debugOverlay(WindowManager* windowManager)
+void Sys_BunkerControl::debugOverlay(WindowManager* windowManager)
 {
 }
 
-void Sys_BunkerDamage::notify(const Message& msg)
+void Sys_BunkerControl::notify(const Message& msg)
 {
 	if (!hasActor(msg.m_receiver)) return;
 	switch ((ActorMessageType)msg.m_type)
@@ -65,7 +65,7 @@ void Sys_BunkerDamage::notify(const Message& msg)
 	}
 }
 
-void Sys_BunkerDamage::handleBunkerDamage(const ActorId& actorId, const ActorId& otherId)
+void Sys_BunkerControl::handleBunkerDamage(const ActorId& actorId, const ActorId& otherId)
 {
 	sf::FloatRect collider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision)->getAABB();
 	Comp_SpriteSheet* spriteComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
@@ -138,7 +138,7 @@ void Sys_BunkerDamage::handleBunkerDamage(const ActorId& actorId, const ActorId&
 		}
 		texture->update(imageBunker);
 		
-		// message bullet of collision
+		// message other actor of collision
 		Message msg((MessageType)ActorMessageType::Collision);
 		msg.m_sender = actorId;
 		msg.m_receiver = otherId;
@@ -146,7 +146,7 @@ void Sys_BunkerDamage::handleBunkerDamage(const ActorId& actorId, const ActorId&
 	}
 }
 
-bool Sys_BunkerDamage::pixelCollision(unsigned int xStart, unsigned int width, unsigned int yStart, unsigned int height, sf::Image& image)
+bool Sys_BunkerControl::pixelCollision(unsigned int xStart, unsigned int width, unsigned int yStart, unsigned int height, sf::Image& image)
 {
 	for (unsigned int x = xStart; x <= xStart + width; x++)
 		for (unsigned int y = yStart; y <= yStart + height; y++)
@@ -155,7 +155,7 @@ bool Sys_BunkerDamage::pixelCollision(unsigned int xStart, unsigned int width, u
 	return false;
 }
 
-sf::Vector2i Sys_BunkerDamage::convertToPixelCoords(const sf::Vector2f& coords, const sf::Sprite* sprite)
+sf::Vector2i Sys_BunkerControl::convertToPixelCoords(const sf::Vector2f& coords, const sf::Sprite* sprite)
 {
 	sf::Vector2f pos = sprite->getPosition();
 	sf::Vector2f scale = sprite->getScale();
@@ -168,7 +168,7 @@ sf::Vector2i Sys_BunkerDamage::convertToPixelCoords(const sf::Vector2f& coords, 
 	return sf::Vector2i(offset);
 }
 
-sf::Vector2f Sys_BunkerDamage::convertToScreenCoords(const sf::Vector2i& coords, const sf::Sprite* sprite)
+sf::Vector2f Sys_BunkerControl::convertToScreenCoords(const sf::Vector2i& coords, const sf::Sprite* sprite)
 {
 	sf::Vector2f pos = sprite->getPosition();
 	sf::Vector2f scale = sprite->getScale();
