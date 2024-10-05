@@ -49,7 +49,8 @@ void Sys_InvaderControl::start()
 	{
 		Actor* invader = m_systemManager->getActorManager()->getActor(id);
 		Comp_Position* posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
-		posComp->setPosition(m_levelManager->getInvaderSpawn(id));
+		Comp_Invader* invComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
+		posComp->setPosition(invComp->getSpawnPosition());
 		Comp_Movement* moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
 		moveComp->setVelocity(sf::Vector2f(0, 0));
 		Comp_Control* controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
@@ -116,7 +117,7 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 				shootDirection * (bulletCol->getAABB().getSize().y / 2 + shooterCol->getAABB().getSize().y / 2.f));
 			Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
 			Comp_Bullet* bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
-			bulletMove->setVelocity(shootDirection * bulletComp->getbulletSpeed());
+			bulletMove->setVelocity(shootDirection * bulletComp->getBulletSpeed());
 			// knock-back
 			float knockback = 25000;
 			Comp_Movement* moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);

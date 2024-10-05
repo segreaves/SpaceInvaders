@@ -28,6 +28,7 @@ void State_Game::update(const float& deltaTime)
 	if (m_remainingInvaders <= 0)
 		loadNextLevel();
 	m_fps = 1.0f / deltaTime;
+	// game update
 	m_stateManager->getContext()->m_systemManager->update(deltaTime);
 	// HUD update
 	m_hudUpdateTimer += deltaTime;
@@ -159,7 +160,6 @@ void State_Game::drawHUD()
 
 void State_Game::setHUDStyle()
 {
-	m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
 	m_scoreText.setFont(m_font);
 	m_scoreText.setCharacterSize(m_fontSize);
 	m_scoreText.setPosition(m_hudPadding, m_hudPadding);

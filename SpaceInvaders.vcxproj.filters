@@ -150,6 +150,9 @@
     <ClCompile Include="State_Paused.cpp">
       <Filter>Source Files\Core\Engine States</Filter>
     </ClCompile>
+    <ClCompile Include="State_GameOver.cpp">
+      <Filter>Source Files\Core\Engine States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowManager.h">
@@ -318,6 +321,9 @@
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="State_Paused.h">
+      <Filter>Header Files\Core\Engine States</Filter>
+    </ClInclude>
+    <ClInclude Include="State_GameOver.h">
       <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
   </ItemGroup>

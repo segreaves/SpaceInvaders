@@ -4,7 +4,7 @@
 class Comp_Bullet : public Comp
 {
 public:
-	float getbulletSpeed() const { return m_bulletSpeed; }
+	float getBulletSpeed() const { return m_bulletSpeed; }
 	std::string getBulletTag() const { return m_bulletTag; }
 private:
 	void load(std::stringstream& ss) override

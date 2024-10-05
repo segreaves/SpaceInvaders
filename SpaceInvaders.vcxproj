@@ -148,6 +148,7 @@
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="State_Game.cpp" />
+    <ClCompile Include="State_GameOver.cpp" />
     <ClCompile Include="State_Intro.cpp" />
     <ClCompile Include="State_Menu.cpp" />
     <ClCompile Include="State_Paused.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="OriginType.h" />
     <ClInclude Include="ShapeType.h" />
     <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="State_GameOver.h" />
     <ClInclude Include="State_Paused.h" />
     <ClInclude Include="Sys_Animator.h" />
     <ClInclude Include="Sys_BunkerControl.h" />

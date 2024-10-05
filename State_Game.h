@@ -45,6 +45,7 @@ private:
 	sf::View m_gameView;
 	sf::View m_hudView;
 	std::vector<ActorId> m_bunkers;
+	unsigned int m_playerLives;
 	unsigned int m_remainingInvaders;
 	unsigned int m_playerBulletIndex;
 	unsigned int m_invaderBulletIndex;

@@ -48,7 +48,8 @@ void LevelManager::createInvaders(sf::FloatRect viewSpace)
 			m_invaders.emplace_back(invaderId);
 			float spawnX = j * m_invaderSeparation.x + offset;// center in view space
 			float spawnY = (i + 1) * m_invaderSeparation.y;
-			m_invaderSpawn.emplace(invaderId, sf::Vector2f(spawnX, spawnY));
+			Comp_Invader* invaderComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Invader>(ComponentType::Invader);
+			invaderComp->setSpawnPosition(sf::Vector2f(spawnX, spawnY));
 			// get collider and adjust to sprite
 			Comp_Collision* colComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Collision>(ComponentType::Collision);
 			Comp_SpriteSheet* sprite = m_actorManager->getActor(invaderId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
@@ -97,12 +98,6 @@ void LevelManager::createShockwaves(const int& numInvaders)
 		shockwaveColor.a = 50;
 		sprite->getSpriteSheet()->setSpriteColor(shockwaveColor);
 	}
-}
-
-sf::Vector2f LevelManager::getInvaderSpawn(ActorId id)
-{
-	if (m_invaderSpawn.find(id) == m_invaderSpawn.end()) return sf::Vector2f();
-	return m_invaderSpawn[id];
 }
 
 sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)

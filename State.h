@@ -30,5 +30,4 @@ protected:
 	StateManager* m_stateManager;
 	bool m_transparent;
 	sf::Font m_font;
-	std::vector<sf::Text> m_screenTexts = std::vector<sf::Text>();
 };

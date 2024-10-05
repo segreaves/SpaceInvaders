@@ -116,7 +116,7 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 			shootDirection * (bulletCol->getAABB().getSize().y / 2 + shooterCol->getAABB().getSize().y / 2.f));
 		Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
 		Comp_Bullet* bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
-		bulletMove->setVelocity(shootDirection * bulletComp->getbulletSpeed());
+		bulletMove->setVelocity(shootDirection * bulletComp->getBulletSpeed());
 		// knock-back
 		float knockback = 1000000;
 		Comp_Movement* moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);

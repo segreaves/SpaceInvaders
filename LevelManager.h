@@ -34,7 +34,6 @@ public:
 	std::vector<ActorId>& getInvaderBulletIds() { return m_invaderBullets; }
 	std::vector<ActorId>& getBunkerIds() { return m_bunkers; }
 	std::vector<ActorId>& getShockwaveIds() { return m_shockwaves; }
-	sf::Vector2f getInvaderSpawn(ActorId id);
 	sf::Vector2f getBunkerSpawn(ActorId id);
 	unsigned int getLevel() const { return m_level; }
 	float getInvaderBaseSpeed() const { return m_invaderBaseSpeed; }
@@ -56,7 +55,6 @@ private:
 	std::vector<ActorId> m_invaderBullets;
 	std::vector<ActorId> m_bunkers;
 	std::vector<ActorId> m_shockwaves;
-	std::unordered_map<ActorId, sf::Vector2f> m_invaderSpawn;
 	const int m_invaderCols = 12;
 	const sf::Vector2i m_invaderSeparation = sf::Vector2i(50, 45);
 	const int m_nBullets = 100;
