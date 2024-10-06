@@ -156,7 +156,8 @@ void Sys_PlayerControl::notify(const Message& msg)
 			if (other->getTag() == "bullet_invader")
 			{
 				Comp_Health* playerHealth = actor->getComponent<Comp_Health>(ComponentType::Health);
-				if (playerHealth->takeDamage() < 0)
+				m_levelManager->setPlayerLives(playerHealth->takeDamage());
+				if (m_levelManager->getPlayerLives() <= 0)
 					m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
 				else
 				{

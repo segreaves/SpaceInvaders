@@ -34,6 +34,13 @@ public:
 	std::vector<ActorId>& getInvaderBulletIds() { return m_invaderBullets; }
 	std::vector<ActorId>& getBunkerIds() { return m_bunkers; }
 	std::vector<ActorId>& getShockwaveIds() { return m_shockwaves; }
+	int getPlayerLives() const;
+	void setPlayerLives(const unsigned int lives) { m_playerLives = lives; }
+	int getInvaderCount() const { return m_remainingInvaders; }
+	void resetInvaderCount() { m_remainingInvaders = m_invaders.size(); }
+	int decrementInvaderCount() { return --m_remainingInvaders; }
+	void onInvaderDefeated();
+	int getKills() const { return m_kills; }
 	sf::Vector2f getBunkerSpawn(ActorId id);
 	unsigned int getLevel() const { return m_level; }
 	float getInvaderBaseSpeed() const { return m_invaderBaseSpeed; }
@@ -55,6 +62,9 @@ private:
 	std::vector<ActorId> m_invaderBullets;
 	std::vector<ActorId> m_bunkers;
 	std::vector<ActorId> m_shockwaves;
+	unsigned int m_remainingInvaders;
+	unsigned int m_playerLives;
+	unsigned int m_kills;
 	const int m_invaderCols = 12;
 	const sf::Vector2i m_invaderSeparation = sf::Vector2i(50, 45);
 	const int m_nBullets = 100;

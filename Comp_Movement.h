@@ -24,6 +24,11 @@ public:
 		m_velocity += velocity;
 	}
 
+	void updatePrevVelocity()
+	{
+		m_prevVelocity = m_velocity;
+	}
+
 	const sf::Vector2f& getAcceleration() const { return m_acceleration; }
 
 	void setAcceleration(const sf::Vector2f& acceleration)
@@ -81,6 +86,7 @@ private:
 	}
 
 	float m_frictionCoefficient = 100.f;
+	sf::Vector2f m_prevVelocity;
 	sf::Vector2f m_velocity;
 	sf::Vector2f m_acceleration;
 	bool m_collidingOnX = false;

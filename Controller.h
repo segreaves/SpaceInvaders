@@ -20,6 +20,7 @@ public:
 	Trigger<void> m_onEscape;
 	Trigger<void> m_onShoot;
 	Trigger<void> m_onPause;
+	Trigger<void> m_onEnter;
 	Trigger<void> m_onToggleFullscreen;
 	Trigger<sf::Vector2f> m_onMove;
 private:

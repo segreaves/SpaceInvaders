@@ -14,6 +14,7 @@ public:
 
 	void update(const float& deltaTime);
 	void draw();
+	void lateUpdate();
 
 	void processRequests();
 

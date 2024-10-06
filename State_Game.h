@@ -28,9 +28,8 @@ private:
 	void loadNextLevel();
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();
-	void onInvaderDefeated(const int& invaderId);
-	void onPlayerDefeated();
 	void onActorDisabled(unsigned int actorId);
+	void gameOverScreen();
 
 	void updateHUD();
 	void drawGame();
@@ -46,12 +45,10 @@ private:
 	sf::View m_hudView;
 	std::vector<ActorId> m_bunkers;
 	unsigned int m_playerLives;
-	unsigned int m_remainingInvaders;
 	unsigned int m_playerBulletIndex;
 	unsigned int m_invaderBulletIndex;
 	unsigned int m_shockwaveIndex;
 	unsigned int m_fps;
-	unsigned int m_kills;
 	unsigned int m_lives;
 	sf::RectangleShape m_background;
 	// HUD elements

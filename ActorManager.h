@@ -14,6 +14,7 @@
 #include "Comp_Shockwave.h"
 #include "Comp_Target.h"
 #include "Comp_Health.h"
+#include "Comp_Rotation.h"
 #include "ActorEventType.h"
 #include "TextureManager.h"
 #include "Trigger.h"
@@ -33,7 +34,7 @@ public:
 	int initializeActor(std::string tag);
 	void addComponent(const ActorId& id, ComponentType compType);
 	bool destroyActor(ActorId id);
-	void destroyAllActors();
+	void purge();
 	void enableActor(const ActorId& id);
 	void enableAllActors();
 	void disableActor(const ActorId& id);

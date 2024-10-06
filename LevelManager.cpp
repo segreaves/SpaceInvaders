@@ -7,7 +7,10 @@
 LevelManager::LevelManager() :
 	m_actorManager(nullptr),
 	m_level(0),
-	m_playerId(-1)
+	m_playerId(-1),
+	m_playerLives(0),
+	m_remainingInvaders(0),
+	m_kills(0)
 {
 }
 
@@ -50,7 +53,7 @@ void LevelManager::createInvaders(sf::FloatRect viewSpace)
 			float spawnY = (i + 1) * m_invaderSeparation.y;
 			Comp_Invader* invaderComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Invader>(ComponentType::Invader);
 			invaderComp->setSpawnPosition(sf::Vector2f(spawnX, spawnY));
-			// get collider and adjust to sprite
+			// adjust collider to fit sprite
 			Comp_Collision* colComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Collision>(ComponentType::Collision);
 			Comp_SpriteSheet* sprite = m_actorManager->getActor(invaderId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 			adjustColliderToSprite(colComp, sprite);
@@ -98,6 +101,19 @@ void LevelManager::createShockwaves(const int& numInvaders)
 		shockwaveColor.a = 50;
 		sprite->getSpriteSheet()->setSpriteColor(shockwaveColor);
 	}
+}
+
+int LevelManager::getPlayerLives() const
+{
+	Comp_Health* healthComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Health>(ComponentType::Health);
+	if (!healthComp) return 0;
+	return healthComp->getHealth();
+}
+
+void LevelManager::onInvaderDefeated()
+{
+	m_kills++;
+	decrementInvaderCount();
 }
 
 sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)

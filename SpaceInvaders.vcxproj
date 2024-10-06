@@ -175,6 +175,7 @@
     <ClInclude Include="Comp.h" />
     <ClInclude Include="ComponentType.h" />
     <ClInclude Include="Comp_Health.h" />
+    <ClInclude Include="Comp_Rotation.h" />
     <ClInclude Include="Comp_Target.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="Comp_Shockwave.h" />

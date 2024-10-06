@@ -326,5 +326,8 @@
     <ClInclude Include="State_GameOver.h">
       <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
+    <ClInclude Include="Comp_Rotation.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

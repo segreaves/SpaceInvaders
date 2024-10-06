@@ -10,8 +10,6 @@
 State_Game::State_Game(StateManager* stateManager) :
 	State(stateManager),
 	m_playerBulletIndex(0),
-	m_remainingInvaders(0),
-	m_kills(0),
 	m_currentInvaderSpeed(0),
 	m_hudUpdateTimer(0)
 {
@@ -25,7 +23,7 @@ State_Game::State_Game(StateManager* stateManager) :
 
 void State_Game::update(const float& deltaTime)
 {
-	if (m_remainingInvaders <= 0)
+	if (m_levelManager.getInvaderCount() <= 0)
 		loadNextLevel();
 	m_fps = 1.0f / deltaTime;
 	// game update
@@ -83,7 +81,7 @@ void State_Game::deactivate()
 {
 	m_stateManager->getContext()->m_controller->m_onPause.removeCallback("Game_onPause");
 	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onMove");
-	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onShoot");
+	m_stateManager->getContext()->m_controller->m_onShoot.removeCallback("Game_onShoot");
 	m_stateManager->getContext()->m_actorManager->m_actorDisabled.removeCallback("Game_onActorDisabled");
 }
 
@@ -92,7 +90,7 @@ void State_Game::loadNextLevel()
 	// increase level
 	m_levelManager++;
 	// reset invader count
-	m_remainingInvaders = m_levelManager.getInvaderIds().size();
+	m_levelManager.resetInvaderCount();
 	// enable (or re-enable) all actors
 	for (auto& invaderId : m_levelManager.getInvaderIds())
 		m_stateManager->getContext()->m_actorManager->enableActor(invaderId);
@@ -111,32 +109,32 @@ void State_Game::onPlayerShoot()
 	m_stateManager->getContext()->m_systemManager->addEvent(m_levelManager.getPlayerId(), (EventId)ActorEventType::Shoot);
 }
 
-void State_Game::onInvaderDefeated(const int& invaderId)
-{
-	m_kills++;
-	m_remainingInvaders--;
-}
-
-void State_Game::onPlayerDefeated()
-{
-	std::cout << "Player defeated!" << std::endl;
-}
-
 void State_Game::onActorDisabled(unsigned int actorId)
 {
 	Actor* actor = m_stateManager->getContext()->m_actorManager->getActor(actorId);
 	if (actor->getTag() == "invader")
-		onInvaderDefeated(actorId);
+		m_levelManager.onInvaderDefeated();
 	else if (actor->getTag() == "player")
-		onPlayerDefeated();
+	{
+		// with player disabled, play an explosion animation in player position
+		// (to be implemented), for now just go to game over state
+		gameOverScreen();
+	}
+}
+
+void State_Game::gameOverScreen()
+{
+	m_stateManager->getContext()->m_actorManager->purge();
+	m_stateManager->switchTo(StateType::GameOver);
+	m_stateManager->remove(StateType::Game);
 }
 
 void State_Game::updateHUD()
 {
 	m_scoreText.setString("Score: " + std::to_string(0));
 	m_levelText.setString("Level: " + std::to_string(m_levelManager.getLevel()));
-	m_livesText.setString("Lives: " + std::to_string(3));
-	m_killsText.setString("Kills: " + std::to_string(m_kills));
+	m_livesText.setString("Lives: " + std::to_string(m_levelManager.getPlayerLives()));
+	m_killsText.setString("Kills: " + std::to_string(m_levelManager.getKills()));
 	m_fpsText.setString("FPS: " + std::to_string(m_fps));
 }
 

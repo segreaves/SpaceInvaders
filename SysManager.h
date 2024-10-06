@@ -50,6 +50,7 @@ public:
 	}
 
 	void purgeSystems();
+	void purgeActors();
 private:
 	ActorManager* m_actorManager;
 	std::map<SystemType, Sys*> m_systems;

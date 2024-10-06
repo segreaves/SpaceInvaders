@@ -28,21 +28,22 @@ void State_Paused::draw()
 void State_Paused::onCreate()
 {
 	m_transparent = true;
+
+	// set gray panel for background
 	WindowManager* windowManager = m_stateManager->getContext()->m_windowManager;
 	windowManager->getRenderWindow()->setView(m_view);
 	m_panel.setSize(windowManager->getCurrentViewSpace().getSize());
 	m_panel.setPosition(0, 0);
-	m_panel.setFillColor(sf::Color(0, 0, 0, 150));
+	m_panel.setFillColor(OVERLAY_COLOR);
 
 	m_pausedText.setString({ "PAUSED" });
 	m_pausedText.setFont(m_font);
 	m_pausedText.setCharacterSize(75);
 	m_pausedText.setFillColor(APP_COLOR);
 	m_pausedText.setPosition(m_view.getSize().x / 2.0f, m_view.getSize().y / 2.0f);
-	sf::FloatRect textBounds = m_pausedText.getLocalBounds();
 	m_pausedText.setOrigin(
-		textBounds.left + textBounds.width / 2.0f,
-		textBounds.top + textBounds.height / 2.0f
+		m_pausedText.getLocalBounds().left + m_pausedText.getLocalBounds().width / 2.0f,
+		m_pausedText.getLocalBounds().top + m_pausedText.getLocalBounds().height / 2.0f
 	);
 }
 

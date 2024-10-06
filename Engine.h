@@ -23,6 +23,6 @@ private:
 	WindowManager m_windowManager;
 	StateManager m_stateManager;
 	SysManager m_systemManager;
-	ActorManager m_entityManager;
+	ActorManager m_actorManager;
 	TextureManager m_textureManager;
 };

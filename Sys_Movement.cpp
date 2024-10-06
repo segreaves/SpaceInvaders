@@ -58,13 +58,16 @@ void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
 	Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
 	Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 	Comp_Movement* moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+	// movement
 	sf::Vector2f acceleration = sf::Vector2f(
 		moveComp->getAcceleration().x * !moveComp->getCollidingOnX(),
 		moveComp->getAcceleration().y * !moveComp->getCollidingOnY());
+	moveComp->updatePrevVelocity();
 	moveComp->addVelocity(acceleration * deltaTime);
 	moveComp->setAcceleration(sf::Vector2f(0, 0));
 	moveComp->resetCollisionFlags();
 	if (moveComp->getFrictionCoefficient() > 0)
 		moveComp->applyBaseFriction(moveComp->getVelocity() * deltaTime);
 	posComp->move(moveComp->getVelocity() * deltaTime);
+	// rotation
 }

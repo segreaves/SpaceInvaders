@@ -104,3 +104,9 @@ void SysManager::purgeSystems()
 		delete sys.second;
 	m_systems.clear();
 }
+
+void SysManager::purgeActors()
+{
+	for (auto& sys : m_systems)
+		sys.second->purge();
+}

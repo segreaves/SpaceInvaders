@@ -3,7 +3,7 @@
 
 class State_GameOver : public State
 {
-	public:
+public:
 	State_GameOver(StateManager* stateManager);
 	~State_GameOver();
 
@@ -13,4 +13,10 @@ class State_GameOver : public State
 	void onDestroy();
 	void activate();
 	void deactivate();
+private:
+	void OnEnter();
+	sf::View m_view;
+	sf::RectangleShape m_panel;
+	sf::Text m_gameOverText;
+	sf::Text m_optionsText;
 };

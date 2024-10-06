@@ -10,6 +10,7 @@ Sys::Sys(SysManager* systemManager) :
 
 Sys::~Sys()
 {
+	purge();
 }
 
 bool Sys::addActor(const ActorId& actor)
@@ -36,6 +37,11 @@ bool Sys::hasActor(const ActorId& actor)
 bool Sys::fitsRequirements(const Bitmask& mask)
 {
 	return std::find_if(m_requirements.begin(), m_requirements.end(), [&mask](const Bitmask& req) { return (req & mask) == req; }) != m_requirements.end();
+}
+
+void Sys::purge()
+{
+	m_actorIds.clear();
 }
 
 int Sys::getActorCount() const

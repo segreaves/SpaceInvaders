@@ -28,10 +28,11 @@ public:
 
 	virtual bool addActor(const ActorId& actorId);
 	virtual bool removeActor(const ActorId& actorId);
+	int getActorCount() const;
 	bool hasActor(const ActorId& actorId);
 	bool fitsRequirements(const Bitmask& mask);
 
-	int getActorCount() const;
+	void purge();
 protected:
 	std::vector<Bitmask> m_requirements;
 	std::vector<ActorId> m_actorIds;

@@ -21,6 +21,8 @@ void Controller::handleEvent(sf::Event event)
 	{
 		if (event.key.code == sf::Keyboard::Space)
 			m_onShoot.dispatch();
+		else if (event.key.code == sf::Keyboard::Return)
+			m_onEnter.dispatch();
 		else if (event.key.code == sf::Keyboard::Escape)
 			m_onEscape.dispatch();
 		else if (event.key.code == sf::Keyboard::P)

@@ -2,6 +2,7 @@
 #include "State_Intro.h"
 #include "State_Game.h"
 #include "State_Paused.h"
+#include "State_GameOver.h"
 #include <iostream>
 
 StateManager::StateManager(Context* context) :
@@ -10,6 +11,7 @@ StateManager::StateManager(Context* context) :
 	registerState<State_Intro>(StateType::Intro);
 	registerState<State_Game>(StateType::Game);
 	registerState<State_Paused>(StateType::Paused);
+	registerState<State_GameOver>(StateType::GameOver);
 }
 
 StateManager::~StateManager()
@@ -47,6 +49,11 @@ void StateManager::draw()
 		}
 	}
 	else m_states.back().second->draw();
+}
+
+void StateManager::lateUpdate()
+{
+	processRequests();
 }
 
 void StateManager::processRequests()
@@ -101,8 +108,7 @@ void StateManager::switchTo(const StateType& toState)
 void StateManager::createState(const StateType& newState)
 {
 	auto it = m_stateFactory.find(newState);
-	if (it == m_stateFactory.end()) return;
-	State* state = it->second();
+	if (it == m_stateFactory.end()) return;	State* state = it->second();
 	m_states.emplace_back(newState, state);
 	state->onCreate();
 }
@@ -118,9 +124,10 @@ void StateManager::removeState(const StateType& removeState)
 	{
 		if (it->first == removeState)
 		{
-			//it->second->onDestroy();
+			it->second->onDestroy();
 			delete it->second;
 			m_states.erase(it);
+			return;
 		}
 	}
 }

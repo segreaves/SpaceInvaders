@@ -19,11 +19,12 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	addComponentType<Comp_Bunker>(ComponentType::Bunker);
 	addComponentType<Comp_Shockwave>(ComponentType::Shockwave);
 	addComponentType<Comp_Health>(ComponentType::Health);
+	addComponentType<Comp_Rotation>(ComponentType::Rotation);
 }
 
 ActorManager::~ActorManager()
 {
-	destroyAllActors();
+	purge();
 }
 
 int ActorManager::createActor(Bitmask components, std::string tag)
@@ -94,8 +95,9 @@ bool ActorManager::destroyActor(ActorId id)
 	return true;
 }
 
-void ActorManager::destroyAllActors()
+void ActorManager::purge()
 {
+	m_systemManager->purgeActors();
 	while (m_actors.begin() != m_actors.end())
 	{
 		delete m_actors.begin()->second;
