@@ -20,6 +20,7 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	addComponentType<Comp_Shockwave>(ComponentType::Shockwave);
 	addComponentType<Comp_Health>(ComponentType::Health);
 	addComponentType<Comp_Rotation>(ComponentType::Rotation);
+	addComponentType<Comp_Particles>(ComponentType::Particles);
 }
 
 ActorManager::~ActorManager()
@@ -213,6 +214,12 @@ unsigned int ActorManager::loadActorProfile(const std::string actorName, const s
 			addComponent(actorId, ComponentType::Shockwave);
 			Comp_Shockwave* shockwave = actor->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
 			ss >> *shockwave;
+		}
+		else if (attr == "Particles")
+		{
+			addComponent(actorId, ComponentType::Particles);
+			Comp_Particles* particles = actor->getComponent<Comp_Particles>(ComponentType::Particles);
+			ss >> *particles;
 		}
 		else if (attr == "Sprite")
 		{

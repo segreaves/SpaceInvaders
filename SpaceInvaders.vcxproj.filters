@@ -70,10 +70,10 @@
     <Filter Include="Header Files\Utils">
       <UniqueIdentifier>{f700e456-e6d6-4715-b614-0811c32187d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Media">
+    <Filter Include="Header Files\Graphics">
       <UniqueIdentifier>{865d29ed-faf0-4e3d-b4bc-b9fdb94c613e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Media">
+    <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{c12754d1-8448-4500-bf1e-88ddedb3b8e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -136,12 +136,12 @@
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="SpriteSheet.cpp">
-      <Filter>Source Files\Media</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Sys_BunkerControl.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Sys_Shockwave.cpp">
+    <ClCompile Include="Sys_ShockwaveControl.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Sys_Animator.cpp">
@@ -152,6 +152,12 @@
     </ClCompile>
     <ClCompile Include="State_GameOver.cpp">
       <Filter>Source Files\Core\Engine States</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -288,12 +294,12 @@
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="SpriteSheet.h">
-      <Filter>Header Files\Media</Filter>
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Comp_Shockwave.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Sys_Shockwave.h">
+    <ClInclude Include="Sys_ShockwaveControl.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Sys_Animator.h">
@@ -328,6 +334,15 @@
     </ClInclude>
     <ClInclude Include="Comp_Rotation.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Particles.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

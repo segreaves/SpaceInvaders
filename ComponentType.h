@@ -15,5 +15,6 @@ enum class ComponentType
 	Bullet,
 	Bunker,
 	Shockwave,
+	Particles,
 	Health
 };

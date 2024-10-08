@@ -1,22 +1,22 @@
-#include "Sys_Shockwave.h"
+#include "Sys_ShockwaveControl.h"
 #include "SysManager.h"
 
-Sys_Shockwave::Sys_Shockwave(SysManager* systemManager) : Sys(systemManager)
+Sys_ShockwaveControl::Sys_ShockwaveControl(SysManager* systemManager) : Sys(systemManager)
 {
 	setupRequirements();
 	subscribeToChannels();
 }
 
-Sys_Shockwave::~Sys_Shockwave()
+Sys_ShockwaveControl::~Sys_ShockwaveControl()
 {
 	unsubscribeFromChannels();
 }
 
-void Sys_Shockwave::start()
+void Sys_ShockwaveControl::start()
 {
 }
 
-void Sys_Shockwave::setupRequirements()
+void Sys_ShockwaveControl::setupRequirements()
 {
 	Bitmask req;
 	req.set((unsigned int)ComponentType::Position);
@@ -26,17 +26,17 @@ void Sys_Shockwave::setupRequirements()
 	m_requirements.emplace_back(req);
 }
 
-void Sys_Shockwave::subscribeToChannels()
+void Sys_ShockwaveControl::subscribeToChannels()
 {
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
 }
 
-void Sys_Shockwave::unsubscribeFromChannels()
+void Sys_ShockwaveControl::unsubscribeFromChannels()
 {
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
 }
 
-void Sys_Shockwave::update(const float& deltaTime)
+void Sys_ShockwaveControl::update(const float& deltaTime)
 {
 	for (auto& id : m_actorIds)
 	{
@@ -53,7 +53,7 @@ void Sys_Shockwave::update(const float& deltaTime)
 	}
 }
 
-void Sys_Shockwave::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
+void Sys_ShockwaveControl::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
 {
 	if (!hasActor(actorId)) return;
 	switch (eventId)
@@ -64,11 +64,11 @@ void Sys_Shockwave::handleEvent(const ActorId& actorId, const ActorEventType& ev
 	}
 }
 
-void Sys_Shockwave::debugOverlay(WindowManager* windowManager)
+void Sys_ShockwaveControl::debugOverlay(WindowManager* windowManager)
 {
 }
 
-void Sys_Shockwave::notify(const Message& msg)
+void Sys_ShockwaveControl::notify(const Message& msg)
 {
 	if (!hasActor(msg.m_receiver)) return;
 	ActorMessageType msgType = (ActorMessageType)msg.m_type;

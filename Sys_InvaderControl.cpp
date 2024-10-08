@@ -58,7 +58,7 @@ void Sys_InvaderControl::start()
 		Comp_Target* targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
 		targetComp->setTarget(posComp->getPosition());
 		Comp_SpriteSheet* spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		spriteComp->updatePosition(posComp->getPosition());
+		//spriteComp->updatePosition(posComp->getPosition());
 		spriteComp->setFPS(spriteComp->getDefaultFPS() * m_currentInvaderSpeed / m_levelManager->getInvaderBaseSpeed());
 	}
 	selectTrackedInvaders();

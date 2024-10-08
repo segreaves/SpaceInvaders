@@ -8,6 +8,7 @@ LevelManager::LevelManager() :
 	m_actorManager(nullptr),
 	m_level(0),
 	m_playerId(-1),
+	m_playerExplosion(-1),
 	m_playerLives(0),
 	m_remainingInvaders(0),
 	m_kills(0)
@@ -101,6 +102,11 @@ void LevelManager::createShockwaves(const int& numInvaders)
 		shockwaveColor.a = 50;
 		sprite->getSpriteSheet()->setSpriteColor(shockwaveColor);
 	}
+}
+
+void LevelManager::createPlayerExplosion()
+{
+	m_playerExplosion = m_actorManager->loadActorProfile("player_explosion", "player_explosion");
 }
 
 int LevelManager::getPlayerLives() const

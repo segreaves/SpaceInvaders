@@ -15,6 +15,7 @@
 #include "Comp_Target.h"
 #include "Comp_Health.h"
 #include "Comp_Rotation.h"
+#include "Comp_Particles.h"
 #include "ActorEventType.h"
 #include "TextureManager.h"
 #include "Trigger.h"

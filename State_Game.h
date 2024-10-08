@@ -40,20 +40,13 @@ private:
 	sf::FloatRect getHUDViewSpace();
 
 	LevelManager m_levelManager;
-	float m_currentInvaderSpeed;
 	sf::View m_gameView;
 	sf::View m_hudView;
-	std::vector<ActorId> m_bunkers;
-	unsigned int m_playerLives;
-	unsigned int m_playerBulletIndex;
-	unsigned int m_invaderBulletIndex;
-	unsigned int m_shockwaveIndex;
 	unsigned int m_fps;
-	unsigned int m_lives;
 	sf::RectangleShape m_background;
 	// HUD elements
-	const float m_hudUpdateInterval = 0.2;
 	float m_hudUpdateTimer;
+	const float m_hudUpdateInterval = 0.2;
 	unsigned int m_fontSize = 50;
 	unsigned int m_hudPadding = 10;
 	sf::Text m_scoreText;

@@ -28,12 +28,14 @@ public:
 	void createInvaderBullets();
 	void createBunkers(sf::FloatRect viewSpace);
 	void createShockwaves(const int& numInvaders);
-	int& getPlayerId() { return m_playerId; }
+	void createPlayerExplosion();
+	ActorId& getPlayerId() { return m_playerId; }
 	std::vector<ActorId>& getInvaderIds() { return m_invaders; }
 	std::vector<ActorId>& getPlayerBulletIds() { return m_playerBullets; }
 	std::vector<ActorId>& getInvaderBulletIds() { return m_invaderBullets; }
 	std::vector<ActorId>& getBunkerIds() { return m_bunkers; }
 	std::vector<ActorId>& getShockwaveIds() { return m_shockwaves; }
+	ActorId& getPlayerExplosionId() { return m_playerExplosion; }
 	int getPlayerLives() const;
 	void setPlayerLives(const unsigned int lives) { m_playerLives = lives; }
 	int getInvaderCount() const { return m_remainingInvaders; }
@@ -56,12 +58,13 @@ private:
 
 	unsigned int m_level;
 	ActorManager* m_actorManager;
-	int m_playerId;
+	ActorId m_playerId;
 	std::vector<ActorId> m_invaders;
 	std::vector<ActorId> m_playerBullets;
 	std::vector<ActorId> m_invaderBullets;
 	std::vector<ActorId> m_bunkers;
 	std::vector<ActorId> m_shockwaves;
+	ActorId m_playerExplosion;
 	unsigned int m_remainingInvaders;
 	unsigned int m_playerLives;
 	unsigned int m_kills;

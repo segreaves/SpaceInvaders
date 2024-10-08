@@ -25,8 +25,12 @@ void Sys_Renderer::update(const float& deltaTime)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
 		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		IDrawable* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		spriteSheetComp->updatePosition(posComp->getPosition());
+		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		if (spriteSheetComp)
+			spriteSheetComp->updatePosition(posComp->getPosition());
+		Comp_Particles* particlesComp = actor->getComponent<Comp_Particles>(ComponentType::Particles);
+		if (particlesComp)
+			particlesComp->getParticleSystem()->update(deltaTime);
 	}
 }
 
@@ -40,8 +44,11 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
 		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		if (spriteSheetComp->isEnabled())
+		if (spriteSheetComp && spriteSheetComp->isEnabled() && windowManager->getCurrentViewSpace().intersects(spriteSheetComp->getDrawableBounds()))
 			draw(windowManager, static_cast<IDrawable*>(spriteSheetComp));
+		Comp_Particles* particlesComp = actor->getComponent<Comp_Particles>(ComponentType::Particles);
+		if (particlesComp && particlesComp->getParticleSystem()->isEnabled())
+			draw(windowManager, static_cast<IDrawable*>(particlesComp));
 	}
 }
 
@@ -56,16 +63,19 @@ void Sys_Renderer::notify(const Message& msg)
 void Sys_Renderer::draw(WindowManager* windowManager, IDrawable* drawable)
 {
 	if (!drawable) return;
-	if (windowManager->getCurrentViewSpace().intersects(drawable->getDrawableBounds()))
-		drawable->draw(windowManager->getRenderWindow());
+	drawable->draw(windowManager->getRenderWindow());
 }
 
 void Sys_Renderer::setupRequirements()
 {
-	Bitmask req;
-	req.set((unsigned int)ComponentType::Position);
-	req.set((unsigned int)ComponentType::SpriteSheet);
-	m_requirements.emplace_back(req);
+	Bitmask req_spriteSheet;
+	req_spriteSheet.set((unsigned int)ComponentType::Position);
+	req_spriteSheet.set((unsigned int)ComponentType::SpriteSheet);
+	m_requirements.emplace_back(req_spriteSheet);
+	Bitmask req_particles;
+	req_particles.set((unsigned int)ComponentType::Position);
+	req_particles.set((unsigned int)ComponentType::Particles);
+	m_requirements.emplace_back(req_particles);
 }
 
 void Sys_Renderer::subscribeToChannels()

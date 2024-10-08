@@ -1,6 +1,5 @@
 #include "WindowManager.h"
 #include "Params.h"
-#include <iostream>
 
 WindowManager::WindowManager(const std::string& title, const sf::Vector2u& size)
 {

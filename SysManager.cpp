@@ -9,7 +9,7 @@ SysManager::SysManager() :
 	m_systems[SystemType::Movement] = new Sys_Movement(this);
 	m_systems[SystemType::InvaderControl] = new Sys_InvaderControl(this);
 	m_systems[SystemType::BulletControl] = new Sys_BulletControl(this);
-	m_systems[SystemType::Shockwave] = new Sys_Shockwave(this);
+	m_systems[SystemType::Shockwave] = new Sys_ShockwaveControl(this);
 	m_systems[SystemType::Collision] = new Sys_Collision(this);
 	m_systems[SystemType::BunkerDamage] = new Sys_BunkerControl(this);
 	m_systems[SystemType::Animator] = new Sys_Animator(this);

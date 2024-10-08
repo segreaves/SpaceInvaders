@@ -9,8 +9,6 @@
 
 State_Game::State_Game(StateManager* stateManager) :
 	State(stateManager),
-	m_playerBulletIndex(0),
-	m_currentInvaderSpeed(0),
 	m_hudUpdateTimer(0)
 {
 	m_gameView.setViewport(sf::FloatRect(0.15f, 0, 0.7f, 1));
@@ -50,6 +48,7 @@ void State_Game::onCreate()
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_PlayerControl>(SystemType::PlayerControl)->setLevelManager(&m_levelManager);
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletControl>(SystemType::BulletControl)->setLevelManager(&m_levelManager);
 	m_levelManager.createPlayer();
+	m_levelManager.createPlayerExplosion();
 	m_levelManager.createPlayerBullets();
 	m_levelManager.createInvaderBullets();
 	m_levelManager.createInvaders(getGameViewSpace());
@@ -116,9 +115,16 @@ void State_Game::onActorDisabled(unsigned int actorId)
 		m_levelManager.onInvaderDefeated();
 	else if (actor->getTag() == "player")
 	{
-		// with player disabled, play an explosion animation in player position
-		// (to be implemented), for now just go to game over state
-		gameOverScreen();
+		// enable player explosion particle system
+		ActorId explosionId = m_levelManager.getPlayerExplosionId();
+		Comp_Position* playerPos = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Position>(ComponentType::Position);
+		Comp_Position* explosionPos = m_stateManager->getContext()->m_actorManager->getActor(explosionId)->getComponent<Comp_Position>(ComponentType::Position);
+		explosionPos->setPosition(playerPos->getPosition());
+		Comp_Particles* particlesComp = m_stateManager->getContext()->m_actorManager->getActor(explosionId)->getComponent<Comp_Particles>(ComponentType::Particles);
+		particlesComp->getParticleSystem()->initialize();
+		particlesComp->getParticleSystem()->setEmitterPosition(explosionPos->getPosition());
+		particlesComp->getParticleSystem()->emitParticles();
+		m_stateManager->getContext()->m_actorManager->enableActor(explosionId);
 	}
 }
 

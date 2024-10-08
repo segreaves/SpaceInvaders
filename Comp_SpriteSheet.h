@@ -16,7 +16,9 @@ public:
 		m_fps(0),
 		m_sharedMemory(true),
 		m_origin(OriginType::Medium),
-		m_dmgBlinks(0)
+		m_dmgBlinks(0),
+		m_dmgBlinkTime(0),
+		m_isBlinking(false)
 	{
 	}
 

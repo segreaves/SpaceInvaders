@@ -1,11 +1,11 @@
 #pragma once
 #include "Sys.h"
 
-class Sys_Shockwave : public Sys
+class Sys_ShockwaveControl : public Sys
 {
 public:
-	Sys_Shockwave(SysManager* systemManager);
-	~Sys_Shockwave();
+	Sys_ShockwaveControl(SysManager* systemManager);
+	~Sys_ShockwaveControl();
 
 	void start();
 	void setupRequirements();
