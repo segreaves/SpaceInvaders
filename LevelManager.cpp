@@ -88,6 +88,9 @@ void LevelManager::createBunkers(sf::FloatRect viewSpace)
 		Comp_Collision* colComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Collision>(ComponentType::Collision);
 		Comp_SpriteSheet* sprite = m_actorManager->getActor(bunkerId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		adjustColliderToSprite(colComp, sprite);
+		m_actorManager->enableActor(bunkerId);
+		Comp_Position* posComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Position>(ComponentType::Position);
+		posComp->setPosition(getBunkerSpawn(bunkerId));
 	}
 }
 

@@ -160,7 +160,7 @@ void Sys_Collision::detectCollisions()
 	{
 		for (auto& invaderId : m_actorGroups["invader"])
 		{
-			// check collisions against bullets
+			// check collisions against player bullets
 			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
 				for (auto& bulletId : m_actorGroups["bullet_player"])
 					if (detectActorCollision(invaderId, bulletId))
@@ -195,10 +195,12 @@ void Sys_Collision::detectCollisions()
 	{
 		for (auto& bunkerId : m_actorGroups["bunker"])
 		{
+			// check collisions against player bullets
 			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
 				for (auto& playerBulletId : m_actorGroups["bullet_player"])
 					if (detectActorCollision(bunkerId, playerBulletId))
 						break;
+			// check collisions against invader bullets
 			if (m_actorGroups.find("bullet_invader") != m_actorGroups.end())
 				for (auto& invaderBulletId : m_actorGroups["bullet_invader"])
 					if (detectActorCollision(bunkerId, invaderBulletId))
@@ -209,6 +211,7 @@ void Sys_Collision::detectCollisions()
 	if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
 		for (auto& playerBulletId : m_actorGroups["bullet_player"])
 		{
+			// check collisions against invader bullets
 			if (m_actorGroups.find("bullet_invader") != m_actorGroups.end())
 				for (auto& invaderBulletId : m_actorGroups["bullet_invader"])
 					if (detectActorCollision(playerBulletId, invaderBulletId))

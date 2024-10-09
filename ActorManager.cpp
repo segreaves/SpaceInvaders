@@ -66,7 +66,7 @@ int ActorManager::initializeActor(std::string tag)
 		delete actor;
 		return -1;
 	}
-	disableActor(m_idCounter);
+	m_systemManager->actorModified(m_idCounter, Bitmask(0));
 	return m_idCounter++;
 }
 

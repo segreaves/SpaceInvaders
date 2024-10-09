@@ -30,6 +30,7 @@ private:
 	void onPlayerShoot();
 	void onActorDisabled(unsigned int actorId);
 	void gameOverScreen();
+	void newGame();
 
 	void updateHUD();
 	void drawGame();
@@ -42,7 +43,11 @@ private:
 	LevelManager m_levelManager;
 	sf::View m_gameView;
 	sf::View m_hudView;
+	bool m_newGame;
 	unsigned int m_fps;
+	float m_gameOverWaitTime = 2.f;
+	float m_deathTimer;
+	bool m_playerDead;
 	sf::RectangleShape m_background;
 	// HUD elements
 	float m_hudUpdateTimer;

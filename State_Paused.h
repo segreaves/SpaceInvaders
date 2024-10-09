@@ -16,7 +16,6 @@ public:
 	void activate();
 	void deactivate();
 private:
-	sf::View m_view;
 	sf::RectangleShape m_panel;
 	sf::Text m_pausedText;
 };

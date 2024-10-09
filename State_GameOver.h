@@ -15,7 +15,6 @@ public:
 	void deactivate();
 private:
 	void OnEnter();
-	sf::View m_view;
 	sf::RectangleShape m_panel;
 	sf::Text m_gameOverText;
 	sf::Text m_optionsText;

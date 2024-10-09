@@ -9,7 +9,10 @@
 
 State_Game::State_Game(StateManager* stateManager) :
 	State(stateManager),
-	m_hudUpdateTimer(0)
+	m_hudUpdateTimer(0),
+	m_deathTimer(0),
+	m_playerDead(false),
+	m_newGame(true)
 {
 	m_gameView.setViewport(sf::FloatRect(0.15f, 0, 0.7f, 1));
 	m_hudView.setViewport(sf::FloatRect(0, 0, 1, 1));
@@ -33,6 +36,13 @@ void State_Game::update(const float& deltaTime)
 		updateHUD();
 		m_hudUpdateTimer -= m_hudUpdateInterval;
 	}
+	// if player dead, prepare to switch to Game Over screen
+	if (m_playerDead)
+	{
+		m_deathTimer -= deltaTime;
+		if (m_deathTimer < 0)
+			gameOverScreen();
+	}
 }
 
 void State_Game::draw()
@@ -43,25 +53,9 @@ void State_Game::draw()
 
 void State_Game::onCreate()
 {
-	m_levelManager.setViewSpace(getGameViewSpace());
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->setLevelManager(&m_levelManager);
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_PlayerControl>(SystemType::PlayerControl)->setLevelManager(&m_levelManager);
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletControl>(SystemType::BulletControl)->setLevelManager(&m_levelManager);
-	m_levelManager.createPlayer();
-	m_levelManager.createPlayerExplosion();
-	m_levelManager.createPlayerBullets();
-	m_levelManager.createInvaderBullets();
-	m_levelManager.createInvaders(getGameViewSpace());
-	m_levelManager.createShockwaves(m_levelManager.getInvaderIds().size());
-	m_levelManager.createBunkers(getGameViewSpace());
-	ActorManager* actorManager = m_stateManager->getContext()->m_actorManager;
-	actorManager->enableActor(m_levelManager.getPlayerId());
-	for (auto& bunkerId : m_levelManager.getBunkerIds())
-	{
-		actorManager->enableActor(bunkerId);
-		Comp_Position* posComp = actorManager->getActor(bunkerId)->getComponent<Comp_Position>(ComponentType::Position);
-		posComp->setPosition(m_levelManager.getBunkerSpawn(bunkerId));
-	}
 }
 
 void State_Game::onDestroy()
@@ -74,6 +68,8 @@ void State_Game::activate()
 	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
 	m_stateManager->getContext()->m_actorManager->m_actorDisabled.addCallback("Game_onActorDisabled", std::bind(&State_Game::onActorDisabled, this, std::placeholders::_1));
+	if (m_newGame)
+		newGame();
 }
 
 void State_Game::deactivate()
@@ -125,14 +121,33 @@ void State_Game::onActorDisabled(unsigned int actorId)
 		particlesComp->getParticleSystem()->setEmitterPosition(explosionPos->getPosition());
 		particlesComp->getParticleSystem()->emitParticles();
 		m_stateManager->getContext()->m_actorManager->enableActor(explosionId);
+		m_playerDead = true;
+		m_deathTimer = m_gameOverWaitTime;
 	}
 }
 
 void State_Game::gameOverScreen()
 {
-	m_stateManager->getContext()->m_actorManager->purge();
+	m_newGame = true;
 	m_stateManager->switchTo(StateType::GameOver);
 	m_stateManager->remove(StateType::Game);
+	m_stateManager->remove(StateType::Paused);
+}
+
+void State_Game::newGame()
+{
+	m_newGame = false;
+	m_playerDead = false;
+	m_stateManager->getContext()->m_actorManager->purge();
+	m_levelManager.setViewSpace(getGameViewSpace());
+	m_levelManager.createPlayer();
+	m_levelManager.createPlayerExplosion();
+	m_levelManager.createPlayerBullets();
+	m_levelManager.createInvaderBullets();
+	m_levelManager.createInvaders(getGameViewSpace());
+	m_levelManager.createShockwaves(m_levelManager.getInvaderIds().size());
+	m_levelManager.createBunkers(getGameViewSpace());
+	m_stateManager->getContext()->m_actorManager->enableActor(m_levelManager.getPlayerId());
 }
 
 void State_Game::updateHUD()
