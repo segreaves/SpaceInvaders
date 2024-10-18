@@ -159,6 +159,9 @@
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowManager.h">
@@ -205,9 +208,6 @@
     </ClInclude>
     <ClInclude Include="Actor.h">
       <Filter>Header Files\Core\ECS\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Comp_Sprite.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="Controller.h">
       <Filter>Header Files\Controls</Filter>
@@ -343,6 +343,12 @@
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Grid.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

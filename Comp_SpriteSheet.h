@@ -7,21 +7,6 @@
 class Comp_SpriteSheet : public Comp, public IDrawable
 {
 public:
-	Comp_SpriteSheet() :
-		IDrawable(),
-		m_enabled(true),
-		m_spriteSheet(nullptr),
-		m_frameDuration(0.1f),
-		m_frameTime(0),
-		m_fps(0),
-		m_sharedMemory(true),
-		m_origin(OriginType::Medium),
-		m_dmgBlinks(0),
-		m_dmgBlinkTime(0),
-		m_isBlinking(false)
-	{
-	}
-
 	~Comp_SpriteSheet()
 	{
 		if (m_spriteSheet)
@@ -41,6 +26,11 @@ public:
 			m_spriteSheet->setSpriteColor(getDefaultColor());
 			m_spriteSheet->setSmooth(false);
 		}
+	}
+
+	OriginType getOrigin()
+	{
+		return m_origin;
 	}
 
 	SpriteSheet* getSpriteSheet()
@@ -169,12 +159,12 @@ private:
 			m_origin = OriginType::Medium;
 	}
 
-	bool m_enabled;
+	bool m_enabled = true;
 	std::string m_sheetName;
 	SpriteSheet* m_spriteSheet;
 	bool m_sharedMemory;
 	OriginType m_origin;
-	float m_frameDuration;
+	float m_frameDuration = 0.1f;
 	float m_frameTime;
 	float m_defaultFPS = 1.f;
 	float m_fps;

@@ -2,7 +2,6 @@
 #include "StateManager.h"
 #include "Comp_Position.h"
 #include "Comp_Movement.h"
-#include "Comp_Sprite.h"
 #include "Comp_Invader.h"
 #include "LevelManager.h"
 #include "Utils.h"
@@ -206,7 +205,7 @@ void State_Game::setWindowOutline()
 	int outlineThickness = 2;
 	m_background.setSize(m_gameView.getSize() - sf::Vector2f(2 * outlineThickness, 2 * outlineThickness));
 	m_background.setPosition(outlineThickness, outlineThickness);
-	m_background.setFillColor(BGD_COLOR);
+	m_background.setFillColor(sf::Color::Transparent);
 	m_background.setOutlineColor(APP_COLOR);
 	m_background.setOutlineThickness(outlineThickness);
 }

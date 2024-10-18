@@ -7,7 +7,6 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	m_idCounter(0)
 {
 	addComponentType<Comp_Position>(ComponentType::Position);
-	addComponentType<Comp_Sprite>(ComponentType::Sprite);
 	addComponentType<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 	addComponentType<Comp_Movement>(ComponentType::Movement);
 	addComponentType<Comp_Target>(ComponentType::Target);
@@ -21,6 +20,7 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	addComponentType<Comp_Health>(ComponentType::Health);
 	addComponentType<Comp_Rotation>(ComponentType::Rotation);
 	addComponentType<Comp_Particles>(ComponentType::Particles);
+	addComponentType<Comp_Grid>(ComponentType::Grid);
 }
 
 ActorManager::~ActorManager()
@@ -221,12 +221,6 @@ unsigned int ActorManager::loadActorProfile(const std::string actorName, const s
 			Comp_Particles* particles = actor->getComponent<Comp_Particles>(ComponentType::Particles);
 			ss >> *particles;
 		}
-		else if (attr == "Sprite")
-		{
-			addComponent(actorId, ComponentType::Sprite);
-			Comp_Sprite* sprite = actor->getComponent<Comp_Sprite>(ComponentType::Sprite);
-			ss >> *sprite;
-		}
 		else if (attr == "SpriteSheet")
 		{
 			addComponent(actorId, ComponentType::SpriteSheet);
@@ -239,6 +233,12 @@ unsigned int ActorManager::loadActorProfile(const std::string actorName, const s
 			addComponent(actorId, ComponentType::Health);
 			Comp_Health* health = actor->getComponent<Comp_Health>(ComponentType::Health);
 			ss >> *health;
+		}
+		else if (attr == "Grid")
+		{
+			addComponent(actorId, ComponentType::Grid);
+			Comp_Grid* grid = actor->getComponent<Comp_Grid>(ComponentType::Grid);
+			ss >> *grid;
 		}
 		else
 			std::cerr << "Unknown attribute: " << attr << std::endl;

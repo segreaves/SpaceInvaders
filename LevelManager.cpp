@@ -91,6 +91,11 @@ void LevelManager::createBunkers(sf::FloatRect viewSpace)
 		m_actorManager->enableActor(bunkerId);
 		Comp_Position* posComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Position>(ComponentType::Position);
 		posComp->setPosition(getBunkerSpawn(bunkerId));
+		// fit bunker grids to sprite
+		Comp_Grid* gridComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Grid>(ComponentType::Grid);
+		// get position of the sprite's top left corner
+		sf::Vector2f gridPos(posComp->getPosition().x + sprite->getDrawableBounds().left, posComp->getPosition().y + sprite->getDrawableBounds().top);
+		gridComp->create(sprite->getDrawableBounds().width, sprite->getDrawableBounds().height, gridPos);
 	}
 }
 

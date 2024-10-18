@@ -16,5 +16,6 @@ enum class ComponentType
 	Bunker,
 	Shockwave,
 	Particles,
-	Health
+	Health,
+	Grid
 };

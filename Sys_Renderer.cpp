@@ -68,6 +68,10 @@ void Sys_Renderer::draw(WindowManager* windowManager, IDrawable* drawable)
 
 void Sys_Renderer::setupRequirements()
 {
+	Bitmask req_sprite;
+	req_sprite.set((unsigned int)ComponentType::Position);
+	req_sprite.set((unsigned int)ComponentType::Sprite);
+	m_requirements.emplace_back(req_sprite);
 	Bitmask req_spriteSheet;
 	req_spriteSheet.set((unsigned int)ComponentType::Position);
 	req_spriteSheet.set((unsigned int)ComponentType::SpriteSheet);

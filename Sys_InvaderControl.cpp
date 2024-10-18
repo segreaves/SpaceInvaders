@@ -119,7 +119,7 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 			Comp_Bullet* bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
 			bulletMove->setVelocity(shootDirection * bulletComp->getBulletSpeed());
 			// knock-back
-			float knockback = 25000;
+			float knockback = 50000;
 			Comp_Movement* moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
 			moveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
 			break;
@@ -195,10 +195,12 @@ void Sys_InvaderControl::selectTrackedInvaders()
 			maxX = posComp->getPosition().x + colComp->getAABB().width;
 		}
 	}
-	Comp_Sprite* leftSprite = actorManager->getActor(m_leftInvader)->getComponent<Comp_Sprite>(ComponentType::Sprite);
-	if (leftSprite) leftSprite->setColor(sf::Color::Red);
-	Comp_Sprite* rightSprite = actorManager->getActor(m_rightInvader)->getComponent<Comp_Sprite>(ComponentType::Sprite);
-	if (rightSprite) rightSprite->setColor(sf::Color::Red);
+#ifdef DEBUG
+	Comp_SpriteSheet* leftSprite = actorManager->getActor(m_leftInvader)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+	if (leftSprite) leftSprite->getSpriteSheet()->setSpriteColor(sf::Color::Red);
+	Comp_SpriteSheet* rightSprite = actorManager->getActor(m_rightInvader)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+	if (rightSprite) rightSprite->getSpriteSheet()->setSpriteColor(sf::Color::Red);
+#endif
 }
 
 void Sys_InvaderControl::instantiateShockwave(sf::Vector2f position)

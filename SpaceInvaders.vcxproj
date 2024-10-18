@@ -143,6 +143,7 @@
     <ClCompile Include="ActorManager.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
@@ -176,10 +177,12 @@
     <ClInclude Include="Channel.h" />
     <ClInclude Include="Comp.h" />
     <ClInclude Include="ComponentType.h" />
+    <ClInclude Include="Comp_Grid.h" />
     <ClInclude Include="Comp_Particles.h" />
     <ClInclude Include="Comp_Health.h" />
     <ClInclude Include="Comp_Rotation.h" />
     <ClInclude Include="Comp_Target.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="Comp_Shockwave.h" />
     <ClInclude Include="Comp_Invader.h" />
@@ -189,7 +192,6 @@
     <ClInclude Include="Comp_Control.h" />
     <ClInclude Include="Comp_Player.h" />
     <ClInclude Include="Comp_Position.h" />
-    <ClInclude Include="Comp_Sprite.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Direction.h" />
