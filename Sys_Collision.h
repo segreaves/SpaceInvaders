@@ -31,4 +31,8 @@ private:
 	bool detectActorCollision(const ActorId& actorId, const ActorId& otherActor);
 
 	std::unordered_map<std::string, std::vector<ActorId>> m_actorGroups;
+
+#ifdef DEBUG
+	std::vector<sf::RectangleShape> m_intersects;
+#endif
 };

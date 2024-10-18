@@ -125,6 +125,16 @@ const sf::Vector2f& SpriteSheet::getSpriteSpacing() const { return m_spriteSpaci
 
 const sf::IntRect& SpriteSheet::getCropRect() const { return m_cropRect; }
 
+sf::FloatRect SpriteSheet::globalRectToPixelRect(const sf::FloatRect& rect) const
+{
+	sf::FloatRect pixelRect;
+	pixelRect.left = (rect.left - m_sprite.getGlobalBounds().left) / m_spriteScale.x;
+	pixelRect.top = (rect.top - m_sprite.getGlobalBounds().top) / m_spriteScale.y;
+	pixelRect.width = rect.width / m_spriteScale.x;
+	pixelRect.height = rect.height / m_spriteScale.y;
+	return pixelRect;
+}
+
 bool SpriteSheet::loadSheet(const std::string& filePath)
 {
 	std::ifstream file;

@@ -1,6 +1,7 @@
 #include "Sys_BulletControl.h"
 #include "SysManager.h"
 #include "LevelManager.h"
+#include "WindowManager.h"
 
 Sys_BulletControl::Sys_BulletControl(SysManager* systemManager) :
 	Sys(systemManager)
@@ -51,6 +52,16 @@ void Sys_BulletControl::update(const float& deltaTime)
 		// check if bullet is out of bounds
 		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_levelManager->getViewSpace().getSize().y)
 			m_systemManager->addEvent(bullet->getId(), (EventId)ActorEventType::Despawned);
+#ifdef DEBUG
+		Comp_Position* posComp = bullet->getComponent<Comp_Position>(ComponentType::Position);
+		sf::RectangleShape rectTip(sf::Vector2f(4.f, 4.f));
+		rectTip.setPosition(posComp->getPosition());
+		rectTip.setOrigin(rectTip.getSize().x / 2, rectTip.getSize().y / 2);
+		sf::Color color = sf::Color::White;
+		color.a = 100;
+		rectTip.setFillColor(color);
+		m_bulletTips.emplace_back(rectTip);
+#endif
 	}
 }
 
@@ -67,6 +78,11 @@ void Sys_BulletControl::handleEvent(const ActorId& actorId, const ActorEventType
 
 void Sys_BulletControl::debugOverlay(WindowManager* windowManager)
 {
+#ifdef DEBUG
+	for (auto& rect : m_bulletTips)
+		windowManager->getRenderWindow()->draw(rect);
+	m_bulletTips.clear();
+#endif
 }
 
 void Sys_BulletControl::notify(const Message& msg)

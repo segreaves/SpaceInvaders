@@ -49,6 +49,27 @@ void StateManager::draw()
 		}
 	}
 	else m_states.back().second->draw();
+	// after everything is drawn, draw the render lines
+	// vertical lines
+	for (int x = 0; x < m_context->m_windowManager->getRenderWindow()->getSize().x; x += 2)
+	{
+		sf::Vertex line[] =
+		{
+			sf::Vertex(sf::Vector2f(x, 0), sf::Color::Black),
+			sf::Vertex(sf::Vector2f(x, m_context->m_windowManager->getRenderWindow()->getSize().y), sf::Color::Black)
+		};
+		m_context->m_windowManager->getRenderWindow()->draw(line, 2, sf::Lines);
+	}
+	// horizontal lines
+	for (int y = 0; y < m_context->m_windowManager->getRenderWindow()->getSize().y; y += 2)
+	{
+		sf::Vertex line[] =
+		{
+			sf::Vertex(sf::Vector2f(0, y), sf::Color::Black),
+			sf::Vertex(sf::Vector2f(m_context->m_windowManager->getRenderWindow()->getSize().x, y), sf::Color::Black)
+		};
+		m_context->m_windowManager->getRenderWindow()->draw(line, 2, sf::Lines);
+	}
 }
 
 void StateManager::lateUpdate()

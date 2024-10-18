@@ -32,6 +32,7 @@ public:
 	const sf::Vector2f& getSheetPadding() const;
 	const sf::Vector2f& getSpriteSpacing() const;
 	const sf::IntRect& getCropRect() const;
+	sf::FloatRect globalRectToPixelRect(const sf::FloatRect& rect) const;
 
 	bool loadSheet(const std::string& filePath);
 	void releaseSheet();

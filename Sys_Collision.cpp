@@ -74,6 +74,7 @@ void Sys_Collision::handleEvent(const ActorId& actorId, const ActorEventType& ev
 
 void Sys_Collision::debugOverlay(WindowManager* windowManager)
 {
+#ifdef DEBUG
 	if (m_actorIds.empty()) return;
 	for (auto& actorId : m_actorIds)
 	{
@@ -86,6 +87,10 @@ void Sys_Collision::debugOverlay(WindowManager* windowManager)
 		shape.setFillColor(color);
 		windowManager->getRenderWindow()->draw(shape);
 	}
+	for (auto& rect : m_intersects)
+		windowManager->getRenderWindow()->draw(rect);
+	m_intersects.clear();
+#endif
 }
 
 void Sys_Collision::notify(const Message& msg)
@@ -198,13 +203,11 @@ void Sys_Collision::detectCollisions()
 			// check collisions against player bullets
 			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
 				for (auto& playerBulletId : m_actorGroups["bullet_player"])
-					if (detectActorCollision(bunkerId, playerBulletId))
-						break;
+					detectActorCollision(bunkerId, playerBulletId);
 			// check collisions against invader bullets
 			if (m_actorGroups.find("bullet_invader") != m_actorGroups.end())
 				for (auto& invaderBulletId : m_actorGroups["bullet_invader"])
-					if (detectActorCollision(bunkerId, invaderBulletId))
-						break;
+					detectActorCollision(bunkerId, invaderBulletId);
 		}
 	}
 	// check player bullet collisions
@@ -259,8 +262,17 @@ bool Sys_Collision::detectActorCollision(const ActorId& actorId, const ActorId& 
 	Comp_Collision* otherCollider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision);
 	Comp_Position* otherPosition = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Position>(ComponentType::Position);
 	otherCollider->setPosition(otherPosition->getPosition());
-	if (actorCollider->getAABB().intersects(otherCollider->getAABB()))
+	sf::FloatRect intersect;
+	if (actorCollider->getAABB().intersects(otherCollider->getAABB(), intersect))
 	{
+#ifdef DEBUG
+		sf::RectangleShape rectIntersect(sf::Vector2f(intersect.width, intersect.height));
+		rectIntersect.setPosition(sf::Vector2f(intersect.left, intersect.top));
+		sf::Color color = sf::Color::Red;
+		color.a = 100;
+		rectIntersect.setFillColor(color);
+		m_intersects.emplace_back(rectIntersect);
+#endif
 		Message msg((MessageType)ActorMessageType::Collision);
 		msg.m_sender = otherId;
 		msg.m_receiver = actorId;

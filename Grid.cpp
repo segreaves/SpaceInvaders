@@ -3,13 +3,18 @@
 #include <unordered_map>
 #include <algorithm>
 
-Grid::Grid(int cellSize, int rows, int cols, float posX, float posY) :
+Grid::Grid(float cellSize, int rows, int cols, float posX, float posY) :
     m_cellSize(cellSize),
     m_rows(rows),
     m_cols(cols),
     m_posX(posX),
     m_posY(posY)
 {
+}
+
+sf::FloatRect Grid::getCellRect(const int& col, const int& row) const
+{
+    return sf::FloatRect(m_posX + col * m_cellSize, m_posY + row * m_cellSize, m_cellSize, m_cellSize);
 }
 
 bool Grid::isCellValid(const int& col, const int& row) const
@@ -31,21 +36,6 @@ sf::Vector2i Grid::getCell(const sf::Vector2f& coords) const
 sf::Vector2f Grid::getCellCoords(const sf::Vector2i& cell) const
 {
     return sf::Vector2f(cell.x * m_cellSize + m_posX, cell.y * m_cellSize + m_posY);
-}
-
-std::vector<sf::Vector2i> Grid::getOverlappingCells(const sf::FloatRect& rect) const
-{
-    std::vector<sf::Vector2i> cells;
-
-	sf::Vector2i topLeft = getCell(sf::Vector2f(rect.left, rect.top));
-	sf::Vector2i bottomRight = getCell(sf::Vector2f(rect.left + rect.width, rect.top + rect.height));
-
-	for (int row = topLeft.y; row <= bottomRight.y; row++)
-        for (int col = topLeft.x; col <= bottomRight.x; col++)
-            if (isCellValid(col, row))
-                cells.emplace_back(col, row);
-
-	return cells;
 }
 
 std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal) const
@@ -153,6 +143,7 @@ std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal)
 
     // traverse the grid
     bool traversing = true;
+    float traversed = 0;
     while (traversing)
     {
         intersect.emplace_back(cell);
@@ -177,16 +168,18 @@ std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal)
             pos.x += tMaxX * dir.x;
             pos.y += tMaxX * dir.y;
             cell.x += dir.x > 0 ? 1 : -1;
+            traversed += tMaxX;
         }
         else
         {
             pos.x += tMaxY * dir.x;
             pos.y += tMaxY * dir.y;
             cell.y += dir.y > 0 ? 1 : -1;
+            traversed += tMaxY;
         }
 
         // check if we exited the grid
-        if (!contains(pos))
+        if (!contains(pos) || traversed >= maxTraversal)
             traversing = false;
     }
 

@@ -26,4 +26,8 @@ public:
 private:
 	LevelManager* m_levelManager;
 	unsigned int m_currentBullet;
+
+#ifdef DEBUG
+	std::vector<sf::RectangleShape> m_bulletTips;
+#endif
 };

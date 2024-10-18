@@ -18,7 +18,7 @@ struct Ray
 class Grid
 {
 public:
-    Grid(int cellSize, int rows, int cols, float posX = 0, float posY = 0);
+    Grid(float cellSize, int rows, int cols, float posX = 0, float posY = 0);
 
     int cellSize() const { return m_cellSize; }
     int rows() const { return m_rows; }
@@ -27,6 +27,7 @@ public:
     void setPosition(float x, float y) { m_posX = x; m_posY = y; }
     void setPosition(const sf::Vector2f& position) { setPosition(position.x, position.y); }
     sf::Vector2f getPosition() const { return sf::Vector2f(m_posX, m_posY); }
+    sf::FloatRect getCellRect(const int& col, const int& row) const;
     float getCellSize() const { return m_cellSize; }
     float getLeftEdge() const { return m_posX; }
     float getRightEdge() const { return m_posX + m_cols * m_cellSize; }
@@ -38,9 +39,9 @@ public:
     bool contains(const sf::Vector2f& coords) const { return contains(coords.x, coords.y); }
     sf::Vector2i getCell(const sf::Vector2f& coords) const;
     sf::Vector2f getCellCoords(const sf::Vector2i& cell) const;
-    std::vector<sf::Vector2i> getOverlappingCells(const sf::FloatRect& rect) const;
     std::vector<sf::Vector2i> getIntersect(const Ray& ray, float maxTraversal = std::numeric_limits<float>::infinity()) const;
 private:
-    int m_cellSize, m_rows, m_cols;
+    float m_cellSize;
+    int m_rows, m_cols;
     float m_posX, m_posY;
 };
