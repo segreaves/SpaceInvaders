@@ -6,6 +6,7 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	m_textureManager(textureManager),
 	m_idCounter(0)
 {
+	m_componentFactory.reserve(MAX_COMPONENTS);
 	addComponentType<Comp_Position>(ComponentType::Position);
 	addComponentType<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 	addComponentType<Comp_Movement>(ComponentType::Movement);

@@ -21,6 +21,11 @@ State_Game::State_Game(StateManager* stateManager) :
 	setWindowOutline();
 }
 
+State_Game::~State_Game()
+{
+	onDestroy();
+}
+
 void State_Game::update(const float& deltaTime)
 {
 	if (m_levelManager.getInvaderCount() <= 0)

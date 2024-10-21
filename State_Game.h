@@ -17,6 +17,7 @@ class State_Game : public State
 {
 public:
 	State_Game(StateManager* stateManager);
+	~State_Game();
 
 	void update(const float& deltaTime) override;
 	void draw() override;

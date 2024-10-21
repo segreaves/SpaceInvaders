@@ -55,7 +55,7 @@ void StateManager::draw()
 	{
 		sf::Vertex line[] =
 		{
-			sf::Vertex(sf::Vector2f(x, 0), sf::Color::Black),
+			sf::Vertex(sf::Vector2f(x, 0), sf::Color(0, 0, 0, 50)),
 			sf::Vertex(sf::Vector2f(x, m_context->m_windowManager->getRenderWindow()->getSize().y), sf::Color::Black)
 		};
 		m_context->m_windowManager->getRenderWindow()->draw(line, 2, sf::Lines);
@@ -65,7 +65,7 @@ void StateManager::draw()
 	{
 		sf::Vertex line[] =
 		{
-			sf::Vertex(sf::Vector2f(0, y), sf::Color::Black),
+			sf::Vertex(sf::Vector2f(0, y), sf::Color(0, 0, 0, 75)),
 			sf::Vertex(sf::Vector2f(m_context->m_windowManager->getRenderWindow()->getSize().x, y), sf::Color::Black)
 		};
 		m_context->m_windowManager->getRenderWindow()->draw(line, 2, sf::Lines);
@@ -129,7 +129,8 @@ void StateManager::switchTo(const StateType& toState)
 void StateManager::createState(const StateType& newState)
 {
 	auto it = m_stateFactory.find(newState);
-	if (it == m_stateFactory.end()) return;	State* state = it->second();
+	if (it == m_stateFactory.end()) return;
+	State* state = it->second();
 	m_states.emplace_back(newState, state);
 	state->onCreate();
 }
