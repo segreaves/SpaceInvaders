@@ -17,15 +17,13 @@ class State_Game : public State
 {
 public:
 	State_Game(StateManager* stateManager);
-	~State_Game();
-
+private:
 	void update(const float& deltaTime) override;
 	void draw() override;
 	void onCreate() override;
-	void onDestroy() override;
 	void activate() override;
 	void deactivate() override;
-private:
+
 	void loadNextLevel();
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();

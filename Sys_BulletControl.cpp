@@ -47,13 +47,13 @@ void Sys_BulletControl::update(const float& deltaTime)
 	{
 		Actor* bullet = actorManager->getActor(id);
 		// no need to update bullet movement as their velocity is constant and set up on creation
-		Comp_Collision* colComp = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
+		auto colComp = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
 		sf::FloatRect bulletAABB = colComp->getAABB();
 		// check if bullet is out of bounds
 		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_levelManager->getViewSpace().getSize().y)
 			m_systemManager->addEvent(bullet->getId(), (EventId)ActorEventType::Despawned);
 #ifdef DEBUG
-		Comp_Position* posComp = bullet->getComponent<Comp_Position>(ComponentType::Position);
+		auto posComp = bullet->getComponent<Comp_Position>(ComponentType::Position);
 		sf::RectangleShape rectTip(sf::Vector2f(4.f, 4.f));
 		rectTip.setPosition(posComp->getPosition());
 		rectTip.setOrigin(rectTip.getSize().x / 2, rectTip.getSize().y / 2);

@@ -23,8 +23,8 @@ void Sys_PlayerControl::start()
 	for (auto& id : m_actorIds)
 	{
 		Actor* player = actorManager->getActor(id);
-		Comp_Position* posComp = player->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Target* targetComp = player->getComponent<Comp_Target>(ComponentType::Target);
+		auto posComp = player->getComponent<Comp_Position>(ComponentType::Position);
+		auto targetComp = player->getComponent<Comp_Target>(ComponentType::Target);
 		targetComp->setTarget(posComp->getPosition());
 	}
 }
@@ -57,21 +57,21 @@ void Sys_PlayerControl::update(const float& deltaTime)
 	{
 		Actor* player = m_systemManager->getActorManager()->getActor(id);
 		// clamp the player target to the view space
-		Comp_Target* targetComp = player->getComponent<Comp_Target>(ComponentType::Target);
+		auto targetComp = player->getComponent<Comp_Target>(ComponentType::Target);
 		float lowerBound = m_levelManager->getViewSpace().getPosition().x;
 		float upperBound = m_levelManager->getViewSpace().getPosition().x + m_levelManager->getViewSpace().getSize().x;
 		targetComp->setTarget(sf::Vector2f(targetComp->getTarget().x < lowerBound ? lowerBound : (targetComp->getTarget().x > upperBound ? upperBound : targetComp->getTarget().x), targetComp->getTarget().y));
 		
-		Comp_Control* controlComp = player->getComponent<Comp_Control>(ComponentType::Control);
-		Comp_Position* posComp = player->getComponent<Comp_Position>(ComponentType::Position);
+		auto controlComp = player->getComponent<Comp_Control>(ComponentType::Control);
+		auto posComp = player->getComponent<Comp_Position>(ComponentType::Position);
 		sf::Vector2f direction = targetComp->getTarget() - posComp->getPosition();
 
-		Comp_Movement* moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
+		auto moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
 		controlComp->setMovementInput(direction);
 		moveComp->accelerate(controlComp->getMovementInput() * controlComp->getMaxAcceleration());
 
 		// check if player is out of bounds
-		Comp_Collision* colComp = player->getComponent<Comp_Collision>(ComponentType::Collision);
+		auto colComp = player->getComponent<Comp_Collision>(ComponentType::Collision);
 		sf::FloatRect playerAABB = colComp->getAABB();
 
 		float resolve = 0;
@@ -81,8 +81,8 @@ void Sys_PlayerControl::update(const float& deltaTime)
 			resolve = -(playerAABB.left + playerAABB.width - m_levelManager->getViewSpace().getSize().x);
 		if (resolve != 0)
 		{
-			Comp_Position* posComp = player->getComponent<Comp_Position>(ComponentType::Position);
-			Comp_Movement* moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
+			auto posComp = player->getComponent<Comp_Position>(ComponentType::Position);
+			auto moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
 			posComp->move(resolve, 0);
 			moveComp->setAcceleration(0, moveComp->getAcceleration().y);
 			moveComp->setVelocity(0, moveComp->getVelocity().y);
@@ -107,19 +107,19 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 		sf::Vector2f shootDirection(0, -1);
 		Actor* bullet = actorManager->getActor(bulletId);
 		Actor* shooter = actorManager->getActor(actorId);
-		Comp_Position* shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Collision* shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
+		auto shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
+		auto shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
 		// set bullet just above player
-		Comp_Position* bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Collision* bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
+		auto bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
+		auto bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
 		bulletPos->setPosition(shooterPos->getPosition() +
 			shootDirection * (bulletCol->getAABB().getSize().y / 2 + shooterCol->getAABB().getSize().y / 2.f));
-		Comp_Movement* bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
-		Comp_Bullet* bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
+		auto bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
+		auto bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
 		bulletMove->setVelocity(shootDirection * bulletComp->getBulletSpeed());
 		// knock-back
 		float knockback = 1000000;
-		Comp_Movement* moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
+		auto moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
 		moveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
 		break;
 	}
@@ -133,7 +133,7 @@ void Sys_PlayerControl::debugOverlay(WindowManager* windowManager)
 	for (auto& actorId : m_actorIds)
 	{
 		Actor* actor = actorManager->getActor(actorId);
-		Comp_Target* targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
+		auto targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 		sf::CircleShape target(2.5f);
 		target.setOrigin(target.getRadius(), target.getRadius());
 		target.setFillColor(sf::Color::Red);
@@ -155,7 +155,7 @@ void Sys_PlayerControl::notify(const Message& msg)
 			Actor* other = actorManager->getActor(msg.m_sender);
 			if (other->getTag() == "bullet_invader")
 			{
-				Comp_Health* playerHealth = actor->getComponent<Comp_Health>(ComponentType::Health);
+				auto playerHealth = actor->getComponent<Comp_Health>(ComponentType::Health);
 				m_levelManager->setPlayerLives(playerHealth->takeDamage());
 				if (m_levelManager->getPlayerLives() <= 0)
 					m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);

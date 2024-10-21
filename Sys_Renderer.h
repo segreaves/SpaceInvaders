@@ -23,5 +23,5 @@ public:
 
 	void notify(const Message& msg);
 
-	void draw(WindowManager* windowManager, IDrawable* drawable);
+	void draw(WindowManager* windowManager, std::shared_ptr<IDrawable> drawable);
 };

@@ -159,86 +159,86 @@ unsigned int ActorManager::loadActorProfile(const std::string actorName, const s
 		if (attr == "Position")
 		{
 			addComponent(actorId, ComponentType::Position);
-			Comp_Position* pos = actor->getComponent<Comp_Position>(ComponentType::Position);
+			auto pos = actor->getComponent<Comp_Position>(ComponentType::Position);
 			ss >> *pos;
 		}
 		else if (attr == "Movement")
 		{
 			addComponent(actorId, ComponentType::Movement);
-			Comp_Movement* movement = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+			auto movement = actor->getComponent<Comp_Movement>(ComponentType::Movement);
 			ss >> *movement;
 		}
 		else if (attr == "MoveTarget")
 		{
 			addComponent(actorId, ComponentType::Target);
-			Comp_Target* target = actor->getComponent<Comp_Target>(ComponentType::Target);
+			auto target = actor->getComponent<Comp_Target>(ComponentType::Target);
 			ss >> *target;
 		}
 		else if (attr == "Control")
 		{
 			addComponent(actorId, ComponentType::Control);
-			Comp_Control* control = actor->getComponent<Comp_Control>(ComponentType::Control);
+			auto control = actor->getComponent<Comp_Control>(ComponentType::Control);
 			ss >> *control;
 		}
 		else if (attr == "Collision")
 		{
 			addComponent(actorId, ComponentType::Collision);
-			Comp_Collision* collision = actor->getComponent<Comp_Collision>(ComponentType::Collision);
+			auto collision = actor->getComponent<Comp_Collision>(ComponentType::Collision);
 			ss >> *collision;
 		}
 		else if (attr == "Player")
 		{
 			addComponent(actorId, ComponentType::Player);
-			Comp_Player* player = actor->getComponent<Comp_Player>(ComponentType::Player);
+			auto player = actor->getComponent<Comp_Player>(ComponentType::Player);
 			ss >> *player;
 		}
 		else if (attr == "Invader")
 		{
 			addComponent(actorId, ComponentType::Invader);
-			Comp_Invader* invader = actor->getComponent<Comp_Invader>(ComponentType::Invader);
+			auto invader = actor->getComponent<Comp_Invader>(ComponentType::Invader);
 			ss >> *invader;
 		}
 		else if (attr == "Bullet")
 		{
 			addComponent(actorId, ComponentType::Bullet);
-			Comp_Bullet* bullet = actor->getComponent<Comp_Bullet>(ComponentType::Bullet);
+			auto bullet = actor->getComponent<Comp_Bullet>(ComponentType::Bullet);
 			ss >> *bullet;
 		}
 		else if (attr == "Bunker")
 		{
 			addComponent(actorId, ComponentType::Bunker);
-			Comp_Bunker* bunker = actor->getComponent<Comp_Bunker>(ComponentType::Bunker);
+			auto bunker = actor->getComponent<Comp_Bunker>(ComponentType::Bunker);
 			ss >> *bunker;
 		}
 		else if (attr == "Shockwave")
 		{
 			addComponent(actorId, ComponentType::Shockwave);
-			Comp_Shockwave* shockwave = actor->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
+			auto shockwave = actor->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
 			ss >> *shockwave;
 		}
 		else if (attr == "Particles")
 		{
 			addComponent(actorId, ComponentType::Particles);
-			Comp_Particles* particles = actor->getComponent<Comp_Particles>(ComponentType::Particles);
+			auto particles = actor->getComponent<Comp_Particles>(ComponentType::Particles);
 			ss >> *particles;
 		}
 		else if (attr == "SpriteSheet")
 		{
 			addComponent(actorId, ComponentType::SpriteSheet);
-			Comp_SpriteSheet* spriteSheet = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+			auto spriteSheet = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 			ss >> *spriteSheet;
 			spriteSheet->create(m_textureManager);
 		}
 		else if (attr == "Health")
 		{
 			addComponent(actorId, ComponentType::Health);
-			Comp_Health* health = actor->getComponent<Comp_Health>(ComponentType::Health);
+			auto health = actor->getComponent<Comp_Health>(ComponentType::Health);
 			ss >> *health;
 		}
 		else if (attr == "Grid")
 		{
 			addComponent(actorId, ComponentType::Grid);
-			Comp_Grid* grid = actor->getComponent<Comp_Grid>(ComponentType::Grid);
+			auto grid = actor->getComponent<Comp_Grid>(ComponentType::Grid);
 			ss >> *grid;
 		}
 		else

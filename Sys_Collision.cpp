@@ -60,8 +60,8 @@ void Sys_Collision::update(const float& deltaTime)
 	for (auto& id : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
-		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Collision* colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
+		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		auto colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
 		colComp->setPosition(posComp->getPosition());
 	}
 	// check collisions between specific actor groups
@@ -79,7 +79,7 @@ void Sys_Collision::debugOverlay(WindowManager* windowManager)
 	for (auto& actorId : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
-		Comp_Collision* colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
+		auto colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
 		sf::RectangleShape shape(sf::Vector2f(colComp->getAABB().width, colComp->getAABB().height));
 		shape.setPosition(colComp->getAABB().left, colComp->getAABB().top);
 		sf::Color color = sf::Color::Yellow;
@@ -107,14 +107,14 @@ void Sys_Collision::actorCollisions()
 	for (auto id1 = m_actorIds.begin(); id1 != m_actorIds.end(); id1++)
 	{
 		Actor* actor1 = m_systemManager->getActorManager()->getActor(*id1);
-		Comp_Position* posComp1 = actor1->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Collision* colComp1 = actor1->getComponent<Comp_Collision>(ComponentType::Collision);
+		auto posComp1 = actor1->getComponent<Comp_Position>(ComponentType::Position);
+		auto colComp1 = actor1->getComponent<Comp_Collision>(ComponentType::Collision);
 		colComp1->setPosition(posComp1->getPosition());
 		for (auto id2 = std::next(id1); id2 != m_actorIds.end(); id2++)
 		{
 			Actor* actor2 = m_systemManager->getActorManager()->getActor(*id2);
-			Comp_Position* posComp2 = actor2->getComponent<Comp_Position>(ComponentType::Position);
-			Comp_Collision* colComp2 = actor2->getComponent<Comp_Collision>(ComponentType::Collision);
+			auto posComp2 = actor2->getComponent<Comp_Position>(ComponentType::Position);
+			auto colComp2 = actor2->getComponent<Comp_Collision>(ComponentType::Collision);
 			colComp2->setPosition(posComp2->getPosition());
 			if (colComp1->getAABB().intersects(colComp2->getAABB()))
 			{
@@ -258,9 +258,9 @@ void Sys_Collision::detectCollisions()
 /// <returns></returns>
 bool Sys_Collision::detectActorCollision(const ActorId& actorId, const ActorId& otherId)
 {
-	Comp_Collision* actorCollider = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Collision>(ComponentType::Collision);
-	Comp_Collision* otherCollider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision);
-	Comp_Position* otherPosition = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Position>(ComponentType::Position);
+	auto actorCollider = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Collision>(ComponentType::Collision);
+	auto otherCollider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision);
+	auto otherPosition = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Position>(ComponentType::Position);
 	otherCollider->setPosition(otherPosition->getPosition());
 	sf::FloatRect intersect;
 	if (actorCollider->getAABB().intersects(otherCollider->getAABB(), intersect))

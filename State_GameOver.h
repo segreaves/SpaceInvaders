@@ -5,15 +5,14 @@ class State_GameOver : public State
 {
 public:
 	State_GameOver(StateManager* stateManager);
-	~State_GameOver();
 
-	void update(const float& deltaTime);
-	void draw();
-	void onCreate();
-	void onDestroy();
-	void activate();
-	void deactivate();
 private:
+	void update(const float& deltaTime) override;
+	void draw() override;
+	void onCreate() override;
+	void activate() override;
+	void deactivate() override;
+
 	void OnEnter();
 	sf::RectangleShape m_panel;
 	sf::Text m_gameOverText;

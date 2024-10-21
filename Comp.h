@@ -5,6 +5,8 @@
 class Comp
 {
 public:
+	virtual ~Comp() {}
+
 	friend std::stringstream& operator >>(std::stringstream& ss, Comp& comp)
 	{
 		comp.load(ss);

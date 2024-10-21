@@ -21,11 +21,6 @@ State_Game::State_Game(StateManager* stateManager) :
 	setWindowOutline();
 }
 
-State_Game::~State_Game()
-{
-	onDestroy();
-}
-
 void State_Game::update(const float& deltaTime)
 {
 	if (m_levelManager.getInvaderCount() <= 0)
@@ -62,10 +57,6 @@ void State_Game::onCreate()
 	m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletControl>(SystemType::BulletControl)->setLevelManager(&m_levelManager);
 }
 
-void State_Game::onDestroy()
-{
-}
-
 void State_Game::activate()
 {
 	m_stateManager->getContext()->m_controller->m_onPause.addCallback("Game_onPause", std::bind(&StateManager::switchTo, m_stateManager, StateType::Paused));
@@ -99,7 +90,7 @@ void State_Game::loadNextLevel()
 
 void State_Game::onPlayerMove(sf::Vector2f xy)
 {
-	Comp_Target* targetComp = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Target>(ComponentType::Target);
+	auto targetComp = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Target>(ComponentType::Target);
 	targetComp->setTarget(targetComp->getTarget() + xy);
 }
 
@@ -117,10 +108,10 @@ void State_Game::onActorDisabled(unsigned int actorId)
 	{
 		// enable player explosion particle system
 		ActorId explosionId = m_levelManager.getPlayerExplosionId();
-		Comp_Position* playerPos = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_Position* explosionPos = m_stateManager->getContext()->m_actorManager->getActor(explosionId)->getComponent<Comp_Position>(ComponentType::Position);
+		auto playerPos = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Position>(ComponentType::Position);
+		auto explosionPos = m_stateManager->getContext()->m_actorManager->getActor(explosionId)->getComponent<Comp_Position>(ComponentType::Position);
 		explosionPos->setPosition(playerPos->getPosition());
-		Comp_Particles* particlesComp = m_stateManager->getContext()->m_actorManager->getActor(explosionId)->getComponent<Comp_Particles>(ComponentType::Particles);
+		auto particlesComp = m_stateManager->getContext()->m_actorManager->getActor(explosionId)->getComponent<Comp_Particles>(ComponentType::Particles);
 		particlesComp->getParticleSystem()->initialize();
 		particlesComp->getParticleSystem()->setEmitterPosition(explosionPos->getPosition());
 		particlesComp->getParticleSystem()->emitParticles();

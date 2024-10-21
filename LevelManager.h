@@ -54,7 +54,7 @@ public:
 	unsigned int operator++() { return ++m_level; }
 	unsigned int operator++(int) { return m_level++; }
 private:
-	void adjustColliderToSprite(Comp_Collision* colComp, Comp_SpriteSheet* sprite);
+	void adjustColliderToSprite(std::shared_ptr<Comp_Collision> colComp, std::shared_ptr<Comp_SpriteSheet> sprite);
 
 	unsigned int m_level;
 	ActorManager* m_actorManager;

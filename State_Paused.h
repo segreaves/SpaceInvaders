@@ -7,15 +7,14 @@ class State_Paused : public State
 {
 public:
 	State_Paused(StateManager* stateManager);
-	~State_Paused();
 
-	void update(const float& deltaTime);
-	void draw();
-	void onCreate();
-	void onDestroy();
-	void activate();
-	void deactivate();
 private:
+	void update(const float& deltaTime) override;
+	void draw() override;
+	void onCreate() override;
+	void activate() override;
+	void deactivate() override;
+
 	sf::RectangleShape m_panel;
 	sf::Text m_pausedText;
 };

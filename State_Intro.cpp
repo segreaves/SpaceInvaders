@@ -9,11 +9,6 @@ State_Intro::State_Intro(StateManager* stateManager) :
 	m_view.setViewport(sf::FloatRect(0, 0, 1, 1));
 }
 
-State_Intro::~State_Intro()
-{
-	onDestroy();
-}
-
 void State_Intro::update(const float& deltaTime) {}
 
 void State_Intro::draw()
@@ -41,10 +36,6 @@ void State_Intro::onCreate()
 	m_text.setPosition(windowSize.x / 2.0f, windowSize.y / 2.0f);
 
 	m_transparent = true;
-}
-
-void State_Intro::onDestroy()
-{
 }
 
 void State_Intro::activate()

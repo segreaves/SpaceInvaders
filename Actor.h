@@ -11,19 +11,19 @@ public:
 
 	unsigned int getId();
 	std::string getTag();
-	void addComponent(ComponentType compType, Comp* component);
+	void addComponent(ComponentType compType, std::shared_ptr<Comp> component);
 	void removeComponent(ComponentType compType);
 	void removeAllComponents();
 	template<class T>
-	T* getComponent(ComponentType compType)
+	std::shared_ptr<T> getComponent(ComponentType compType)
 	{
-		return m_components.find(compType) == m_components.end() ? nullptr : dynamic_cast<T*>(m_components[compType]);
+		return m_components.find(compType) == m_components.end() ? nullptr : std::static_pointer_cast<T>(m_components[compType]);
 	}
 	void updateComponentBitmask();
 	Bitmask* getComponentBitmask();
 private:
 	const unsigned int m_id;
 	const std::string m_tag;
-	std::unordered_map<ComponentType, Comp*> m_components;
+	std::unordered_map<ComponentType, std::shared_ptr<Comp>> m_components;
 	Bitmask m_componentBitmask;
 };

@@ -49,14 +49,14 @@ public:
 	{
 		if (m_componentFactory.size() > MAX_COMPONENTS)
 			std::cout << "! Fatal Error: ComponentFactory has reached maximum capacity." << std::endl;
-		m_componentFactory[compType] = []()->Comp* { return new T(); };
+		m_componentFactory[compType] = []()->std::shared_ptr<Comp> { return std::make_shared<T>(); };
 	}
 
 	Trigger<unsigned int> m_actorDisabled;
 private:
 	unsigned int m_idCounter;
 	std::unordered_map<ActorId, Actor*> m_actors;
-	std::unordered_map<ComponentType, std::function<Comp* (void)>> m_componentFactory;
+	std::unordered_map<ComponentType, std::function<std::shared_ptr<Comp>(void)>> m_componentFactory;
 	SysManager* m_systemManager;
 	TextureManager* m_textureManager;
 };

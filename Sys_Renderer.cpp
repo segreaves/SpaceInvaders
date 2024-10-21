@@ -24,11 +24,11 @@ void Sys_Renderer::update(const float& deltaTime)
 	for (auto& id : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
-		Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		auto spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		if (spriteSheetComp)
 			spriteSheetComp->updatePosition(posComp->getPosition());
-		Comp_Particles* particlesComp = actor->getComponent<Comp_Particles>(ComponentType::Particles);
+		auto particlesComp = actor->getComponent<Comp_Particles>(ComponentType::Particles);
 		if (particlesComp)
 			particlesComp->getParticleSystem()->update(deltaTime);
 	}
@@ -43,12 +43,12 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 	for (auto& id : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
-		Comp_SpriteSheet* spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		auto spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		if (spriteSheetComp && spriteSheetComp->isEnabled() && windowManager->getCurrentViewSpace().intersects(spriteSheetComp->getDrawableBounds()))
-			draw(windowManager, static_cast<IDrawable*>(spriteSheetComp));
-		Comp_Particles* particlesComp = actor->getComponent<Comp_Particles>(ComponentType::Particles);
+			draw(windowManager, std::static_pointer_cast<IDrawable>(spriteSheetComp));
+		auto particlesComp = actor->getComponent<Comp_Particles>(ComponentType::Particles);
 		if (particlesComp && particlesComp->getParticleSystem()->isEnabled())
-			draw(windowManager, static_cast<IDrawable*>(particlesComp));
+			draw(windowManager, std::static_pointer_cast<IDrawable>(particlesComp));
 	}
 }
 
@@ -60,7 +60,7 @@ void Sys_Renderer::notify(const Message& msg)
 {
 }
 
-void Sys_Renderer::draw(WindowManager* windowManager, IDrawable* drawable)
+void Sys_Renderer::draw(WindowManager* windowManager, std::shared_ptr<IDrawable> drawable)
 {
 	if (!drawable) return;
 	drawable->draw(windowManager->getRenderWindow());

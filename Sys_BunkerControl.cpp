@@ -73,7 +73,7 @@ void Sys_BunkerControl::notify(const Message& msg)
 void Sys_BunkerControl::damageBunker(const ActorId& actorId, const ActorId& otherId)
 {
 	sf::FloatRect collider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision)->getAABB();
-	Comp_Grid* gridComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Grid>(ComponentType::Grid);
+	auto gridComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Grid>(ComponentType::Grid);
 	SpriteSheet* spriteSheet = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet)->getSpriteSheet();
 	sf::Texture* texture = const_cast<sf::Texture*>(spriteSheet->getTexture());
 	if (!texture) return;

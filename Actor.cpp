@@ -21,7 +21,7 @@ std::string Actor::getTag()
 	return m_tag;
 }
 
-void Actor::addComponent(ComponentType compType, Comp* component)
+void Actor::addComponent(ComponentType compType, std::shared_ptr<Comp> component)
 {
 	if (m_components.find(compType) != m_components.end()) return;
 	m_components[compType] = component;
@@ -31,15 +31,15 @@ void Actor::addComponent(ComponentType compType, Comp* component)
 void Actor::removeComponent(ComponentType compType)
 {
 	if (m_components.find(compType) == m_components.end()) return;
-	delete m_components[compType];
+	//delete m_components[compType];
 	m_components.erase(compType);
 	updateComponentBitmask();
 }
 
 void Actor::removeAllComponents()
 {
-	for (auto& comp : m_components)
-		delete comp.second;
+	//for (auto& comp : m_components)
+	//	delete comp.second;
 	m_components.clear();
 }
 

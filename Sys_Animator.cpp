@@ -38,7 +38,7 @@ void Sys_Animator::start()
 	for (auto& id : m_actorIds)
 	{
 		Actor* actor = m_systemManager->getActorManager()->getActor(id);
-		Comp_SpriteSheet* spriteComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		auto spriteComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		spriteComp->resetFrameStep();
 		spriteComp->cropSprite();
 		spriteComp->setFrameTime(0);
@@ -49,7 +49,7 @@ void Sys_Animator::update(const float& deltaTime)
 {
 	for (auto& id : m_actorIds)
 	{
-		Comp_SpriteSheet* spriteSheetComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		auto spriteSheetComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		if (spriteSheetComp->isAnimated())
 			handleAnimation(spriteSheetComp, deltaTime);
 		if (spriteSheetComp->m_isBlinking)
@@ -72,14 +72,14 @@ void Sys_Animator::notify(const Message& msg)
 	{
 		case ActorMessageType::Damage:
 		{
-			Comp_SpriteSheet* spriteComp = m_systemManager->getActorManager()->getActor(msg.m_receiver)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+			auto spriteComp = m_systemManager->getActorManager()->getActor(msg.m_receiver)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 			spriteComp->startDmgBlink();
 			break;
 		}
 	}
 }
 
-void Sys_Animator::handleAnimation(Comp_SpriteSheet* spriteSheetComp, const float& deltaTime)
+void Sys_Animator::handleAnimation(std::shared_ptr<Comp_SpriteSheet> spriteSheetComp, const float& deltaTime)
 {
 	if (spriteSheetComp->incrementFrameTime(deltaTime) >= spriteSheetComp->getFrameDuration())
 	{
@@ -89,7 +89,7 @@ void Sys_Animator::handleAnimation(Comp_SpriteSheet* spriteSheetComp, const floa
 	}
 }
 
-void Sys_Animator::handleBlinking(Comp_SpriteSheet* spriteSheetComp, const float& deltaTime)
+void Sys_Animator::handleBlinking(std::shared_ptr<Comp_SpriteSheet> spriteSheetComp, const float& deltaTime)
 {
 	if (spriteSheetComp->incrementBlinkTime(deltaTime) > m_maxDmgBlinkTime)
 	{

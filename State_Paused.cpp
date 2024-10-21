@@ -7,11 +7,6 @@ State_Paused::State_Paused(StateManager* stateManager) :
 {
 }
 
-State_Paused::~State_Paused()
-{
-	onDestroy();
-}
-
 void State_Paused::update(const float& deltaTime)
 {
 }
@@ -42,10 +37,6 @@ void State_Paused::onCreate()
 		m_pausedText.getLocalBounds().left + m_pausedText.getLocalBounds().width / 2.0f,
 		m_pausedText.getLocalBounds().top + m_pausedText.getLocalBounds().height / 2.0f
 	);
-}
-
-void State_Paused::onDestroy()
-{
 }
 
 void State_Paused::activate()

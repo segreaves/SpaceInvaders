@@ -17,10 +17,7 @@ StateManager::StateManager(Context* context) :
 StateManager::~StateManager()
 {
 	for (auto& state : m_states)
-	{
-		state.second->onDestroy();
 		delete state.second;
-	}
 }
 
 void StateManager::update(const float& deltaTime)
@@ -146,7 +143,6 @@ void StateManager::removeState(const StateType& removeState)
 	{
 		if (it->first == removeState)
 		{
-			it->second->onDestroy();
 			delete it->second;
 			m_states.erase(it);
 			return;

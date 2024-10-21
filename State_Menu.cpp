@@ -7,11 +7,6 @@ State_Menu::State_Menu(StateManager* stateManager) :
 {
 }
 
-State_Menu::~State_Menu()
-{
-	onDestroy();
-}
-
 void State_Menu::update(const float& deltaTime)
 {
 }
@@ -35,7 +30,6 @@ void State_Menu::onCreate()
 		textBounds.top + textBounds.height / 2.0f
 	);
 
-	//sf::Vector2u windowSize = m_stateManager->getContext()->m_windowManager->getRenderWindow()->getSize();
 	sf::Vector2f windowSize = m_stateManager->getContext()->m_windowManager->getCurrentViewSpace().getSize();
 	m_text.setPosition(windowSize.x / 2.0f, windowSize.y / 2.0f);
 
@@ -43,10 +37,6 @@ void State_Menu::onCreate()
 	m_panel.setSize(sf::Vector2f(windowSize));
 	m_panel.setPosition(0, 0);
 	m_panel.setFillColor(sf::Color(0, 0, 0, 255));
-}
-
-void State_Menu::onDestroy()
-{
 }
 
 void State_Menu::activate()

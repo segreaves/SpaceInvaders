@@ -32,11 +32,11 @@ void LevelManager::setViewSpace(sf::FloatRect viewSpace)
 void LevelManager::createPlayer()
 {
 	m_playerId = m_actorManager->loadActorProfile("player", "player");
-	Comp_Position* posComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Position>(ComponentType::Position);
+	auto posComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Position>(ComponentType::Position);
 	posComp->setPosition(getPlayerSpawnPoint());
 	// get collider and adjust to sprite
-	Comp_Collision* colComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Collision>(ComponentType::Collision);
-	Comp_SpriteSheet* sprite = m_actorManager->getActor(m_playerId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+	auto colComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Collision>(ComponentType::Collision);
+	auto sprite = m_actorManager->getActor(m_playerId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 	adjustColliderToSprite(colComp, sprite);
 }
 
@@ -52,11 +52,11 @@ void LevelManager::createInvaders(sf::FloatRect viewSpace)
 			m_invaders.emplace_back(invaderId);
 			float spawnX = j * m_invaderSeparation.x + offset;// center in view space
 			float spawnY = (i + 1) * m_invaderSeparation.y;
-			Comp_Invader* invaderComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Invader>(ComponentType::Invader);
+			auto invaderComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Invader>(ComponentType::Invader);
 			invaderComp->setSpawnPosition(sf::Vector2f(spawnX, spawnY));
 			// adjust collider to fit sprite
-			Comp_Collision* colComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Collision>(ComponentType::Collision);
-			Comp_SpriteSheet* sprite = m_actorManager->getActor(invaderId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+			auto colComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Collision>(ComponentType::Collision);
+			auto sprite = m_actorManager->getActor(invaderId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 			adjustColliderToSprite(colComp, sprite);
 		}
 	}
@@ -85,14 +85,14 @@ void LevelManager::createBunkers(sf::FloatRect viewSpace)
 		float spawnX = i * m_bunkerSeparation + offset;// center in view space
 		m_bunkerSpawn.emplace(bunkerId, sf::Vector2f(spawnX, spawnY));
 		// get collider and adjust to sprite
-		Comp_Collision* colComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Collision>(ComponentType::Collision);
-		Comp_SpriteSheet* sprite = m_actorManager->getActor(bunkerId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		auto colComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Collision>(ComponentType::Collision);
+		auto sprite = m_actorManager->getActor(bunkerId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		adjustColliderToSprite(colComp, sprite);
 		m_actorManager->enableActor(bunkerId);
-		Comp_Position* posComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Position>(ComponentType::Position);
+		auto posComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Position>(ComponentType::Position);
 		posComp->setPosition(getBunkerSpawn(bunkerId));
 		// fit bunker grids to sprite
-		Comp_Grid* gridComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Grid>(ComponentType::Grid);
+		auto gridComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Grid>(ComponentType::Grid);
 		// get position of the sprite's top left corner
 		sf::Vector2f gridPos(posComp->getPosition().x + sprite->getDrawableBounds().left, posComp->getPosition().y + sprite->getDrawableBounds().top);
 		gridComp->create(sprite->getDrawableBounds().width, sprite->getDrawableBounds().height, gridPos);
@@ -105,7 +105,7 @@ void LevelManager::createShockwaves(const int& numInvaders)
 	{
 		unsigned int shockwaveId = m_actorManager->loadActorProfile("shockwave", "shockwave");
 		m_shockwaves.push_back(shockwaveId);
-		Comp_SpriteSheet* sprite = m_actorManager->getActor(shockwaveId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		auto sprite = m_actorManager->getActor(shockwaveId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		sf::Color shockwaveColor = APP_COLOR;
 		shockwaveColor.a = 50;
 		sprite->getSpriteSheet()->setSpriteColor(shockwaveColor);
@@ -119,7 +119,7 @@ void LevelManager::createPlayerExplosion()
 
 int LevelManager::getPlayerLives() const
 {
-	Comp_Health* healthComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Health>(ComponentType::Health);
+	auto healthComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Health>(ComponentType::Health);
 	if (!healthComp) return 0;
 	return healthComp->getHealth();
 }
@@ -136,7 +136,7 @@ sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)
 	return m_bunkerSpawn[id];
 }
 
-void LevelManager::adjustColliderToSprite(Comp_Collision* colComp, Comp_SpriteSheet* sprite)
+void LevelManager::adjustColliderToSprite(std::shared_ptr<Comp_Collision> colComp, std::shared_ptr<Comp_SpriteSheet> sprite)
 {
 	sf::Vector2f size = sf::Vector2f(
 		sprite->getSpriteSheet()->getSpriteScale().x * sprite->getSpriteSheet()->getSpriteSize().x,

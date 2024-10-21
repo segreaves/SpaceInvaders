@@ -7,11 +7,6 @@ State_GameOver::State_GameOver(StateManager* stateManager) :
 {
 }
 
-State_GameOver::~State_GameOver()
-{
-	onDestroy();
-}
-
 void State_GameOver::update(const float& deltaTime)
 {
 }
@@ -53,10 +48,6 @@ void State_GameOver::onCreate()
 		m_optionsText.getLocalBounds().left + m_optionsText.getLocalBounds().width / 2.0f,
 		m_optionsText.getLocalBounds().top + m_optionsText.getLocalBounds().height / 2.0f
 	);
-}
-
-void State_GameOver::onDestroy()
-{
 }
 
 void State_GameOver::activate()

@@ -5,17 +5,15 @@ class State_Intro : public State
 {
 public:
 	State_Intro(StateManager* stateManager);
-	~State_Intro();
-
-	void update(const float& deltaTime);
-	void draw();
-	void onCreate();
-	void onDestroy();
-	void activate();
-	void deactivate();
 
 	void onContinue();
 private:
+	void update(const float& deltaTime) override;
+	void draw() override;
+	void onCreate() override;
+	void activate() override;
+	void deactivate() override;
+
 	sf::View m_view;
 	sf::Font m_font;
 	sf::Text m_text;

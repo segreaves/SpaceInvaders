@@ -56,8 +56,8 @@ void Sys_Movement::notify(const Message& msg)
 void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
 {
 	Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
-	Comp_Position* posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-	Comp_Movement* moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+	auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+	auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
 	// movement
 	sf::Vector2f acceleration = sf::Vector2f(
 		moveComp->getAcceleration().x * !moveComp->getCollidingOnX(),
