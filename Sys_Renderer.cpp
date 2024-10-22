@@ -6,13 +6,12 @@
 Sys_Renderer::Sys_Renderer(SysManager* systemManager) :
 	Sys(systemManager)
 {
-	setupRequirements();
-	subscribeToChannels();
+	onCreate();
 }
 
 Sys_Renderer::~Sys_Renderer()
 {
-	unsubscribeFromChannels();
+	onDestroy();
 }
 
 void Sys_Renderer::start()

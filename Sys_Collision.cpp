@@ -6,13 +6,12 @@
 Sys_Collision::Sys_Collision(SysManager* systemManager) :
 	Sys(systemManager)
 {
-	setupRequirements();
-	subscribeToChannels();
+	onCreate();
 }
 
 Sys_Collision::~Sys_Collision()
 {
-	unsubscribeFromChannels();
+	onDestroy();
 }
 
 bool Sys_Collision::addActor(const ActorId& actorId)

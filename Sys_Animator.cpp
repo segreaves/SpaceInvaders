@@ -5,13 +5,12 @@
 Sys_Animator::Sys_Animator(SysManager* systemManager) :
 	Sys(systemManager)
 {
-	setupRequirements();
-	subscribeToChannels();
+	onCreate();
 }
 
 Sys_Animator::~Sys_Animator()
 {
-	unsubscribeFromChannels();
+	onDestroy();
 }
 
 void Sys_Animator::setupRequirements()

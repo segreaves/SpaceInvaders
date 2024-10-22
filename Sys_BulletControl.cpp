@@ -6,13 +6,12 @@
 Sys_BulletControl::Sys_BulletControl(SysManager* systemManager) :
 	Sys(systemManager)
 {
-	setupRequirements();
-	subscribeToChannels();
+	onCreate();
 }
 
 Sys_BulletControl::~Sys_BulletControl()
 {
-	unsubscribeFromChannels();
+	onDestroy();
 }
 
 void Sys_BulletControl::start()

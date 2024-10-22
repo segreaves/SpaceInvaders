@@ -5,13 +5,12 @@
 Sys_Movement::Sys_Movement(SysManager* systemManager) :
 	Sys(systemManager)
 {
-	setupRequirements();
-	subscribeToChannels();
+	onCreate();
 }
 
 Sys_Movement::~Sys_Movement()
 {
-	unsubscribeFromChannels();
+	onDestroy();
 }
 
 void Sys_Movement::setupRequirements()

@@ -1,15 +1,16 @@
 #include "Sys_ShockwaveControl.h"
 #include "SysManager.h"
+#include "WindowManager.h"
 
-Sys_ShockwaveControl::Sys_ShockwaveControl(SysManager* systemManager) : Sys(systemManager)
+Sys_ShockwaveControl::Sys_ShockwaveControl(SysManager* systemManager) :
+	Sys(systemManager)
 {
-	setupRequirements();
-	subscribeToChannels();
+	onCreate();
 }
 
 Sys_ShockwaveControl::~Sys_ShockwaveControl()
 {
-	unsubscribeFromChannels();
+	onDestroy();
 }
 
 void Sys_ShockwaveControl::start()
@@ -66,6 +67,17 @@ void Sys_ShockwaveControl::handleEvent(const ActorId& actorId, const ActorEventT
 
 void Sys_ShockwaveControl::debugOverlay(WindowManager* windowManager)
 {
+	for (auto& id : m_actorIds)
+	{
+		Actor* actor = m_systemManager->getActorManager()->getActor(id);
+		auto shockwaveComp = actor->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
+		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		sf::CircleShape circle(shockwaveComp->getRadius());
+		circle.setOrigin(shockwaveComp->getRadius(), shockwaveComp->getRadius());
+		circle.setPosition(posComp->getPosition());
+		circle.setFillColor(sf::Color(255, 255, 0, 50));
+		windowManager->getRenderWindow()->draw(circle);
+	}
 }
 
 void Sys_ShockwaveControl::notify(const Message& msg)

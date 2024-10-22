@@ -23,15 +23,14 @@ SysManager::~SysManager()
 
 void SysManager::start()
 {
-	for (auto& sys : m_systems)
-		sys.second->start();
+	for (auto& [type, sys] : m_systems)
+		sys->start();
 }
 
 void SysManager::update(const float& deltaTime)
 {
-	// use structured bindings to cycle through the m_systems map
-	for (auto& sys : m_systems)
-		sys.second->update(deltaTime);
+	for (auto& [type, sys] : m_systems)
+		sys->update(deltaTime);
 	handleEvents();
 }
 
@@ -82,6 +81,12 @@ void SysManager::removeActor(const ActorId& actorId)
 {
 	for (auto& sys : m_systems)
 		sys.second->removeActor(actorId);
+}
+
+void SysManager::printActorCounts()
+{
+	for (auto& [type, sys] : m_systems)
+		std::cout << "System: " << (int)type << " Actor count: " << sys->getActorCount() << std::endl;
 }
 
 void SysManager::setActorManager(ActorManager* actorManager)

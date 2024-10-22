@@ -8,8 +8,7 @@
 Sys_BunkerControl::Sys_BunkerControl(SysManager* systemManager) :
 	Sys(systemManager)
 {
-	setupRequirements();
-	subscribeToChannels();
+	onCreate();
 
 	m_damageTexture.loadFromFile(Utils::getWorkingDirectory() + "assets/graphics/crack.png");
 	m_damageSprite.setTexture(m_damageTexture);
@@ -20,7 +19,7 @@ Sys_BunkerControl::Sys_BunkerControl(SysManager* systemManager) :
 
 Sys_BunkerControl::~Sys_BunkerControl()
 {
-	unsubscribeFromChannels();
+	onDestroy();
 }
 
 void Sys_BunkerControl::start()

@@ -39,6 +39,7 @@ public:
 	void actorModified(const ActorId& actorId, const Bitmask& mask);
 	void removeActor(const ActorId& actorId);
 
+	void printActorCounts();
 	void setActorManager(ActorManager* actorManager);
 	ActorManager* getActorManager();
 	MessageHandler* getMessageHandler();

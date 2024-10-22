@@ -21,7 +21,10 @@ public:
 	}
 	void updateComponentBitmask();
 	Bitmask* getComponentBitmask();
+	bool isEnabled() { return m_enabled; }
+	void setEnabled(bool enabled) { m_enabled = enabled; }
 private:
+	bool m_enabled;
 	const unsigned int m_id;
 	const std::string m_tag;
 	std::unordered_map<ComponentType, std::shared_ptr<Comp>> m_components;

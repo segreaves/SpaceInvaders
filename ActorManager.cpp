@@ -29,44 +29,16 @@ ActorManager::~ActorManager()
 	purge();
 }
 
-int ActorManager::createActor(Bitmask components, std::string tag)
-{
-	Actor* actor = new Actor(m_idCounter, tag);
-	for (int i = 0; i < components.size(); i++)
-	{
-		if (components.test(i))
-		{
-			ComponentType compType = (ComponentType)i;
-			auto factory = m_componentFactory.find(compType);
-			if (factory == m_componentFactory.end())
-			{
-				std::cout << "! Error: ActorManager::createActor() component factory element " << (unsigned int)compType << " not found." << std::endl;
-				return -1;
-			}
-			actor->addComponent(compType, factory->second());
-		}
-	}
-	if (!m_actors.emplace(m_idCounter, actor).second)
-	{
-		std::cout << "! Error: ActorManager::createActor() failed to add new actor." << std::endl;
-		delete actor;
-		return -1;
-	}
-
-	disableActor(m_idCounter);
-	
-	return m_idCounter++;
-}
-
 int ActorManager::initializeActor(std::string tag)
 {
-	Actor* actor = new Actor(m_idCounter, tag);
+	auto actor = new Actor(m_idCounter, tag);
 	if (!m_actors.emplace(m_idCounter, actor).second)
 	{
 		std::cout << "! Error: ActorManager::initializeActor() failed to add new actor." << std::endl;
 		delete actor;
 		return -1;
 	}
+	//m_actorGroups[tag].emplace_back(m_idCounter);
 	m_systemManager->actorModified(m_idCounter, Bitmask(0));
 	return m_idCounter++;
 }
@@ -92,14 +64,17 @@ bool ActorManager::destroyActor(ActorId id)
 {
 	auto it = m_actors.find(id);
 	if (it == m_actors.end()) return false;
+	//std::remove(m_actorGroups[it->second->getTag()].begin(), m_actorGroups[it->second->getTag()].end(), id);
 	delete it->second;
 	m_actors.erase(it);
+
 	return true;
 }
 
 void ActorManager::purge()
 {
 	m_systemManager->purgeActors();
+	//m_actorGroups.clear();
 	while (m_actors.begin() != m_actors.end())
 	{
 		delete m_actors.begin()->second;
@@ -110,6 +85,7 @@ void ActorManager::purge()
 
 void ActorManager::enableActor(const ActorId& id)
 {
+	getActor(id)->setEnabled(true);
 	m_systemManager->actorModified(id, *getActor(id)->getComponentBitmask());
 }
 
@@ -121,6 +97,7 @@ void ActorManager::enableAllActors()
 
 void ActorManager::disableActor(const ActorId& id)
 {
+	getActor(id)->setEnabled(false);
 	m_systemManager->actorModified(id, Bitmask(0));
 	m_actorDisabled.dispatch(id);
 }

@@ -5,11 +5,22 @@
 Sys::Sys(SysManager* systemManager) :
 	m_systemManager(systemManager)
 {
-	m_requirements = std::vector<Bitmask>();
 }
 
 Sys::~Sys()
 {
+}
+
+void Sys::onCreate()
+{
+	m_requirements = std::vector<Bitmask>();
+	setupRequirements();
+	subscribeToChannels();
+}
+
+void Sys::onDestroy()
+{
+	unsubscribeFromChannels();
 	purge();
 }
 

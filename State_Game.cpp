@@ -59,7 +59,6 @@ void State_Game::onCreate()
 
 void State_Game::activate()
 {
-	m_stateManager->remove(StateType::GameOver);
 	m_stateManager->getContext()->m_controller->m_onPause.addCallback("Game_onPause", std::bind(&StateManager::switchTo, m_stateManager, StateType::Paused));
 	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
@@ -111,8 +110,8 @@ void State_Game::onActorDisabled(unsigned int actorId)
 	{
 		// enable player explosion particle system
 		ActorId explosionId = m_levelManager.getPlayerExplosionId();
-		auto playerPos = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Position>(ComponentType::Position);
 		auto explosionPos = m_stateManager->getContext()->m_actorManager->getActor(explosionId)->getComponent<Comp_Position>(ComponentType::Position);
+		auto playerPos = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Position>(ComponentType::Position);
 		explosionPos->setPosition(playerPos->getPosition());
 		auto particlesComp = m_stateManager->getContext()->m_actorManager->getActor(explosionId)->getComponent<Comp_Particles>(ComponentType::Particles);
 		particlesComp->getParticleSystem()->initialize();

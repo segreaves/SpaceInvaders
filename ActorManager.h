@@ -31,7 +31,6 @@ public:
 	ActorManager(SysManager* systemManager, TextureManager* textureManager);
 	~ActorManager();
 
-	int createActor(Bitmask components, std::string tag);
 	int initializeActor(std::string tag);
 	void addComponent(const ActorId& id, ComponentType compType);
 	bool destroyActor(ActorId id);
@@ -42,6 +41,7 @@ public:
 	void disableAllActors();
 
 	Actor* getActor(const ActorId& id);
+	//std::unordered_map<std::string, std::vector<ActorId>>* getActorGroups() { return &m_actorGroups; }
 	unsigned int loadActorProfile(const std::string actorName, const std::string tag);
 
 	template<class T>
@@ -56,6 +56,7 @@ public:
 private:
 	unsigned int m_idCounter;
 	std::unordered_map<ActorId, Actor*> m_actors;
+	//std::unordered_map<std::string, std::vector<ActorId>> m_actorGroups;
 	std::unordered_map<ComponentType, std::function<std::shared_ptr<Comp>(void)>> m_componentFactory;
 	SysManager* m_systemManager;
 	TextureManager* m_textureManager;

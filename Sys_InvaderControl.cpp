@@ -6,13 +6,12 @@
 Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	Sys(systemManager)
 {
-	setupRequirements();
-	subscribeToChannels();
+	onCreate();
 }
 
 Sys_InvaderControl::~Sys_InvaderControl()
 {
-	unsubscribeFromChannels();
+	onDestroy();
 }
 
 void Sys_InvaderControl::setupRequirements()
@@ -204,7 +203,9 @@ void Sys_InvaderControl::selectTrackedInvaders()
 
 void Sys_InvaderControl::instantiateShockwave(sf::Vector2f position)
 {
-	const int shockwaveId = m_levelManager->getShockwaveIds()[m_shockwaveIndex++ % m_levelManager->getShockwaveIds().size()];
+	unsigned int numShockwaves = m_levelManager->getShockwaveIds().size();
+	if (numShockwaves == 0) return;
+	const int shockwaveId = m_levelManager->getShockwaveIds()[m_shockwaveIndex++ % numShockwaves];
 	auto actorManager = m_systemManager->getActorManager();
 	auto shockwavePos = actorManager->getActor(shockwaveId)->getComponent<Comp_Position>(ComponentType::Position);
 	auto shockwaveCol = actorManager->getActor(shockwaveId)->getComponent<Comp_Collision>(ComponentType::Collision);

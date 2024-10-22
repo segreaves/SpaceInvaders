@@ -8,13 +8,12 @@
 Sys_PlayerControl::Sys_PlayerControl(SysManager* systemManager) :
 	Sys(systemManager)
 {
-	setupRequirements();
-	subscribeToChannels();
+	onCreate();
 }
 
 Sys_PlayerControl::~Sys_PlayerControl()
 {
-	unsubscribeFromChannels();
+	onDestroy();
 }
 
 void Sys_PlayerControl::start()

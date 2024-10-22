@@ -7,7 +7,7 @@ class SysManager;
 
 class Sys_BunkerControl : public Sys
 {
-	public:
+public:
 	Sys_BunkerControl(SysManager* systemManager);
 	~Sys_BunkerControl();
 

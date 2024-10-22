@@ -15,7 +15,7 @@ class Sys : public ISubscriber
 {
 public:
 	Sys(SysManager* systemManager);
-	~Sys();
+	virtual ~Sys();
 
 	virtual void setupRequirements() = 0;
 	virtual void subscribeToChannels() = 0;
@@ -25,6 +25,9 @@ public:
 	virtual void update(const float& deltaTime) = 0;
 	virtual void debugOverlay(WindowManager* windowManager) = 0;
 	virtual void handleEvent(const ActorId& actorId, const ActorEventType& eventId) = 0;
+
+	void onCreate();
+	void onDestroy();
 
 	virtual bool addActor(const ActorId& actorId);
 	virtual bool removeActor(const ActorId& actorId);

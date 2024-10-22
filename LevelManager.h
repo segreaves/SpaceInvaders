@@ -20,7 +20,6 @@ public:
 
 	sf::Vector2f getPlayerSpawnPoint() const;
 
-	void setViewSpace(sf::FloatRect viewSpace);
 	sf::FloatRect getViewSpace() const { return m_viewSpace; }
 	void createPlayer();
 	void createInvaders(sf::FloatRect viewSpace);

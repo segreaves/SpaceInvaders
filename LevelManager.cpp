@@ -24,11 +24,6 @@ sf::Vector2f LevelManager::getPlayerSpawnPoint() const
 	return sf::Vector2f(m_viewSpace.left + m_viewSpace.width / 2.f, m_viewSpace.top + m_viewSpace.height * 0.925f);
 }
 
-void LevelManager::setViewSpace(sf::FloatRect viewSpace)
-{
-	m_viewSpace = viewSpace;
-}
-
 void LevelManager::createPlayer()
 {
 	m_playerId = m_actorManager->loadActorProfile("player", "player");
@@ -65,13 +60,13 @@ void LevelManager::createInvaders(sf::FloatRect viewSpace)
 void LevelManager::createPlayerBullets()
 {
 	for (unsigned int i = 0; i < m_nBullets; i++)
-		m_playerBullets.push_back(m_actorManager->loadActorProfile("bullet_player", "bullet_player"));
+		m_playerBullets.emplace_back(m_actorManager->loadActorProfile("bullet_player", "bullet_player"));
 }
 
 void LevelManager::createInvaderBullets()
 {
 	for (unsigned int i = 0; i < m_nBullets; i++)
-		m_invaderBullets.push_back(m_actorManager->loadActorProfile("bullet_invader", "bullet_invader"));
+		m_invaderBullets.emplace_back(m_actorManager->loadActorProfile("bullet_invader", "bullet_invader"));
 }
 
 void LevelManager::createBunkers(sf::FloatRect viewSpace)
@@ -104,7 +99,7 @@ void LevelManager::createShockwaves(const int& numInvaders)
 	for (unsigned int i = 0; i < numInvaders; i++)
 	{
 		unsigned int shockwaveId = m_actorManager->loadActorProfile("shockwave", "shockwave");
-		m_shockwaves.push_back(shockwaveId);
+		m_shockwaves.emplace_back(shockwaveId);
 		auto sprite = m_actorManager->getActor(shockwaveId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		sf::Color shockwaveColor = APP_COLOR;
 		shockwaveColor.a = 50;
@@ -138,7 +133,7 @@ sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)
 
 void LevelManager::newGame(sf::FloatRect viewSpace)
 {
-	setViewSpace(viewSpace);
+	m_viewSpace = viewSpace;
 	createPlayer();
 	createPlayerExplosion();
 	createPlayerBullets();
@@ -150,8 +145,6 @@ void LevelManager::newGame(sf::FloatRect viewSpace)
 
 void LevelManager::purge()
 {
-	m_playerId = -1;
-	m_playerExplosion = -1;
 	m_playerLives = 0;
 	m_remainingInvaders = 0;
 	m_kills = 0;

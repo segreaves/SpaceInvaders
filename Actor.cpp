@@ -41,6 +41,7 @@ void Actor::removeAllComponents()
 	//for (auto& comp : m_components)
 	//	delete comp.second;
 	m_components.clear();
+	updateComponentBitmask();
 }
 
 void Actor::updateComponentBitmask()
