@@ -136,6 +136,34 @@ sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)
 	return m_bunkerSpawn[id];
 }
 
+void LevelManager::newGame(sf::FloatRect viewSpace)
+{
+	setViewSpace(viewSpace);
+	createPlayer();
+	createPlayerExplosion();
+	createPlayerBullets();
+	createInvaderBullets();
+	createInvaders(viewSpace);
+	createShockwaves(getInvaderIds().size());
+	createBunkers(viewSpace);
+}
+
+void LevelManager::purge()
+{
+	m_playerId = -1;
+	m_playerExplosion = -1;
+	m_playerLives = 0;
+	m_remainingInvaders = 0;
+	m_kills = 0;
+	m_invaders.clear();
+	m_playerBullets.clear();
+	m_invaderBullets.clear();
+	m_bunkers.clear();
+	m_shockwaves.clear();
+	m_bunkerSpawn.clear();
+	m_level = 0;
+}
+
 void LevelManager::adjustColliderToSprite(std::shared_ptr<Comp_Collision> colComp, std::shared_ptr<Comp_SpriteSheet> sprite)
 {
 	sf::Vector2f size = sf::Vector2f(

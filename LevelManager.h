@@ -49,6 +49,8 @@ public:
 	float getLevelSpeedIncrease() const { return m_levelSpeedIncrease; }
 	float getDefeatSpeedIncrease() const { return m_defeatSpeedIncrease; }
 	void setActorManager(ActorManager* actorManager) { m_actorManager = actorManager; }
+	void newGame(sf::FloatRect viewSpace);
+	void purge();
 
 	// overload the ++ operator
 	unsigned int operator++() { return ++m_level; }

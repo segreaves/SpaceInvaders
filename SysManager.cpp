@@ -29,6 +29,7 @@ void SysManager::start()
 
 void SysManager::update(const float& deltaTime)
 {
+	// use structured bindings to cycle through the m_systems map
 	for (auto& sys : m_systems)
 		sys.second->update(deltaTime);
 	handleEvents();
@@ -100,6 +101,7 @@ MessageHandler* SysManager::getMessageHandler()
 
 void SysManager::purgeSystems()
 {
+	purgeActors();
 	for (auto& sys : m_systems)
 		delete sys.second;
 	m_systems.clear();
