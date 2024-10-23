@@ -31,4 +31,10 @@ private:
 	sf::Sprite m_damageSprite;
 
 	int m_rows, m_cols;
+
+	std::random_device m_rd;
+	std::mt19937 m_gen;
+	std::uniform_real_distribution<float> m_unifAngleDist; // Uniform(0, 360) distribution
+	std::uniform_real_distribution<float> m_unifLengthDist; // Uniform(0, 10) distribution
+
 };

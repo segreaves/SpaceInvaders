@@ -6,7 +6,12 @@
 #include <numbers>
 
 Sys_BunkerControl::Sys_BunkerControl(SysManager* systemManager) :
-	Sys(systemManager)
+	Sys(systemManager),
+	m_rows(0),
+	m_cols(0),
+	m_gen(m_rd()), // seed rng
+	m_unifAngleDist(0, 360), // angle distribution
+	m_unifLengthDist(0, 10) // length distribution
 {
 	onCreate();
 
@@ -14,7 +19,6 @@ Sys_BunkerControl::Sys_BunkerControl(SysManager* systemManager) :
 	m_damageSprite.setTexture(m_damageTexture);
 	m_damageSprite.setScale(1.25f, 1.25f);
 	m_damageSprite.setOrigin(m_damageSprite.getLocalBounds().width / 2, m_damageSprite.getLocalBounds().height / 2);
-	srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 Sys_BunkerControl::~Sys_BunkerControl()
@@ -103,8 +107,8 @@ void Sys_BunkerControl::damageBunker(const ActorId& actorId, const ActorId& othe
 		for (int i = 0; i < rayNum; i++)
 		{
 			// create a ray in a random direction
-			float angle = 360.f * static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-			float length = 10.f * static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+			const auto angle = m_unifAngleDist(m_gen);
+			const auto length = m_unifLengthDist(m_gen);
 			sf::Vector2f direction(cos(angle), sin(angle));
 			// normalize direction
 			direction /= std::sqrt(direction.x * direction.x + direction.y * direction.y);

@@ -191,7 +191,7 @@ void State_Game::setHUDStyle()
 
 void State_Game::setWindowOutline()
 {
-	int outlineThickness = 2;
+	float outlineThickness = 2;
 	m_background.setSize(m_gameView.getSize() - sf::Vector2f(2 * outlineThickness, 2 * outlineThickness));
 	m_background.setPosition(outlineThickness, outlineThickness);
 	m_background.setFillColor(sf::Color::Transparent);

@@ -30,7 +30,7 @@ bool Grid::contains(float x, float y) const
 
 sf::Vector2i Grid::getCell(const sf::Vector2f& coords) const
 {
-    return sf::Vector2i((coords.x - m_posX) / m_cellSize, (coords.y - m_posY) / m_cellSize);
+    return sf::Vector2i(static_cast<int>((coords.x - m_posX) / m_cellSize), static_cast<int>((coords.y - m_posY) / m_cellSize));
 }
 
 sf::Vector2f Grid::getCellCoords(const sf::Vector2i& cell) const
@@ -53,10 +53,10 @@ std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal)
     if (!contains(ray.m_start))
     {
         // grid boundaries
-        float left = getLeftEdge();
-        float right = getRightEdge();
-        float top = getTopEdge();
-        float bottom = getBottomEdge();
+        const auto left = getLeftEdge();
+        const auto right = getRightEdge();
+        const auto top = getTopEdge();
+        const auto bottom = getBottomEdge();
 
         // intersection points with the grid edges
         std::unordered_map<Direction, sf::Vector2f> edgeHits;
@@ -64,7 +64,7 @@ std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal)
         // left edge
         if (ray.m_dir.x != 0)
         {
-            float t = (left - ray.m_start.x) / ray.m_dir.x;
+            const auto t = (left - ray.m_start.x) / ray.m_dir.x;
             if (t >= 0 && t < maxTraversal)
             {
                 sf::Vector2f point = ray.m_start + t * ray.m_dir;
@@ -76,7 +76,7 @@ std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal)
         // right edge
         if (ray.m_dir.x != 0)
         {
-            float t = (right - ray.m_start.x) / ray.m_dir.x;
+            const auto t = (right - ray.m_start.x) / ray.m_dir.x;
             if (t >= 0 && t < maxTraversal)
             {
                 sf::Vector2f point = ray.m_start + t * ray.m_dir;
@@ -88,7 +88,7 @@ std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal)
         // top edge
         if (ray.m_dir.y != 0)
         {
-            float t = (top - ray.m_start.y) / ray.m_dir.y;
+            const auto t = (top - ray.m_start.y) / ray.m_dir.y;
             if (t >= 0 && t < maxTraversal)
             {
                 sf::Vector2f point = ray.m_start + t * ray.m_dir;
@@ -100,7 +100,7 @@ std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal)
         // bottom edge
         if (ray.m_dir.y != 0)
         {
-            float t = (bottom - ray.m_start.y) / ray.m_dir.y;
+            const auto t = (bottom - ray.m_start.y) / ray.m_dir.y;
             if (t >= 0 && t < maxTraversal)
             {
                 sf::Vector2f point = ray.m_start + t * ray.m_dir;
@@ -114,10 +114,12 @@ std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal)
             return intersect;
 
         // closest intersection point
-        float minDistance = std::numeric_limits<float>::infinity();
+        auto minDistance = std::numeric_limits<float>::infinity();
         for (const auto& point : edgeHits)
         {
-            float distance = std::sqrt(std::pow(point.second.x - ray.m_start.x, 2) + std::pow(point.second.y - ray.m_start.y, 2));
+            const auto pointX = point.second.x - ray.m_start.x;
+            const auto pointY = point.second.y - ray.m_start.y;
+            const auto distance = std::sqrt(pointX * pointX + pointY * pointY);
             if (distance < minDistance)
             {
                 minDistance = distance;
@@ -131,10 +133,10 @@ std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal)
                     cell = getCell(pos);
                     break;
                 case Direction::Right:
-                    cell = sf::Vector2i((pos.x - m_posX) / m_cellSize - 1, (pos.y - m_posY) / m_cellSize);
+                    cell = sf::Vector2i(static_cast<int>((pos.x - m_posX) / m_cellSize) - 1, static_cast<int>((pos.y - m_posY) / m_cellSize));
                     break;
                 case Direction::Down:
-                    cell = sf::Vector2i((pos.x - m_posX) / m_cellSize, (pos.y - m_posY) / m_cellSize - 1);
+                    cell = sf::Vector2i(static_cast<int>((pos.x - m_posX) / m_cellSize), static_cast<int>((pos.y - m_posY) / m_cellSize - 1));
                     break;
                 }
             }
@@ -153,15 +155,15 @@ std::vector<sf::Vector2i> Grid::getIntersect(const Ray& ray, float maxTraversal)
             traversing = false;
 
         // calculate the next cell
-        float dx = dir.x > 0 ? m_cellSize : 0;
-        float dy = dir.y > 0 ? m_cellSize : 0;
+        const auto dx = dir.x > 0 ? m_cellSize : 0;
+        const auto dy = dir.y > 0 ? m_cellSize : 0;
 
         sf::Vector2f cellCoords = getCellCoords(cell);
 
         // horizontal intersection
-        float tMaxX = dir.x != 0 ? (cellCoords.x + dx - pos.x) / dir.x : std::numeric_limits<float>::infinity();
+        const auto tMaxX = dir.x != 0 ? (cellCoords.x + dx - pos.x) / dir.x : std::numeric_limits<float>::infinity();
         // vertical intersection
-        float tMaxY = dir.y != 0 ? (cellCoords.y + dy - pos.y) / dir.y : std::numeric_limits<float>::infinity();
+        const auto tMaxY = dir.y != 0 ? (cellCoords.y + dy - pos.y) / dir.y : std::numeric_limits<float>::infinity();
 
         if (tMaxX < tMaxY)
         {

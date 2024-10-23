@@ -20,7 +20,7 @@ class Grid
 public:
     Grid(float cellSize, int rows, int cols, float posX = 0, float posY = 0);
 
-    int cellSize() const { return m_cellSize; }
+    float cellSize() const { return m_cellSize; }
     int rows() const { return m_rows; }
     int cols() const { return m_cols; }
 

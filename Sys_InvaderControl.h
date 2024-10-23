@@ -1,6 +1,7 @@
 #pragma once
 #include "Sys.h"
 #include "LevelManager.h"
+#include <random>
 
 class LevelManager;
 
@@ -36,4 +37,8 @@ private:
 	ActorId m_rightInvader;
 	const float m_dropDistance = 32.f;
 	const float m_bounds = 10.f;
+
+	std::random_device m_rd;
+	std::mt19937 m_gen; // Mersenne Twister engine
+	std::uniform_real_distribution<float> m_unifDist; // Uniform(0, 1) distribution
 };

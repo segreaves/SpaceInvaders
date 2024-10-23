@@ -85,12 +85,6 @@ void SysManager::removeActor(const ActorId& actorId)
 		sys.second->removeActor(actorId);
 }
 
-void SysManager::printActorCounts()
-{
-	for (auto& [type, sys] : m_systems)
-		std::cout << "System: " << (int)type << " Actor count: " << sys->getActorCount() << std::endl;
-}
-
 MessageHandler* SysManager::getMessageHandler()
 {
 	return &m_messageHandler;

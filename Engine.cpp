@@ -6,7 +6,6 @@ Engine::Engine() :
 	m_actorManager(&m_systemManager, &m_textureManager)
 {
 	m_clock.restart();
-	srand(time(nullptr));
 
 	m_context.m_windowManager = &m_windowManager;
 	m_context.m_controller = m_windowManager.getController();

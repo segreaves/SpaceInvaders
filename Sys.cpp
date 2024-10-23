@@ -54,8 +54,3 @@ void Sys::purge()
 {
 	m_actorIds.clear();
 }
-
-int Sys::getActorCount() const
-{
-	return m_actorIds.size();
-}

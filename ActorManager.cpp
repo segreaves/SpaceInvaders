@@ -63,7 +63,9 @@ bool ActorManager::destroyActor(ActorId id)
 {
 	auto it = m_actors.find(id);
 	if (it == m_actors.end()) return false;
-	std::remove(m_actorGroups[it->second->getTag()].begin(), m_actorGroups[it->second->getTag()].end(), id);
+	auto actorGroup = m_actorGroups[it->second->getTag()];
+	auto it_2 = std::find(actorGroup.begin(), actorGroup.end(), id);
+	m_actorGroups[it->second->getTag()].erase(it_2);
 	it->second.reset();
 	m_actors.erase(it);
 

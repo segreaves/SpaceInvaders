@@ -50,9 +50,9 @@ private:
 	sf::RectangleShape m_background;
 	// HUD elements
 	float m_hudUpdateTimer;
-	const float m_hudUpdateInterval = 0.2;
-	unsigned int m_fontSize = 50;
-	unsigned int m_hudPadding = 10;
+	const float m_hudUpdateInterval = 0.2f;
+	int m_fontSize = 50;
+	float m_hudPadding = 10.f;
 	sf::Text m_scoreText;
 	sf::Text m_levelText;
 	sf::Text m_livesText;

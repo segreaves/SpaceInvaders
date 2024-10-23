@@ -12,7 +12,7 @@ public:
 	void setMovementInput(const sf::Vector2f& movementInput)
 	{
 		m_movementInput = m_movementDirection = movementInput;
-		float magnitude = sqrt(pow(m_movementDirection.x, 2) + pow(m_movementDirection.y, 2));
+		float magnitude = static_cast<float>(sqrt(m_movementDirection.x * m_movementDirection.x + m_movementDirection.y * m_movementDirection.y));
 		if (magnitude > 1)
 		{
 			m_movementDirection.x /= magnitude;

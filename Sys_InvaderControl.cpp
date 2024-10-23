@@ -4,7 +4,10 @@
 #include "LevelManager.h"
 
 Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
-	Sys(systemManager)
+	Sys(systemManager),
+	m_movingRight(false),
+	m_gen(m_rd()),
+	m_unifDist(1.f, 30.f)
 {
 	onCreate();
 }
@@ -167,7 +170,7 @@ void Sys_InvaderControl::notify(const Message& msg)
 
 void Sys_InvaderControl::selectTrackedInvaders()
 {
-	if (getActorCount() == 0) return;
+	if (m_actorIds.empty()) return;
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	float minX = m_systemManager->getLevelManager()->getViewSpace().getSize().x;
 	float maxX = 0.f;
@@ -274,10 +277,7 @@ void Sys_InvaderControl::handleShooting(const float& deltaTime, const ActorId& i
 	else
 	{
 		// get random time to shoot
-		srand(time(nullptr) + id);
-		float random = rand() % 100;
-		float waitTime = 1.f + 30.f * random / 100.f;
-		invComp->setTimeToShoot(waitTime);
+		invComp->setTimeToShoot(m_unifDist(m_gen));
 		invComp->setCanShoot(true);
 	}
 }

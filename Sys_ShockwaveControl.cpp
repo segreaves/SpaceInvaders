@@ -96,7 +96,7 @@ void Sys_ShockwaveControl::notify(const Message& msg)
 			auto shockwaveComp = shockwave->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
 			auto otherPosComp = other->getComponent<Comp_Position>(ComponentType::Position);
 			sf::Vector2f direction = otherPosComp->getPosition() - shockwavePosComp->getPosition();
-			float distance = sqrt(pow(direction.x, 2) + pow(direction.y, 2));
+			float distance = sqrt(direction.x * direction.x + direction.y * direction.y);
 			float radius = shockwaveComp->getRadius();
 			if (distance > radius) return;
 			float force = shockwaveComp->getForce() * (1 - distance / radius);

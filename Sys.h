@@ -31,7 +31,6 @@ public:
 
 	bool addActor(const ActorId& actorId);
 	bool removeActor(const ActorId& actorId);
-	int getActorCount() const;
 	bool hasActor(const ActorId& actorId);
 	bool fitsRequirements(const Bitmask& mask);
 

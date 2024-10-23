@@ -24,6 +24,6 @@ private:
 	void handleAnimation(std::shared_ptr<Comp_SpriteSheet> spriteSheetComp, const float& deltaTime);
 	void handleBlinking(std::shared_ptr<Comp_SpriteSheet> spriteSheetComp, const float& deltaTime);
 
-	const float m_maxDmgBlinkTime = 0.15;
+	const float m_maxDmgBlinkTime = 0.15f;
 	const int m_dmgBlinkFrames = 7;
 };
