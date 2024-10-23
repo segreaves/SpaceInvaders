@@ -41,7 +41,7 @@ void Sys_ShockwaveControl::update(const float& deltaTime)
 {
 	for (auto& id : m_actorIds)
 	{
-		Actor* actor = m_systemManager->getActorManager()->getActor(id);
+		auto actor = m_systemManager->getActorManager()->getActor(id);
 		auto shockwaveComp = actor->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
 		shockwaveComp->incrementTime(deltaTime);
 		shockwaveComp->setRadius(shockwaveComp->getMaxRadius() * shockwaveComp->getTime() / shockwaveComp->getLifeTime());
@@ -69,7 +69,7 @@ void Sys_ShockwaveControl::debugOverlay(WindowManager* windowManager)
 {
 	for (auto& id : m_actorIds)
 	{
-		Actor* actor = m_systemManager->getActorManager()->getActor(id);
+		auto actor = m_systemManager->getActorManager()->getActor(id);
 		auto shockwaveComp = actor->getComponent<Comp_Shockwave>(ComponentType::Shockwave);
 		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 		sf::CircleShape circle(shockwaveComp->getRadius());
@@ -89,8 +89,8 @@ void Sys_ShockwaveControl::notify(const Message& msg)
 		case ActorMessageType::Collision:
 		{
 			ActorManager* actorManager = m_systemManager->getActorManager();
-			Actor* shockwave = actorManager->getActor(msg.m_receiver);
-			Actor* other = actorManager->getActor(msg.m_sender);
+			auto shockwave = actorManager->getActor(msg.m_receiver);
+			auto other = actorManager->getActor(msg.m_sender);
 			auto shockwavePosComp = shockwave->getComponent<Comp_Position>(ComponentType::Position);
 			auto shockwaveColComp = shockwave->getComponent<Comp_Collision>(ComponentType::Collision);
 			auto shockwaveComp = shockwave->getComponent<Comp_Shockwave>(ComponentType::Shockwave);

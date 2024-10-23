@@ -87,6 +87,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\simur\Documents\SFML\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-network-d.lib;sfml-audio-d.lib;shlwapi.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,6 +124,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\simur\Documents\SFML\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-network-d.lib;sfml-audio-d.lib;shlwapi.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -156,7 +158,10 @@
     <ClCompile Include="SpaceInvaders.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="StateManager.cpp" />
-    <ClCompile Include="State_Game.cpp" />
+    <ClCompile Include="State_Game.cpp">
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EditAndContinue</DebugInformationFormat>
+    </ClCompile>
     <ClCompile Include="State_GameOver.cpp" />
     <ClCompile Include="State_Intro.cpp" />
     <ClCompile Include="State_Menu.cpp" />
@@ -165,6 +170,7 @@
     <ClCompile Include="SysManager.cpp" />
     <ClCompile Include="Sys_Animator.cpp" />
     <ClCompile Include="Sys_BunkerControl.cpp" />
+    <ClCompile Include="Sys_Health.cpp" />
     <ClCompile Include="Sys_ShockwaveControl.cpp" />
     <ClCompile Include="Sys_InvaderControl.cpp" />
     <ClCompile Include="Sys_Collision.cpp" />
@@ -186,7 +192,6 @@
     <ClInclude Include="Comp_Grid.h" />
     <ClInclude Include="Comp_Particles.h" />
     <ClInclude Include="Comp_Health.h" />
-    <ClInclude Include="Comp_Rotation.h" />
     <ClInclude Include="Comp_Target.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="IDrawable.h" />
@@ -213,6 +218,7 @@
     <ClInclude Include="State_Paused.h" />
     <ClInclude Include="Sys_Animator.h" />
     <ClInclude Include="Sys_BunkerControl.h" />
+    <ClInclude Include="Sys_Health.h" />
     <ClInclude Include="Sys_ShockwaveControl.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Trigger.h" />

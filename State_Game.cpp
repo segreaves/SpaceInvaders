@@ -8,17 +8,12 @@
 
 State_Game::State_Game(StateManager* stateManager) :
 	State(stateManager),
+	m_levelManager(stateManager->getContext()->m_actorManager),
 	m_hudUpdateTimer(0),
 	m_deathTimer(0),
 	m_playerDead(false),
 	m_newGame(true)
 {
-	m_gameView.setViewport(sf::FloatRect(0.15f, 0, 0.7f, 1));
-	m_hudView.setViewport(sf::FloatRect(0, 0, 1, 1));
-
-	m_levelManager.setActorManager(stateManager->getContext()->m_actorManager);
-	setHUDStyle();
-	setWindowOutline();
 }
 
 void State_Game::update(const float& deltaTime)
@@ -52,9 +47,12 @@ void State_Game::draw()
 
 void State_Game::onCreate()
 {
-	m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl)->setLevelManager(&m_levelManager);
-	m_stateManager->getContext()->m_systemManager->getSystem<Sys_PlayerControl>(SystemType::PlayerControl)->setLevelManager(&m_levelManager);
-	m_stateManager->getContext()->m_systemManager->getSystem<Sys_BulletControl>(SystemType::BulletControl)->setLevelManager(&m_levelManager);
+	m_gameView.setViewport(sf::FloatRect(0.15f, 0, 0.7f, 1));
+	m_hudView.setViewport(sf::FloatRect(0, 0, 1, 1));
+
+	m_stateManager->getContext()->m_systemManager->setLevelManager(&m_levelManager);
+	setHUDStyle();
+	setWindowOutline();
 }
 
 void State_Game::activate()
@@ -103,7 +101,7 @@ void State_Game::onPlayerShoot()
 
 void State_Game::onActorDisabled(unsigned int actorId)
 {
-	Actor* actor = m_stateManager->getContext()->m_actorManager->getActor(actorId);
+	auto actor = m_stateManager->getContext()->m_actorManager->getActor(actorId);
 	if (actor->getTag() == "invader")
 		m_levelManager.onInvaderDefeated();
 	else if (actor->getTag() == "player")

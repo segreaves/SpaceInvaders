@@ -10,6 +10,7 @@
 #include "Sys_BunkerControl.h"
 #include "Sys_ShockwaveControl.h"
 #include "Sys_Animator.h"
+#include "Sys_Health.h"
 #include "MessageHandler.h"
 #include <map>
 #include <queue>
@@ -40,8 +41,8 @@ public:
 	void removeActor(const ActorId& actorId);
 
 	void printActorCounts();
-	void setActorManager(ActorManager* actorManager);
-	ActorManager* getActorManager();
+	void setActorManager(ActorManager* actorManager) { m_actorManager = actorManager; }
+	ActorManager* getActorManager() { return m_actorManager; }
 	MessageHandler* getMessageHandler();
 	template<class T>
 	T* getSystem(const SystemType& type)
@@ -52,9 +53,13 @@ public:
 
 	void purgeSystems();
 	void purgeActors();
+
+	void setLevelManager(LevelManager* levelManager) { m_levelManager = levelManager; }
+	LevelManager* getLevelManager() { return m_levelManager; }
 private:
 	ActorManager* m_actorManager;
 	std::map<SystemType, Sys*> m_systems;
 	std::unordered_map<ActorId, std::queue<EventId>> m_actorEvents;
 	MessageHandler m_messageHandler;
+	LevelManager* m_levelManager;
 };

@@ -3,15 +3,17 @@
 #include "WindowManager.h"
 
 SysManager::SysManager() :
-	m_actorManager(nullptr)
+	m_actorManager(nullptr),
+	m_levelManager(nullptr)
 {
 	m_systems[SystemType::PlayerControl] = new Sys_PlayerControl(this);
+	m_systems[SystemType::Health] = new Sys_Health(this);
 	m_systems[SystemType::Movement] = new Sys_Movement(this);
 	m_systems[SystemType::InvaderControl] = new Sys_InvaderControl(this);
 	m_systems[SystemType::BulletControl] = new Sys_BulletControl(this);
 	m_systems[SystemType::Shockwave] = new Sys_ShockwaveControl(this);
 	m_systems[SystemType::Collision] = new Sys_Collision(this);
-	m_systems[SystemType::BunkerDamage] = new Sys_BunkerControl(this);
+	m_systems[SystemType::BunkerControl] = new Sys_BunkerControl(this);
 	m_systems[SystemType::Animator] = new Sys_Animator(this);
 	m_systems[SystemType::Renderer] = new Sys_Renderer(this);
 }
@@ -87,16 +89,6 @@ void SysManager::printActorCounts()
 {
 	for (auto& [type, sys] : m_systems)
 		std::cout << "System: " << (int)type << " Actor count: " << sys->getActorCount() << std::endl;
-}
-
-void SysManager::setActorManager(ActorManager* actorManager)
-{
-	m_actorManager = actorManager;
-}
-
-ActorManager* SysManager::getActorManager()
-{
-	return m_actorManager;
 }
 
 MessageHandler* SysManager::getMessageHandler()

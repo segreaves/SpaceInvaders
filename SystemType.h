@@ -2,13 +2,15 @@
 
 enum class SystemType
 {
-	Renderer = 0,
-	Movement,
+	Movement = 0,
+	Rotation,
 	Collision,
 	PlayerControl,
-	Animator,
 	InvaderControl,
 	BulletControl,
-	BunkerDamage,
-	Shockwave
+	BunkerControl,
+	Animator,
+	Shockwave,
+	Health,
+	Renderer
 };

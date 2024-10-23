@@ -54,7 +54,7 @@ void Sys_Movement::notify(const Message& msg)
 
 void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
 {
-	Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
+	auto actor = m_systemManager->getActorManager()->getActor(actorId);
 	auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 	auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
 	// movement
@@ -68,5 +68,4 @@ void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
 	if (moveComp->getFrictionCoefficient() > 0)
 		moveComp->applyBaseFriction(moveComp->getVelocity() * deltaTime);
 	posComp->move(moveComp->getVelocity() * deltaTime);
-	// rotation
 }

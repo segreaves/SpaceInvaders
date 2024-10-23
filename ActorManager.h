@@ -13,7 +13,6 @@
 #include "Comp_Shockwave.h"
 #include "Comp_Target.h"
 #include "Comp_Health.h"
-#include "Comp_Rotation.h"
 #include "Comp_Particles.h"
 #include "Comp_Grid.h"
 #include "ActorEventType.h"
@@ -40,8 +39,8 @@ public:
 	void disableActor(const ActorId& id);
 	void disableAllActors();
 
-	Actor* getActor(const ActorId& id);
-	//std::unordered_map<std::string, std::vector<ActorId>>* getActorGroups() { return &m_actorGroups; }
+	std::shared_ptr<Actor> getActor(const ActorId& id);
+	std::unordered_map<std::string, std::vector<ActorId>>* getActorGroups() { return &m_actorGroups; }
 	unsigned int loadActorProfile(const std::string actorName, const std::string tag);
 
 	template<class T>
@@ -55,8 +54,8 @@ public:
 	Trigger<unsigned int> m_actorDisabled;
 private:
 	unsigned int m_idCounter;
-	std::unordered_map<ActorId, Actor*> m_actors;
-	//std::unordered_map<std::string, std::vector<ActorId>> m_actorGroups;
+	std::unordered_map<ActorId, std::shared_ptr<Actor>> m_actors;
+	std::unordered_map<std::string, std::vector<ActorId>> m_actorGroups;
 	std::unordered_map<ComponentType, std::function<std::shared_ptr<Comp>(void)>> m_componentFactory;
 	SysManager* m_systemManager;
 	TextureManager* m_textureManager;

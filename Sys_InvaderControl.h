@@ -20,8 +20,6 @@ public:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
-
-	void setLevelManager(LevelManager* levelManager);
 private:
 	void selectTrackedInvaders();
 	void instantiateShockwave(sf::Vector2f position);
@@ -29,7 +27,6 @@ private:
 	void handleMovement(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, std::shared_ptr<Comp_Control> controlComp, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp);
 	void handleShooting(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Invader> invComp);
 
-	LevelManager* m_levelManager;
 	bool m_movingRight;
 	float m_currentInvaderSpeed;
 	unsigned int m_invaderBulletIndex;

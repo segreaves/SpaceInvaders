@@ -23,6 +23,7 @@ public:
 	const sf::Vector2f& getSpritePosition() const;
 	void setSpriteSize(const sf::Vector2u& size);
 	void setSpritePosition(const sf::Vector2f& position);
+	void setSpriteRotation(const float& rotation);
 	void setSpriteScale(const sf::Vector2f& scale);
 	void setSheetPadding(const sf::Vector2f& padding);
 	void setSpriteSpacing(const sf::Vector2f& spacing);

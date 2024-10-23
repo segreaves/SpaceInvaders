@@ -88,6 +88,11 @@ void SpriteSheet::setSpritePosition(const sf::Vector2f& position)
 	m_sprite.setPosition(position);
 }
 
+void SpriteSheet::setSpriteRotation(const float& rotation)
+{
+	m_sprite.setRotation(rotation);
+}
+
 void SpriteSheet::setSpriteScale(const sf::Vector2f& scale)
 {
 	m_spriteScale = scale;

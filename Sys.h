@@ -29,8 +29,8 @@ public:
 	void onCreate();
 	void onDestroy();
 
-	virtual bool addActor(const ActorId& actorId);
-	virtual bool removeActor(const ActorId& actorId);
+	bool addActor(const ActorId& actorId);
+	bool removeActor(const ActorId& actorId);
 	int getActorCount() const;
 	bool hasActor(const ActorId& actorId);
 	bool fitsRequirements(const Bitmask& mask);

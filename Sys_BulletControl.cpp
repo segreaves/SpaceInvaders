@@ -44,12 +44,12 @@ void Sys_BulletControl::update(const float& deltaTime)
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	for (auto& id : m_actorIds)
 	{
-		Actor* bullet = actorManager->getActor(id);
+		auto bullet = actorManager->getActor(id);
 		// no need to update bullet movement as their velocity is constant and set up on creation
 		auto colComp = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
 		sf::FloatRect bulletAABB = colComp->getAABB();
 		// check if bullet is out of bounds
-		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_levelManager->getViewSpace().getSize().y)
+		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_systemManager->getLevelManager()->getViewSpace().getSize().y)
 			m_systemManager->addEvent(bullet->getId(), (EventId)ActorEventType::Despawned);
 #ifdef DEBUG
 		auto posComp = bullet->getComponent<Comp_Position>(ComponentType::Position);
@@ -93,9 +93,4 @@ void Sys_BulletControl::notify(const Message& msg)
 		m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
 		break;
 	}
-}
-
-void Sys_BulletControl::setLevelManager(LevelManager* levelManager)
-{
-	m_levelManager = levelManager;
 }

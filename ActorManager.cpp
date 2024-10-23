@@ -19,7 +19,6 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	addComponentType<Comp_Bunker>(ComponentType::Bunker);
 	addComponentType<Comp_Shockwave>(ComponentType::Shockwave);
 	addComponentType<Comp_Health>(ComponentType::Health);
-	addComponentType<Comp_Rotation>(ComponentType::Rotation);
 	addComponentType<Comp_Particles>(ComponentType::Particles);
 	addComponentType<Comp_Grid>(ComponentType::Grid);
 }
@@ -38,7 +37,7 @@ int ActorManager::initializeActor(std::string tag)
 		delete actor;
 		return -1;
 	}
-	//m_actorGroups[tag].emplace_back(m_idCounter);
+	m_actorGroups[tag].emplace_back(m_idCounter);
 	m_systemManager->actorModified(m_idCounter, Bitmask(0));
 	return m_idCounter++;
 }
@@ -64,8 +63,8 @@ bool ActorManager::destroyActor(ActorId id)
 {
 	auto it = m_actors.find(id);
 	if (it == m_actors.end()) return false;
-	//std::remove(m_actorGroups[it->second->getTag()].begin(), m_actorGroups[it->second->getTag()].end(), id);
-	delete it->second;
+	std::remove(m_actorGroups[it->second->getTag()].begin(), m_actorGroups[it->second->getTag()].end(), id);
+	it->second.reset();
 	m_actors.erase(it);
 
 	return true;
@@ -74,10 +73,10 @@ bool ActorManager::destroyActor(ActorId id)
 void ActorManager::purge()
 {
 	m_systemManager->purgeActors();
-	//m_actorGroups.clear();
+	m_actorGroups.clear();
 	while (m_actors.begin() != m_actors.end())
 	{
-		delete m_actors.begin()->second;
+		m_actors.begin()->second.reset();
 		m_actors.erase(m_actors.begin());
 	}
 	m_idCounter = 0;
@@ -108,7 +107,7 @@ void ActorManager::disableAllActors()
 		disableActor(actor.first);
 }
 
-Actor* ActorManager::getActor(const ActorId& id)
+std::shared_ptr<Actor> ActorManager::getActor(const ActorId& id)
 {
 	auto it = m_actors.find(id);
 	return it == m_actors.end() ? nullptr : it->second;
@@ -125,7 +124,7 @@ unsigned int ActorManager::loadActorProfile(const std::string actorName, const s
 		return -1;
 	}
 	unsigned int actorId = initializeActor(tag);
-	Actor* actor = getActor(actorId);
+	auto actor = getActor(actorId);
 	std::string line;
 	while (getline(file, line))
 	{

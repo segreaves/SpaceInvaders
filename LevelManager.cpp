@@ -4,8 +4,8 @@
 #include <fstream>
 #include <sstream>
 
-LevelManager::LevelManager() :
-	m_actorManager(nullptr),
+LevelManager::LevelManager(ActorManager* actorManager) :
+	m_actorManager(actorManager),
 	m_level(0),
 	m_playerId(-1),
 	m_playerExplosion(-1),

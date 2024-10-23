@@ -14,25 +14,6 @@ Sys_Collision::~Sys_Collision()
 	onDestroy();
 }
 
-bool Sys_Collision::addActor(const ActorId& actorId)
-{
-	if (!Sys::addActor(actorId)) return false;
-	std::string tag = m_systemManager->getActorManager()->getActor(actorId)->getTag();
-	m_actorGroups[tag].push_back(actorId);
-	return true;
-}
-
-bool Sys_Collision::removeActor(const ActorId& actorId)
-{
-	if (!Sys::removeActor(actorId)) return false;
-	std::string tag = m_systemManager->getActorManager()->getActor(actorId)->getTag();
-	if (m_actorGroups.find(tag) == m_actorGroups.end()) return false;
-	auto it = std::find(m_actorGroups[tag].begin(), m_actorGroups[tag].end(), actorId);
-	if (it != m_actorGroups[tag].end())
-		m_actorGroups[tag].erase(it);
-	return true;
-}
-
 void Sys_Collision::start()
 {
 }
@@ -58,7 +39,7 @@ void Sys_Collision::update(const float& deltaTime)
 	// update all collision components with the current position
 	for (auto& id : m_actorIds)
 	{
-		Actor* actor = m_systemManager->getActorManager()->getActor(id);
+		auto actor = m_systemManager->getActorManager()->getActor(id);
 		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 		auto colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
 		colComp->setPosition(posComp->getPosition());
@@ -77,7 +58,7 @@ void Sys_Collision::debugOverlay(WindowManager* windowManager)
 	if (m_actorIds.empty()) return;
 	for (auto& actorId : m_actorIds)
 	{
-		Actor* actor = m_systemManager->getActorManager()->getActor(actorId);
+		auto actor = m_systemManager->getActorManager()->getActor(actorId);
 		auto colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
 		sf::RectangleShape shape(sf::Vector2f(colComp->getAABB().width, colComp->getAABB().height));
 		shape.setPosition(colComp->getAABB().left, colComp->getAABB().top);
@@ -97,41 +78,6 @@ void Sys_Collision::notify(const Message& msg)
 }
 
 /// <summary>
-/// Detects collisions between actors. This is a brute force method, as it checks for collisions
-/// between all actors. This is fine for small numbers of actors, but for larger numbers, the
-/// detectCollisions() method was implemented.
-/// </summary>
-void Sys_Collision::actorCollisions()
-{
-	for (auto id1 = m_actorIds.begin(); id1 != m_actorIds.end(); id1++)
-	{
-		Actor* actor1 = m_systemManager->getActorManager()->getActor(*id1);
-		auto posComp1 = actor1->getComponent<Comp_Position>(ComponentType::Position);
-		auto colComp1 = actor1->getComponent<Comp_Collision>(ComponentType::Collision);
-		colComp1->setPosition(posComp1->getPosition());
-		for (auto id2 = std::next(id1); id2 != m_actorIds.end(); id2++)
-		{
-			Actor* actor2 = m_systemManager->getActorManager()->getActor(*id2);
-			auto posComp2 = actor2->getComponent<Comp_Position>(ComponentType::Position);
-			auto colComp2 = actor2->getComponent<Comp_Collision>(ComponentType::Collision);
-			colComp2->setPosition(posComp2->getPosition());
-			if (colComp1->getAABB().intersects(colComp2->getAABB()))
-			{
-				Message msg1((MessageType)ActorMessageType::Collision);
-				msg1.m_sender = *id1;
-				msg1.m_receiver = *id2;
-				m_systemManager->getMessageHandler()->dispatch(msg1);
-
-				Message msg2((MessageType)ActorMessageType::Collision);
-				msg2.m_sender = *id2;
-				msg2.m_receiver = *id1;
-				m_systemManager->getMessageHandler()->dispatch(msg2);
-			}
-		}
-	}
-}
-
-/// <summary>
 /// Detect collisions between actors. Not all actors can collide with one another, so we
 /// only need to check for collisions between certain actor groups.
 /// Once invaders have detected a collision, we can break the for loop, as this means that either
@@ -140,14 +86,19 @@ void Sys_Collision::actorCollisions()
 void Sys_Collision::detectCollisions()
 {
 	if (m_actorIds.empty()) return;
+	auto actorManager = m_systemManager->getActorManager();
+	auto actorGroups = actorManager->getActorGroups();
 	// check player collisions
-	if (m_actorGroups.find("player") != m_actorGroups.end())
+	if (actorGroups->find("player") != actorGroups->end())
 	{
-		for (auto& playerId : m_actorGroups["player"])
+		for (auto& playerId : actorGroups->at("player"))
 		{
+			if (!actorManager->getActor(playerId)->isEnabled()) continue;
 			// check collisions against bullets
-			if (m_actorGroups.find("bullet_invader") != m_actorGroups.end())
-				for (auto& bulletId : m_actorGroups["bullet_invader"])
+			if (actorGroups->find("bullet_invader") != actorGroups->end())
+				for (auto& bulletId : actorGroups->at("bullet_invader"))
+				{
+					if (!actorManager->getActor(bulletId)->isEnabled()) continue;
 					if (detectActorCollision(playerId, bulletId))
 					{
 						// inform bullet of collision
@@ -157,16 +108,20 @@ void Sys_Collision::detectCollisions()
 						m_systemManager->getMessageHandler()->dispatch(msg);
 						break;
 					}
+				}
 		}
 	}
 	// check invader collisions
-	if (m_actorGroups.find("invader") != m_actorGroups.end())
+	if (actorGroups->find("invader") != actorGroups->end())
 	{
-		for (auto& invaderId : m_actorGroups["invader"])
+		for (auto& invaderId : actorGroups->at("invader"))
 		{
+			if (!actorManager->getActor(invaderId)->isEnabled()) continue;
 			// check collisions against player bullets
-			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
-				for (auto& bulletId : m_actorGroups["bullet_player"])
+			if (actorGroups->find("bullet_player") != actorGroups->end())
+				for (auto& bulletId : actorGroups->at("bullet_player"))
+				{
+					if (!actorManager->getActor(bulletId)->isEnabled()) continue;
 					if (detectActorCollision(invaderId, bulletId))
 					{
 						// inform bullet of collision
@@ -176,46 +131,69 @@ void Sys_Collision::detectCollisions()
 						m_systemManager->getMessageHandler()->dispatch(msg);
 						break;
 					}
+				}
 			// check collisions against player
-			if (m_actorGroups.find("player") != m_actorGroups.end())
-				for (auto& playerId : m_actorGroups["player"])
+			if (actorGroups->find("player") != actorGroups->end())
+				for (auto& playerId : actorGroups->at("player"))
+				{
+					if (!actorManager->getActor(playerId)->isEnabled()) continue;
 					if (detectActorCollision(invaderId, playerId))
 						break;
+				}
 		}
 	}
 	// check shockwave collisions
-	if (m_actorGroups.find("shockwave") != m_actorGroups.end())
+	if (actorGroups->find("shockwave") != actorGroups->end())
 	{
-		for (auto& shockwaveId : m_actorGroups["shockwave"])
+		for (auto& shockwaveId : actorGroups->at("shockwave"))
 		{
+			if (!actorManager->getActor(shockwaveId)->isEnabled()) continue;
 			// check collisions against invaders
-			if (m_actorGroups.find("invader") != m_actorGroups.end())
-				for (auto& invaderId : m_actorGroups["invader"])
+			if (actorGroups->find("invader") != actorGroups->end())
+				for (auto& invaderId : actorGroups->at("invader"))
+				{
+					if (!actorManager->getActor(invaderId)->isEnabled()) continue;
 					detectActorCollision(shockwaveId, invaderId);
+				}
 		}
 	}
 	// check bunker collisions
-	if (m_actorGroups.find("bunker") != m_actorGroups.end())
+	if (actorGroups->find("bunker") != actorGroups->end())
 	{
-		for (auto& bunkerId : m_actorGroups["bunker"])
+		for (auto& bunkerId : actorGroups->at("bunker"))
 		{
+			if (!actorManager->getActor(bunkerId)->isEnabled()) continue;
 			// check collisions against player bullets
-			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
-				for (auto& playerBulletId : m_actorGroups["bullet_player"])
+			if (actorGroups->find("bullet_player") != actorGroups->end())
+			{
+				for (auto& playerBulletId : actorGroups->at("bullet_player"))
+				{
+					if (!actorManager->getActor(playerBulletId)->isEnabled()) continue;
 					detectActorCollision(bunkerId, playerBulletId);
+				}
+			}
 			// check collisions against invader bullets
-			if (m_actorGroups.find("bullet_invader") != m_actorGroups.end())
-				for (auto& invaderBulletId : m_actorGroups["bullet_invader"])
+			if (actorGroups->find("bullet_invader") != actorGroups->end())
+			{
+				for (auto& invaderBulletId : actorGroups->at("bullet_invader"))
+				{
+					if (!actorManager->getActor(invaderBulletId)->isEnabled()) continue;
 					detectActorCollision(bunkerId, invaderBulletId);
+				}
+			}
 		}
 	}
 	// check player bullet collisions
-	if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
-		for (auto& playerBulletId : m_actorGroups["bullet_player"])
+	if (actorGroups->find("bullet_player") != actorGroups->end())
+	{
+		for (auto& playerBulletId : actorGroups->at("bullet_player"))
 		{
+			if (!actorManager->getActor(playerBulletId)->isEnabled()) continue;
 			// check collisions against invader bullets
-			if (m_actorGroups.find("bullet_invader") != m_actorGroups.end())
-				for (auto& invaderBulletId : m_actorGroups["bullet_invader"])
+			if (actorGroups->find("bullet_invader") != actorGroups->end())
+				for (auto& invaderBulletId : actorGroups->at("bullet_invader"))
+				{
+					if (!actorManager->getActor(invaderBulletId)->isEnabled()) continue;
 					if (detectActorCollision(playerBulletId, invaderBulletId))
 					{
 						// inform other bullet of collision
@@ -225,24 +203,30 @@ void Sys_Collision::detectCollisions()
 						m_systemManager->getMessageHandler()->dispatch(msg);
 						break;
 					}
+				}
 		}
+	}
 	// check mystery ship collisions
-	if (m_actorGroups.find("mystery") != m_actorGroups.end())
+	if (actorGroups->find("mystery") != actorGroups->end())
 	{
-		for (auto& mysteryId : m_actorGroups["mystery"])
+		for (auto& mysteryId : actorGroups->at("mystery"))
 		{
-			// check collisions against bullets
-			if (m_actorGroups.find("bullet_player") != m_actorGroups.end())
-				for (auto& bulletId : m_actorGroups["bullet_player"])
+			if (!actorManager->getActor(mysteryId)->isEnabled()) continue;
+			// check collisions against player bullets
+			if (actorGroups->find("bullet_player") != actorGroups->end())
+				for (auto& bulletId : actorGroups->at("bullet_player"))
+				{
+					if (!actorManager->getActor(bulletId)->isEnabled()) continue;
 					if (detectActorCollision(mysteryId, bulletId))
 					{
-						// inform other bullet of collision
+						// inform bullet of collision
 						Message msg((MessageType)ActorMessageType::Collision);
 						msg.m_sender = mysteryId;
 						msg.m_receiver = bulletId;
 						m_systemManager->getMessageHandler()->dispatch(msg);
 						break;
 					}
+				}
 		}
 	}
 }
@@ -260,7 +244,6 @@ bool Sys_Collision::detectActorCollision(const ActorId& actorId, const ActorId& 
 	auto actorCollider = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Collision>(ComponentType::Collision);
 	auto otherCollider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision);
 	auto otherPosition = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Position>(ComponentType::Position);
-	otherCollider->setPosition(otherPosition->getPosition());
 	sf::FloatRect intersect;
 	if (actorCollider->getAABB().intersects(otherCollider->getAABB(), intersect))
 	{

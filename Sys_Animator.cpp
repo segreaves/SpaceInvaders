@@ -36,7 +36,7 @@ void Sys_Animator::start()
 {
 	for (auto& id : m_actorIds)
 	{
-		Actor* actor = m_systemManager->getActorManager()->getActor(id);
+		auto actor = m_systemManager->getActorManager()->getActor(id);
 		auto spriteComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		spriteComp->resetFrameStep();
 		spriteComp->cropSprite();

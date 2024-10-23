@@ -15,7 +15,7 @@ using ActorId = unsigned int;
 class LevelManager
 {
 public:
-	LevelManager();
+	LevelManager(ActorManager* actorManager);
 	~LevelManager();
 
 	sf::Vector2f getPlayerSpawnPoint() const;
@@ -47,7 +47,6 @@ public:
 	float getInvaderBaseSpeed() const { return m_invaderBaseSpeed; }
 	float getLevelSpeedIncrease() const { return m_levelSpeedIncrease; }
 	float getDefeatSpeedIncrease() const { return m_defeatSpeedIncrease; }
-	void setActorManager(ActorManager* actorManager) { m_actorManager = actorManager; }
 	void newGame(sf::FloatRect viewSpace);
 	void purge();
 

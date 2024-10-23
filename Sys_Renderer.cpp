@@ -22,7 +22,7 @@ void Sys_Renderer::update(const float& deltaTime)
 {
 	for (auto& id : m_actorIds)
 	{
-		Actor* actor = m_systemManager->getActorManager()->getActor(id);
+		auto actor = m_systemManager->getActorManager()->getActor(id);
 		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 		auto spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		if (spriteSheetComp)
@@ -41,7 +41,7 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 {
 	for (auto& id : m_actorIds)
 	{
-		Actor* actor = m_systemManager->getActorManager()->getActor(id);
+		auto actor = m_systemManager->getActorManager()->getActor(id);
 		auto spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		if (spriteSheetComp && spriteSheetComp->isEnabled() && windowManager->getCurrentViewSpace().intersects(spriteSheetComp->getDrawableBounds()))
 			draw(windowManager, std::static_pointer_cast<IDrawable>(spriteSheetComp));
@@ -67,10 +67,6 @@ void Sys_Renderer::draw(WindowManager* windowManager, std::shared_ptr<IDrawable>
 
 void Sys_Renderer::setupRequirements()
 {
-	Bitmask req_sprite;
-	req_sprite.set((unsigned int)ComponentType::Position);
-	req_sprite.set((unsigned int)ComponentType::Sprite);
-	m_requirements.emplace_back(req_sprite);
 	Bitmask req_spriteSheet;
 	req_spriteSheet.set((unsigned int)ComponentType::Position);
 	req_spriteSheet.set((unsigned int)ComponentType::SpriteSheet);

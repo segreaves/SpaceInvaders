@@ -1,15 +1,13 @@
 #pragma once
 #include "Sys.h"
-#include <SFML/System/Vector2.hpp>
 
-class SysManager;
 class LevelManager;
 
-class Sys_BulletControl : public Sys
+class Sys_Health : public Sys
 {
 public:
-	Sys_BulletControl(SysManager* systemManager);
-	~Sys_BulletControl();
+	Sys_Health(SysManager* systemManager);
+	~Sys_Health();
 
 	void start();
 	void setupRequirements();
@@ -21,10 +19,4 @@ public:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
-private:
-	unsigned int m_currentBullet;
-
-#ifdef DEBUG
-	std::vector<sf::RectangleShape> m_bulletTips;
-#endif
 };

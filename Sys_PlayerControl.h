@@ -21,10 +21,6 @@ public:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
-
-	void setLevelManager(LevelManager* levelManager);
 private:
-	LevelManager* m_levelManager;
-
 	unsigned int m_playerBulletIndex;
 };

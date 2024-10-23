@@ -3,8 +3,6 @@
 enum class ComponentType
 {
 	Position = 0,
-	Rotation,
-	Sprite,
 	SpriteSheet,
 	Movement,
 	Target,

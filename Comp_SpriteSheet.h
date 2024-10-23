@@ -43,6 +43,11 @@ public:
 		m_spriteSheet->setSpritePosition(position);
 	}
 
+	void updateRotation(const float& rotation)
+	{
+		m_spriteSheet->setSpriteRotation(rotation);
+	}
+
 	void draw(sf::RenderWindow* window)
 	{
 		if (!m_spriteSheet || !m_enabled) return;

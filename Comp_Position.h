@@ -38,7 +38,6 @@ private:
 	void load(std::stringstream& ss) override
 	{
 	}
-
 	sf::Vector2f m_position;
 	sf::Vector2f m_positionPrev;
 };

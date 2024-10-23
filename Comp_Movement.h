@@ -29,6 +29,11 @@ public:
 		m_prevVelocity = m_velocity;
 	}
 
+	sf::Vector2f getSpeedChange() const
+	{
+		return m_velocity - m_prevVelocity;
+	}
+
 	const sf::Vector2f& getAcceleration() const { return m_acceleration; }
 
 	void setAcceleration(const sf::Vector2f& acceleration)
