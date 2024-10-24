@@ -8,6 +8,8 @@ class Comp_SpriteSheet;
 
 using ActorId = unsigned int;
 
+enum class LevelState { PlayerAlive = 0, PlayerDestroyed, PlayerInvaded };
+
 /// <summary>
 /// Sets up the spawn points for the player, invaders, and bunkers.
 /// Provides the speed of invaders to the game state as the levels progress.
@@ -43,6 +45,8 @@ public:
 	int getKills() const { return m_kills; }
 	sf::Vector2f getBunkerSpawn(ActorId id);
 	unsigned int getLevel() const { return m_level; }
+	LevelState getState() const { return m_state; }
+	void setState(const LevelState state) { m_state = state; }
 	float getInvaderBaseSpeed() const { return m_invaderBaseSpeed; }
 	float getLevelSpeedIncrease() const { return m_levelSpeedIncrease; }
 	float getDefeatSpeedIncrease() const { return m_defeatSpeedIncrease; }
@@ -56,6 +60,7 @@ private:
 	void adjustColliderToSprite(std::shared_ptr<Comp_Collision> colComp, std::shared_ptr<Comp_SpriteSheet> sprite);
 
 	unsigned int m_level;
+	LevelState m_state;
 	ActorManager* m_actorManager;
 	ActorId m_playerId;
 	std::vector<ActorId> m_invaders;

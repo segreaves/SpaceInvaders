@@ -50,8 +50,6 @@ public:
 			std::cout << "! Fatal Error: ComponentFactory has reached maximum capacity." << std::endl;
 		m_componentFactory[compType] = []()->std::shared_ptr<Comp> { return std::make_shared<T>(); };
 	}
-
-	Trigger<unsigned int> m_actorDisabled;
 private:
 	unsigned int m_idCounter;
 	std::unordered_map<ActorId, std::shared_ptr<Actor>> m_actors;

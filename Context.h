@@ -11,8 +11,7 @@ struct Context
 		m_windowManager(nullptr),
 		m_controller(nullptr),
 		m_actorManager(nullptr),
-		m_systemManager(nullptr),
-		m_level(nullptr)
+		m_systemManager(nullptr)
 	{
 	}
 
@@ -20,5 +19,4 @@ struct Context
 	Controller* m_controller;
 	ActorManager* m_actorManager;
 	SysManager* m_systemManager;
-	LevelManager* m_level;
 };

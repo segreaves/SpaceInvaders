@@ -100,7 +100,6 @@ void ActorManager::disableActor(const ActorId& id)
 {
 	getActor(id)->setEnabled(false);
 	m_systemManager->actorModified(id, Bitmask(0));
-	m_actorDisabled.dispatch(id);
 }
 
 void ActorManager::disableAllActors()

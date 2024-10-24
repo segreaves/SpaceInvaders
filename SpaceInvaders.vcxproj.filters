@@ -165,6 +165,9 @@
     <ClCompile Include="Sys_Health.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sys_LevelState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowManager.h">
@@ -351,6 +354,9 @@
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="Sys_Health.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_LevelState.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>

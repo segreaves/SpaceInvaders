@@ -11,6 +11,7 @@
 #include "Sys_ShockwaveControl.h"
 #include "Sys_Animator.h"
 #include "Sys_Health.h"
+#include "Sys_LevelState.h"
 #include "MessageHandler.h"
 #include <map>
 #include <queue>

@@ -3,11 +3,11 @@
 
 class LevelManager;
 
-class Sys_Health : public Sys
+class Sys_LevelState : public Sys
 {
 public:
-	Sys_Health(SysManager* systemManager);
-	~Sys_Health();
+	Sys_LevelState(SysManager* systemManager);
+	~Sys_LevelState();
 
 	void start();
 	void setupRequirements();
@@ -20,8 +20,9 @@ public:
 
 	void notify(const Message& msg);
 private:
-	void handleBlinking(std::shared_ptr<Comp_SpriteSheet> spriteSheetComp, const float& deltaTime);
+	void onPlayerDestroyed(ActorId id);
 
-	const float m_maxDmgBlinkTime = 0.15f;
-	const int m_dmgBlinkFrames = 7;
+	float m_gameOverWaitTime = 2.f;
+	float m_deathTimer;
+	bool m_playerDestroyed = false;
 };

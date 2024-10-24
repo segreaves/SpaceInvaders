@@ -137,6 +137,7 @@ public:
 	void stopDmgBlink()
 	{
 		m_isBlinking = false;
+		m_enabled = true;
 	}
 
 	float incrementBlinkTime(const float& deltaTime)

@@ -92,9 +92,7 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 	{
 		case ActorEventType::Despawned:
 		{
-			m_systemManager->getActorManager()->disableActor(actorId);
-			auto posComp = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Position>(ComponentType::Position);
-			instantiateShockwave(posComp->getPosition());
+			onInvaderDeath(actorId);
 			if (!m_actorIds.empty())
 			{
 				selectTrackedInvaders();
@@ -280,4 +278,12 @@ void Sys_InvaderControl::handleShooting(const float& deltaTime, const ActorId& i
 		invComp->setTimeToShoot(m_unifDist(m_gen));
 		invComp->setCanShoot(true);
 	}
+}
+
+void Sys_InvaderControl::onInvaderDeath(const ActorId& id)
+{
+	m_systemManager->getActorManager()->disableActor(id);
+	auto posComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_Position>(ComponentType::Position);
+	instantiateShockwave(posComp->getPosition());
+	m_systemManager->getLevelManager()->onInvaderDefeated();
 }

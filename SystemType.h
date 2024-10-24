@@ -12,5 +12,6 @@ enum class SystemType
 	Animator,
 	Shockwave,
 	Health,
-	Renderer
+	Renderer,
+	LevelState,
 };

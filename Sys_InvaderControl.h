@@ -27,6 +27,7 @@ private:
 	void increaseInvaderSpeed();
 	void handleMovement(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, std::shared_ptr<Comp_Control> controlComp, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp);
 	void handleShooting(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Invader> invComp);
+	void onInvaderDeath(const ActorId& id);
 
 	bool m_movingRight;
 	float m_currentInvaderSpeed;

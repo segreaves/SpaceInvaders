@@ -94,9 +94,6 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 	if (!hasActor(actorId)) return;
 	switch (eventId)
 	{
-	case ActorEventType::Despawned:
-		m_systemManager->getActorManager()->disableActor(actorId);
-		break;
 	case ActorEventType::Shoot:
 	{
 		const int bulletId = m_systemManager->getLevelManager()->getPlayerBulletIds()[m_playerBulletIndex++ % m_systemManager->getLevelManager()->getPlayerBulletIds().size()];

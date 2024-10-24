@@ -131,6 +131,7 @@ sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)
 
 void LevelManager::newGame(sf::FloatRect viewSpace)
 {
+	m_state = LevelState::PlayerAlive;
 	m_viewSpace = viewSpace;
 	createPlayer();
 	createPlayerExplosion();

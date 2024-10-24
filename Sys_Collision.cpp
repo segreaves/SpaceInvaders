@@ -98,7 +98,6 @@ void Sys_Collision::detectCollisions()
 			if (actorGroups->find("bullet_invader") != actorGroups->end())
 				for (auto& bulletId : actorGroups->at("bullet_invader"))
 				{
-					if (!actorManager->getActor(bulletId)->isEnabled()) continue;
 					if (detectActorCollision(playerId, bulletId))
 					{
 						// inform bullet of collision
@@ -121,7 +120,6 @@ void Sys_Collision::detectCollisions()
 			if (actorGroups->find("bullet_player") != actorGroups->end())
 				for (auto& bulletId : actorGroups->at("bullet_player"))
 				{
-					if (!actorManager->getActor(bulletId)->isEnabled()) continue;
 					if (detectActorCollision(invaderId, bulletId))
 					{
 						// inform bullet of collision
@@ -136,9 +134,23 @@ void Sys_Collision::detectCollisions()
 			if (actorGroups->find("player") != actorGroups->end())
 				for (auto& playerId : actorGroups->at("player"))
 				{
-					if (!actorManager->getActor(playerId)->isEnabled()) continue;
 					if (detectActorCollision(invaderId, playerId))
+					{
+						// create invaded event
+						m_systemManager->addEvent(playerId, (EventId)ActorEventType::Invaded);
 						break;
+					}
+				}
+			// check collisions against bunkers
+			if (actorGroups->find("bunker") != actorGroups->end())
+				for (auto& bunkerId : actorGroups->at("bunker"))
+				{
+					if (detectActorCollision(invaderId, bunkerId))
+					{
+						// create invaded event - SEND TO PLAYER
+						m_systemManager->addEvent(m_systemManager->getLevelManager()->getPlayerId(), (EventId)ActorEventType::Invaded);
+						break;
+					}
 				}
 		}
 	}
@@ -152,7 +164,6 @@ void Sys_Collision::detectCollisions()
 			if (actorGroups->find("invader") != actorGroups->end())
 				for (auto& invaderId : actorGroups->at("invader"))
 				{
-					if (!actorManager->getActor(invaderId)->isEnabled()) continue;
 					detectActorCollision(shockwaveId, invaderId);
 				}
 		}
@@ -168,7 +179,6 @@ void Sys_Collision::detectCollisions()
 			{
 				for (auto& playerBulletId : actorGroups->at("bullet_player"))
 				{
-					if (!actorManager->getActor(playerBulletId)->isEnabled()) continue;
 					detectActorCollision(bunkerId, playerBulletId);
 				}
 			}
@@ -177,7 +187,6 @@ void Sys_Collision::detectCollisions()
 			{
 				for (auto& invaderBulletId : actorGroups->at("bullet_invader"))
 				{
-					if (!actorManager->getActor(invaderBulletId)->isEnabled()) continue;
 					detectActorCollision(bunkerId, invaderBulletId);
 				}
 			}
@@ -193,7 +202,6 @@ void Sys_Collision::detectCollisions()
 			if (actorGroups->find("bullet_invader") != actorGroups->end())
 				for (auto& invaderBulletId : actorGroups->at("bullet_invader"))
 				{
-					if (!actorManager->getActor(invaderBulletId)->isEnabled()) continue;
 					if (detectActorCollision(playerBulletId, invaderBulletId))
 					{
 						// inform other bullet of collision
@@ -216,7 +224,6 @@ void Sys_Collision::detectCollisions()
 			if (actorGroups->find("bullet_player") != actorGroups->end())
 				for (auto& bulletId : actorGroups->at("bullet_player"))
 				{
-					if (!actorManager->getActor(bulletId)->isEnabled()) continue;
 					if (detectActorCollision(mysteryId, bulletId))
 					{
 						// inform bullet of collision
@@ -241,6 +248,8 @@ void Sys_Collision::detectCollisions()
 /// <returns></returns>
 bool Sys_Collision::detectActorCollision(const ActorId& actorId, const ActorId& otherId)
 {
+	if (!m_systemManager->getActorManager()->getActor(otherId)->isEnabled()) return false;
+
 	auto actorCollider = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Collision>(ComponentType::Collision);
 	auto otherCollider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision);
 	auto otherPosition = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Position>(ComponentType::Position);

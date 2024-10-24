@@ -171,6 +171,7 @@
     <ClCompile Include="Sys_Animator.cpp" />
     <ClCompile Include="Sys_BunkerControl.cpp" />
     <ClCompile Include="Sys_Health.cpp" />
+    <ClCompile Include="Sys_LevelState.cpp" />
     <ClCompile Include="Sys_ShockwaveControl.cpp" />
     <ClCompile Include="Sys_InvaderControl.cpp" />
     <ClCompile Include="Sys_Collision.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Sys_Animator.h" />
     <ClInclude Include="Sys_BunkerControl.h" />
     <ClInclude Include="Sys_Health.h" />
+    <ClInclude Include="Sys_LevelState.h" />
     <ClInclude Include="Sys_ShockwaveControl.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Trigger.h" />

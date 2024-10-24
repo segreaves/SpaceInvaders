@@ -10,9 +10,8 @@ State_Game::State_Game(StateManager* stateManager) :
 	State(stateManager),
 	m_levelManager(stateManager->getContext()->m_actorManager),
 	m_hudUpdateTimer(0),
-	m_deathTimer(0),
-	m_playerDead(false),
-	m_newGame(true)
+	m_newGame(true),
+	m_fps(0)
 {
 }
 
@@ -31,11 +30,16 @@ void State_Game::update(const float& deltaTime)
 		m_hudUpdateTimer -= m_hudUpdateInterval;
 	}
 	// if player dead, prepare to switch to Game Over screen
-	if (m_playerDead)
+	switch (m_levelManager.getState())
 	{
-		m_deathTimer -= deltaTime;
-		if (m_deathTimer < 0)
+		case LevelState::PlayerAlive:
+			break;
+		case LevelState::PlayerDestroyed:
 			gameOverScreen();
+			break;
+		case LevelState::PlayerInvaded:
+			gameOverScreen();
+			break;
 	}
 }
 
@@ -60,7 +64,6 @@ void State_Game::activate()
 	m_stateManager->getContext()->m_controller->m_onPause.addCallback("Game_onPause", std::bind(&StateManager::switchTo, m_stateManager, StateType::Paused));
 	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
-	m_stateManager->getContext()->m_actorManager->m_actorDisabled.addCallback("Game_onActorDisabled", std::bind(&State_Game::onActorDisabled, this, std::placeholders::_1));
 	if (m_newGame)
 		newGame();
 }
@@ -70,7 +73,6 @@ void State_Game::deactivate()
 	m_stateManager->getContext()->m_controller->m_onPause.removeCallback("Game_onPause");
 	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onMove");
 	m_stateManager->getContext()->m_controller->m_onShoot.removeCallback("Game_onShoot");
-	m_stateManager->getContext()->m_actorManager->m_actorDisabled.removeCallback("Game_onActorDisabled");
 }
 
 void State_Game::loadNextLevel()
@@ -99,28 +101,6 @@ void State_Game::onPlayerShoot()
 	m_stateManager->getContext()->m_systemManager->addEvent(m_levelManager.getPlayerId(), (EventId)ActorEventType::Shoot);
 }
 
-void State_Game::onActorDisabled(unsigned int actorId)
-{
-	auto actor = m_stateManager->getContext()->m_actorManager->getActor(actorId);
-	if (actor->getTag() == "invader")
-		m_levelManager.onInvaderDefeated();
-	else if (actor->getTag() == "player")
-	{
-		// enable player explosion particle system
-		ActorId explosionId = m_levelManager.getPlayerExplosionId();
-		auto explosionPos = m_stateManager->getContext()->m_actorManager->getActor(explosionId)->getComponent<Comp_Position>(ComponentType::Position);
-		auto playerPos = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Position>(ComponentType::Position);
-		explosionPos->setPosition(playerPos->getPosition());
-		auto particlesComp = m_stateManager->getContext()->m_actorManager->getActor(explosionId)->getComponent<Comp_Particles>(ComponentType::Particles);
-		particlesComp->getParticleSystem()->initialize();
-		particlesComp->getParticleSystem()->setEmitterPosition(explosionPos->getPosition());
-		particlesComp->getParticleSystem()->emitParticles();
-		m_stateManager->getContext()->m_actorManager->enableActor(explosionId);
-		m_playerDead = true;
-		m_deathTimer = m_gameOverWaitTime;
-	}
-}
-
 void State_Game::gameOverScreen()
 {
 	m_newGame = true;
@@ -132,7 +112,6 @@ void State_Game::gameOverScreen()
 void State_Game::newGame()
 {
 	m_newGame = false;
-	m_playerDead = false;
 	m_stateManager->getContext()->m_actorManager->purge();
 	m_levelManager.newGame(getGameViewSpace());
 	m_stateManager->getContext()->m_actorManager->enableActor(m_levelManager.getPlayerId());
