@@ -1,9 +1,10 @@
 #include "ActorManager.h"
 #include "SysManager.h"
 
-ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureManager) :
+ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureManager, SoundManager* soundManager) :
 	m_systemManager(systemManager),
 	m_textureManager(textureManager),
+	m_soundManager(soundManager),
 	m_idCounter(0)
 {
 	m_componentFactory.reserve(MAX_COMPONENTS);
@@ -21,6 +22,7 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	addComponentType<Comp_Health>(ComponentType::Health);
 	addComponentType<Comp_Particles>(ComponentType::Particles);
 	addComponentType<Comp_Grid>(ComponentType::Grid);
+	addComponentType<Comp_SoundEmitter>(ComponentType::SoundEmitter);
 }
 
 ActorManager::~ActorManager()
@@ -217,6 +219,13 @@ unsigned int ActorManager::loadActorProfile(const std::string actorName, const s
 			addComponent(actorId, ComponentType::Grid);
 			auto grid = actor->getComponent<Comp_Grid>(ComponentType::Grid);
 			ss >> *grid;
+		}
+		else if (attr == "SoundEmitter")
+		{
+			addComponent(actorId, ComponentType::SoundEmitter);
+			auto sound = actor->getComponent<Comp_SoundEmitter>(ComponentType::SoundEmitter);
+			ss >> *sound;
+			sound->create(m_soundManager);
 		}
 		else
 			std::cerr << "Unknown attribute: " << attr << std::endl;

@@ -46,6 +46,7 @@ public:
 		T* resource = load(path->second);
 		if (!resource) return false;
 		m_resources.emplace(id, std::make_pair(resource, 1));
+		return true;
 	}
 
 	bool releaseResource(const std::string& id)
@@ -89,10 +90,11 @@ private:
 	void loadPaths(const std::string& pathFile)
 	{
 		std::ifstream paths;
-		paths.open(Utils::getWorkingDirectory() + pathFile);
+		std::string fullPath = Utils::getWorkingDirectory() + pathFile;
+		paths.open(fullPath);
 		if (!paths.is_open())
 		{
-			std::cerr << "Resource manager failed to open: " << pathFile << std::endl;
+			std::cerr << "Resource manager failed to open: " << fullPath << std::endl;
 			return;
 		}
 		std::string line;

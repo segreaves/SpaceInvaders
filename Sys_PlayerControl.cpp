@@ -4,6 +4,7 @@
 #include "LevelManager.h"
 #include "WindowManager.h"
 #include <SFML/System/Vector2.hpp>
+#include "SoundType.h"
 
 Sys_PlayerControl::Sys_PlayerControl(SysManager* systemManager) :
 	Sys(systemManager),
@@ -116,6 +117,12 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 		float knockback = 1000000;
 		auto moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
 		moveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
+		// play sound
+		Message msg((MessageType)ActorMessageType::Sound);
+		msg.m_sender = actorId;
+		msg.m_receiver = actorId;
+		msg.m_int = (int)SoundType::PlayerShoot;
+		m_systemManager->getMessageHandler()->dispatch(msg);
 		break;
 	}
 	}

@@ -4,6 +4,6 @@ enum class ActorMessageType
 {
 	Move,
 	Collision,
-	Shoot,
-	Damage
+	Damage,
+	Sound
 };

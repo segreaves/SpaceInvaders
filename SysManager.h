@@ -12,6 +12,7 @@
 #include "Sys_Animator.h"
 #include "Sys_Health.h"
 #include "Sys_LevelState.h"
+#include "Sys_Sound.h"
 #include "MessageHandler.h"
 #include <map>
 #include <queue>

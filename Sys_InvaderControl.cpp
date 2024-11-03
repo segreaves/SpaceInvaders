@@ -7,7 +7,13 @@ Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	Sys(systemManager),
 	m_movingRight(false),
 	m_gen(m_rd()),
-	m_unifDist(1.f, 30.f)
+	m_unifFloat(1.f, 30.f),
+	m_unifInt(0, 1),
+	m_currentInvaderSpeed(0),
+	m_invaderBulletIndex(0),
+	m_leftInvader(-1),
+	m_rightInvader(-1),
+	m_shockwaveIndex(0)
 {
 	onCreate();
 }
@@ -42,8 +48,7 @@ void Sys_InvaderControl::unsubscribeFromChannels()
 
 void Sys_InvaderControl::start()
 {
-	srand(time(nullptr));
-	m_movingRight = rand() % 2;
+	m_movingRight = m_unifInt(m_gen);
 
 	auto levelManager = m_systemManager->getLevelManager();
 	m_currentInvaderSpeed = levelManager->getInvaderBaseSpeed() + (levelManager->getLevel() - 1) * levelManager->getLevelSpeedIncrease();
@@ -200,7 +205,7 @@ void Sys_InvaderControl::selectTrackedInvaders()
 
 void Sys_InvaderControl::instantiateShockwave(sf::Vector2f position)
 {
-	unsigned int numShockwaves = m_systemManager->getLevelManager()->getShockwaveIds().size();
+	auto numShockwaves = m_systemManager->getLevelManager()->getShockwaveIds().size();
 	if (numShockwaves == 0) return;
 	const int shockwaveId = m_systemManager->getLevelManager()->getShockwaveIds()[m_shockwaveIndex++ % numShockwaves];
 	auto actorManager = m_systemManager->getActorManager();
@@ -275,7 +280,7 @@ void Sys_InvaderControl::handleShooting(const float& deltaTime, const ActorId& i
 	else
 	{
 		// get random time to shoot
-		invComp->setTimeToShoot(m_unifDist(m_gen));
+		invComp->setTimeToShoot(m_unifFloat(m_gen));
 		invComp->setCanShoot(true);
 	}
 }

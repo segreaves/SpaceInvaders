@@ -146,7 +146,7 @@ bool SpriteSheet::loadSheet(const std::string& filePath)
 	file.open(Utils::getWorkingDirectory() + filePath);
 	if (!file.is_open())
 	{
-		std::cerr << "SpriteSheet failed to load file: " << filePath << std::endl;
+		std::cerr << "SpriteSheet::loadSheet() failed to load file: " << filePath << std::endl;
 		return false;
 	}
 	std::string line;

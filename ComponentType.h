@@ -15,5 +15,6 @@ enum class ComponentType
 	Shockwave,
 	Particles,
 	Health,
-	Grid
+	Grid,
+	SoundEmitter
 };

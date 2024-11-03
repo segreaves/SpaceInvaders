@@ -3,7 +3,8 @@
 Engine::Engine() :
 	m_windowManager("Space Invaders", sf::Vector2u(1920, 1080)),
 	m_stateManager(&m_context),
-	m_actorManager(&m_systemManager, &m_textureManager)
+	m_soundManager(&m_audioManager),
+	m_actorManager(&m_systemManager, &m_textureManager, &m_soundManager)
 {
 	m_clock.restart();
 

@@ -41,5 +41,6 @@ private:
 
 	std::random_device m_rd;
 	std::mt19937 m_gen; // Mersenne Twister engine
-	std::uniform_real_distribution<float> m_unifDist; // Uniform(0, 1) distribution
+	std::uniform_real_distribution<float> m_unifFloat;
+	std::uniform_int_distribution<int> m_unifInt;
 };

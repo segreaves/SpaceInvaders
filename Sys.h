@@ -13,10 +13,11 @@ using ActorEvent = unsigned int;
 
 class Sys : public ISubscriber
 {
+	friend class SysManager;
 public:
 	Sys(SysManager* systemManager);
 	virtual ~Sys();
-
+protected:
 	virtual void setupRequirements() = 0;
 	virtual void subscribeToChannels() = 0;
 	virtual void unsubscribeFromChannels() = 0;
@@ -35,7 +36,7 @@ public:
 	bool fitsRequirements(const Bitmask& mask);
 
 	void purge();
-protected:
+
 	std::vector<Bitmask> m_requirements;
 	std::vector<ActorId> m_actorIds;
 	SysManager* m_systemManager;

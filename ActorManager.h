@@ -15,8 +15,10 @@
 #include "Comp_Health.h"
 #include "Comp_Particles.h"
 #include "Comp_Grid.h"
+#include "Comp_SoundEmitter.h"
 #include "ActorEventType.h"
 #include "TextureManager.h"
+#include "AudioManager.h"
 #include "Trigger.h"
 #include <functional>
 
@@ -27,7 +29,7 @@ using ActorId = unsigned int;
 class ActorManager
 {
 public:
-	ActorManager(SysManager* systemManager, TextureManager* textureManager);
+	ActorManager(SysManager* systemManager, TextureManager* textureManager, SoundManager* soundManager);
 	~ActorManager();
 
 	int initializeActor(std::string tag);
@@ -38,6 +40,7 @@ public:
 	void enableAllActors();
 	void disableActor(const ActorId& id);
 	void disableAllActors();
+	SoundManager* getSoundManager() { return m_soundManager; }
 
 	std::shared_ptr<Actor> getActor(const ActorId& id);
 	std::unordered_map<std::string, std::vector<ActorId>>* getActorGroups() { return &m_actorGroups; }
@@ -57,4 +60,5 @@ private:
 	std::unordered_map<ComponentType, std::function<std::shared_ptr<Comp>(void)>> m_componentFactory;
 	SysManager* m_systemManager;
 	TextureManager* m_textureManager;
+	SoundManager* m_soundManager;
 };

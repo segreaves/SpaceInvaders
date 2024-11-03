@@ -1,10 +1,9 @@
 #pragma once
 #include "Context.h"
 #include "State.h"
+#include "StateType.h"
 #include <vector>
 #include <unordered_map>
-
-enum class StateType { Intro = 1, Menu, Game, Paused, GameOver, Credits };
 
 class StateManager
 {

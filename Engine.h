@@ -5,6 +5,8 @@
 #include "SysManager.h"
 #include "ActorManager.h"
 #include "TextureManager.h"
+#include "AudioManager.h"
+#include "SoundManager.h"
 
 class Engine
 {
@@ -23,6 +25,8 @@ private:
 	WindowManager m_windowManager;
 	StateManager m_stateManager;
 	SysManager m_systemManager;
-	ActorManager m_actorManager;
 	TextureManager m_textureManager;
+	AudioManager m_audioManager;
+	SoundManager m_soundManager;
+	ActorManager m_actorManager;
 };

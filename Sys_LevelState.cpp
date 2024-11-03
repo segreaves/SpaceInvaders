@@ -1,8 +1,10 @@
 #include "Sys_LevelState.h"
 #include "SysManager.h"
+#include "SoundType.h"
 
 Sys_LevelState::Sys_LevelState(SysManager* systemManager)
-	: Sys(systemManager)
+	: Sys(systemManager),
+	m_deathTimer(0)
 {
 	onCreate();
 }
@@ -68,6 +70,12 @@ void Sys_LevelState::notify(const Message& msg)
 
 void Sys_LevelState::onPlayerDestroyed(ActorId id)
 {
+	// play explosion sound
+	Message msg((MessageType)ActorMessageType::Sound);
+	msg.m_sender = id;
+	msg.m_receiver = id;
+	msg.m_int = (int)SoundType::PlayerExplode;
+	m_systemManager->getMessageHandler()->dispatch(msg);
 	m_systemManager->getActorManager()->disableActor(id);
 	// enable player explosion particle system
 	ActorId explosionId = m_systemManager->getLevelManager()->getPlayerExplosionId();

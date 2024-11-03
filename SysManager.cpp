@@ -17,6 +17,7 @@ SysManager::SysManager() :
 	m_systems[SystemType::Animator] = new Sys_Animator(this);
 	m_systems[SystemType::Renderer] = new Sys_Renderer(this);
 	m_systems[SystemType::LevelState] = new Sys_LevelState(this);
+	m_systems[SystemType::Sound] = new Sys_Sound(this);
 }
 
 SysManager::~SysManager()

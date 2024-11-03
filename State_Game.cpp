@@ -19,7 +19,7 @@ void State_Game::update(const float& deltaTime)
 {
 	if (m_levelManager.getInvaderCount() <= 0)
 		loadNextLevel();
-	m_fps = 1.0f / deltaTime;
+	m_fps = static_cast<unsigned int>(1.f / deltaTime);
 	// game update
 	m_stateManager->getContext()->m_systemManager->update(deltaTime);
 	// HUD update
