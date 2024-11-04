@@ -2,16 +2,29 @@
 #include "Params.h"
 #define QUAD_SIZE 4
 
+ParticleSystem::ParticleSystem()
+	: m_numParticles(100)
+	, m_particleSize(5)
+	, m_minSpeed(0)
+	, m_maxSpeed(1)
+	, m_duration(1)
+	, m_isEnabled(false)
+	, m_emitterPosition(0, 0),
+	m_rng(m_rd()),
+	m_angleDist(0, 360),
+	m_speedDist(0, 1)
+{
+}
+
 void ParticleSystem::initialize()
 {
 	m_vertices.setPrimitiveType(sf::Quads);
 	m_vertices.resize(m_numParticles * QUAD_SIZE);
 
-	for (int i = 0; i < m_numParticles; i++)
+	for (unsigned int i = 0; i < m_numParticles; i++)
 	{
-		srand(time(0) + i);
-		float angle = (rand() % 360) * 3.14f / 180.f;
-		float speed = (rand() % 50) + m_minSpeed;
+		float angle = m_angleDist(m_rng);
+		float speed = m_speedDist(m_rng) * (m_maxSpeed - m_minSpeed) + m_minSpeed;
 
 		sf::Vector2f direction = sf::Vector2f(cos(angle) * speed, sin(angle) * speed);
 		m_particles.push_back(Particle(direction));

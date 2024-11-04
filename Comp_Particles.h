@@ -22,11 +22,12 @@ private:
 	void load(std::stringstream& ss) override
 	{
 		int numParticles;
-		float particleSize, duration, minSpeed;
-		ss >> numParticles >> particleSize >> duration >> minSpeed;
+		float particleSize, duration, minSpeed, maxSpeed;
+		ss >> numParticles >> particleSize >> duration >> minSpeed >> maxSpeed;
 		m_particleSystem.setNumParticles(numParticles);
 		m_particleSystem.setDuration(duration);
 		m_particleSystem.setMinSpeed(minSpeed);
+		m_particleSystem.setMaxSpeed(maxSpeed);
 		m_particleSystem.setParticleSize(particleSize);
 	}
 	ParticleSystem m_particleSystem;
