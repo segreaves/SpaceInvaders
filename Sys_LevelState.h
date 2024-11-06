@@ -20,8 +20,6 @@ public:
 
 	void notify(const Message& msg);
 private:
-	void onPlayerDestroyed(ActorId id);
-
 	float m_gameOverWaitTime = 2.f;
 	float m_deathTimer;
 	bool m_playerDestroyed = false;

@@ -125,6 +125,9 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 		m_systemManager->getMessageHandler()->dispatch(msg);
 		break;
 	}
+	case ActorEventType::Despawned:
+		onPlayerDestroyed(actorId);
+		break;
 	}
 }
 
@@ -146,4 +149,24 @@ void Sys_PlayerControl::debugOverlay(WindowManager* windowManager)
 
 void Sys_PlayerControl::notify(const Message& msg)
 {
+}
+
+void Sys_PlayerControl::onPlayerDestroyed(ActorId id)
+{
+	// play explosion sound
+	Message msg((MessageType)ActorMessageType::Sound);
+	msg.m_sender = id;
+	msg.m_receiver = id;
+	msg.m_int = (int)SoundType::PlayerExplode;
+	m_systemManager->getMessageHandler()->dispatch(msg);
+	// enable player explosion particle system
+	ActorId explosionId = m_systemManager->getLevelManager()->getPlayerExplosionId();
+	auto explosionPos = m_systemManager->getActorManager()->getActor(explosionId)->getComponent<Comp_Position>(ComponentType::Position);
+	auto playerPos = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_Position>(ComponentType::Position);
+	explosionPos->setPosition(playerPos->getPosition());
+	auto particlesComp = m_systemManager->getActorManager()->getActor(explosionId)->getComponent<Comp_Particles>(ComponentType::Particles);
+	particlesComp->getParticleSystem()->initialize();
+	particlesComp->getParticleSystem()->setEmitterPosition(explosionPos->getPosition());
+	particlesComp->getParticleSystem()->emitParticles();
+	m_systemManager->getActorManager()->enableActor(explosionId);
 }

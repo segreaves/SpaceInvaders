@@ -53,8 +53,17 @@ public:
 	{
 		auto r = retrieve(id);
 		if (!r) return false;
-		if (--r->second)
+		--r->second;
+		if (!r->second)
 			unload(id);
+		return true;
+	}
+
+	bool forceReleaseResource(const std::string& id)
+	{
+		auto r = retrieve(id);
+		if (!r) return false;
+		unload(id);
 		return true;
 	}
 
@@ -78,6 +87,7 @@ private:
 		if (it == m_resources.end()) return false;
 		delete it->second.first;
 		m_resources.erase(it);
+		std::cout << "ResourceManager::unload() deleted resource: " << id << std::endl;
 		return true;
 	}
 

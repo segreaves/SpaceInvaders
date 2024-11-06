@@ -37,10 +37,12 @@ void State_Paused::onCreate()
 		m_pausedText.getLocalBounds().left + m_pausedText.getLocalBounds().width / 2.0f,
 		m_pausedText.getLocalBounds().top + m_pausedText.getLocalBounds().height / 2.0f
 	);
+	m_stateManager->getContext()->m_soundManager->loadSoundProfile("assets/profiles/soundProfiles/paused_state.sound");
 }
 
 void State_Paused::activate()
 {
+	m_stateManager->getContext()->m_soundManager->play("click");
 	m_stateManager->getContext()->m_controller->m_onPause.addCallback("Paused_onUnpause", std::bind(&StateManager::switchTo, m_stateManager, StateType::Game));
 }
 

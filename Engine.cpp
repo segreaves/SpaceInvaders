@@ -13,7 +13,9 @@ Engine::Engine() :
 	m_context.m_actorManager = &m_actorManager;
 	m_systemManager.setActorManager(&m_actorManager);
 	m_context.m_systemManager = &m_systemManager;
+	m_context.m_soundManager = &m_soundManager;
 
+	//m_stateManager.getContext()->m_soundManager->loadSoundProfile("assets/profiles/soundProfiles/state_manager.sound");
 	m_stateManager.switchTo(StateType::Intro);
 
 	m_windowManager.getRenderWindow()->setMouseCursorVisible(false);

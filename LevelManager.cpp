@@ -35,9 +35,9 @@ void LevelManager::createPlayer()
 	adjustColliderToSprite(colComp, sprite);
 }
 
-void LevelManager::createInvaders(sf::FloatRect viewSpace)
+void LevelManager::createInvaders()
 {
-	const auto offset = (viewSpace.width - m_invaderSeparation.x * m_invaderCols) / 2.f;
+	const auto offset = (m_viewSpace.width - m_invaderSeparation.x * m_invaderCols) / 2.f;
 	std::vector<std::string> invaderProfiles = { "invader1", "invader2", "invader3", "invader2", "invader1" };
 	for (auto i = 0; i < invaderProfiles.size(); i++)
 	{
@@ -70,14 +70,14 @@ void LevelManager::createInvaderBullets()
 		m_invaderBullets.emplace_back(m_actorManager->loadActorProfile("bullet_invader", "bullet_invader"));
 }
 
-void LevelManager::createBunkers(sf::FloatRect viewSpace)
+void LevelManager::createBunkers()
 {
-	const auto offset = (viewSpace.width - m_bunkerSeparation * (m_nBunkers - 1)) / 2.f;
+	const auto offset = (m_viewSpace.width - m_bunkerSeparation * (m_nBunkers - 1)) / 2.f;
 	for (auto i = 0; i < m_nBunkers; i++)
 	{
 		const auto bunkerId = m_actorManager->loadActorProfile("bunker", "bunker");
 		m_bunkers.emplace_back(bunkerId);
-		m_bunkerSpawn.emplace(bunkerId, sf::Vector2f(i * m_bunkerSeparation + offset, viewSpace.height - m_bunkerSpawnHeight));
+		m_bunkerSpawn.emplace(bunkerId, sf::Vector2f(i * m_bunkerSeparation + offset, m_viewSpace.height - m_bunkerSpawnHeight));
 		// get collider and adjust to sprite
 		auto colComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Collision>(ComponentType::Collision);
 		auto sprite = m_actorManager->getActor(bunkerId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
@@ -129,17 +129,16 @@ sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)
 	return m_bunkerSpawn[id];
 }
 
-void LevelManager::newGame(sf::FloatRect viewSpace)
+void LevelManager::newGame()
 {
 	m_state = LevelState::PlayerAlive;
-	m_viewSpace = viewSpace;
 	createPlayer();
 	createPlayerExplosion();
 	createPlayerBullets();
 	createInvaderBullets();
-	createInvaders(viewSpace);
+	createInvaders();
 	createShockwaves();
-	createBunkers(viewSpace);
+	createBunkers();
 }
 
 void LevelManager::purge()

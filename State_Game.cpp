@@ -57,6 +57,8 @@ void State_Game::onCreate()
 	m_stateManager->getContext()->m_systemManager->setLevelManager(&m_levelManager);
 	setHUDStyle();
 	setWindowOutline();
+	m_stateManager->getContext()->m_soundManager->loadSoundProfile("assets/profiles/soundProfiles/game_state.sound");
+	m_levelManager.setViewSpace(getGameViewSpace());
 }
 
 void State_Game::activate()
@@ -113,7 +115,7 @@ void State_Game::newGame()
 {
 	m_newGame = false;
 	m_stateManager->getContext()->m_actorManager->purge();
-	m_levelManager.newGame(getGameViewSpace());
+	m_levelManager.newGame();
 	m_stateManager->getContext()->m_actorManager->enableActor(m_levelManager.getPlayerId());
 }
 

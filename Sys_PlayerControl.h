@@ -22,5 +22,7 @@ public:
 
 	void notify(const Message& msg);
 private:
+	void onPlayerDestroyed(ActorId id);
+
 	unsigned int m_playerBulletIndex;
 };

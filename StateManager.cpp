@@ -104,6 +104,7 @@ bool StateManager::hasState(const StateType& stateType)
 
 void StateManager::switchTo(const StateType& toState)
 {
+	m_context->m_soundManager->switchState(toState);
 	for (auto it = m_states.begin(); it != m_states.end(); it++)
 	{
 		if (it->first == toState)
@@ -145,6 +146,7 @@ void StateManager::removeState(const StateType& removeState)
 		{
 			delete it->second;
 			m_states.erase(it);
+			m_context->m_soundManager->removeState(removeState);
 			return;
 		}
 	}

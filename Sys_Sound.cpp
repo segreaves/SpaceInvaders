@@ -1,6 +1,7 @@
 #include "Sys_Sound.h"
 #include "SysManager.h"
 #include "SoundType.h"
+#include "WindowManager.h"
 
 Sys_Sound::Sys_Sound(SysManager* systemManager) :
 	Sys(systemManager)
@@ -50,13 +51,22 @@ void Sys_Sound::debugOverlay(WindowManager* windowManager)
 void Sys_Sound::notify(const Message& msg)
 {
 	if (!hasActor(msg.m_receiver)) return;
+	auto posComp = m_systemManager->getActorManager()->getActor(msg.m_receiver)->getComponent<Comp_Position>(ComponentType::Position);
+	std::string sound;
 	switch ((SoundType)msg.m_int)
 	{
 		case SoundType::PlayerShoot:
-			m_systemManager->getActorManager()->getSoundManager()->play("player_shoot", false);
+			sound = "player_shoot";
 			break;
 		case SoundType::PlayerExplode:
-			m_systemManager->getActorManager()->getSoundManager()->play("player_explode", false);
+			sound = "player_explode";
+			break;
+		case SoundType::InvaderExplode:
+			sound = "invader_explode";
+			break;
+		case SoundType::InvaderShoot:
+			sound = "invader_shoot";
 			break;
 	}
+	m_systemManager->getActorManager()->getSoundManager()->play(sound);
 }

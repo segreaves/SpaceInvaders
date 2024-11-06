@@ -2,6 +2,7 @@
 #include "SysManager.h"
 #include "WindowManager.h"
 #include "LevelManager.h"
+#include "SoundType.h"
 
 Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	Sys(systemManager),
@@ -127,6 +128,12 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 			float knockback = 50000;
 			auto moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
 			moveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
+			// play sound
+			Message msg((MessageType)ActorMessageType::Sound);
+			msg.m_sender = actorId;
+			msg.m_receiver = actorId;
+			msg.m_int = (int)SoundType::InvaderShoot;
+			m_systemManager->getMessageHandler()->dispatch(msg);
 			break;
 		}
 	}
@@ -287,6 +294,12 @@ void Sys_InvaderControl::handleShooting(const float& deltaTime, const ActorId& i
 
 void Sys_InvaderControl::onInvaderDeath(const ActorId& id)
 {
+	// play explosion sound
+	Message msg((MessageType)ActorMessageType::Sound);
+	msg.m_sender = id;
+	msg.m_receiver = id;
+	msg.m_int = (int)SoundType::InvaderExplode;
+	m_systemManager->getMessageHandler()->dispatch(msg);
 	m_systemManager->getActorManager()->disableActor(id);
 	auto posComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_Position>(ComponentType::Position);
 	instantiateShockwave(posComp->getPosition());

@@ -20,6 +20,4 @@ class Sys_Sound : public Sys
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
-private:
-	sf::Sound m_sound;
 };

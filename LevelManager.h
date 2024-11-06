@@ -23,11 +23,12 @@ public:
 	sf::Vector2f getPlayerSpawnPoint() const;
 
 	sf::FloatRect getViewSpace() const { return m_viewSpace; }
+	void setViewSpace(sf::FloatRect viewSpace) { m_viewSpace = viewSpace; }
 	void createPlayer();
-	void createInvaders(sf::FloatRect viewSpace);
+	void createInvaders();
 	void createPlayerBullets();
 	void createInvaderBullets();
-	void createBunkers(sf::FloatRect viewSpace);
+	void createBunkers();
 	void createShockwaves();
 	void createPlayerExplosion();
 	ActorId& getPlayerId() { return m_playerId; }
@@ -50,7 +51,7 @@ public:
 	float getInvaderBaseSpeed() const { return m_invaderBaseSpeed; }
 	float getLevelSpeedIncrease() const { return m_levelSpeedIncrease; }
 	float getDefeatSpeedIncrease() const { return m_defeatSpeedIncrease; }
-	void newGame(sf::FloatRect viewSpace);
+	void newGame();
 	void purge();
 
 	// overload the ++ operator

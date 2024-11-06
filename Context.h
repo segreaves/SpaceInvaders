@@ -19,4 +19,5 @@ struct Context
 	Controller* m_controller;
 	ActorManager* m_actorManager;
 	SysManager* m_systemManager;
+	SoundManager* m_soundManager;
 };
