@@ -42,7 +42,7 @@ void State_Paused::onCreate()
 
 void State_Paused::activate()
 {
-	m_stateManager->getContext()->m_soundManager->play("click");
+	m_stateManager->getContext()->m_soundManager->playSound("click");
 	m_stateManager->getContext()->m_controller->m_onPause.addCallback("Paused_onUnpause", std::bind(&StateManager::switchTo, m_stateManager, StateType::Game));
 }
 

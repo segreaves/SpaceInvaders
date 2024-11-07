@@ -19,6 +19,7 @@ void State_Intro::draw()
 
 void State_Intro::onCreate()
 {
+	// set up intro text
 	m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
 	m_text.setFont(m_font);
 	m_text.setString({ "SPACE INVADERS" });
@@ -29,19 +30,22 @@ void State_Intro::onCreate()
 		textBounds.left + textBounds.width / 2.0f,
 		textBounds.top + textBounds.height / 2.0f
 	);
-
 	WindowManager* windowManager = m_stateManager->getContext()->m_windowManager;
 	windowManager->getRenderWindow()->setView(m_view);
 	sf::Vector2f windowSize = windowManager->getCurrentViewSpace().getSize();
 	m_text.setPosition(windowSize.x / 2.0f, windowSize.y / 2.0f);
 
 	m_transparent = true;
+	// load music
+	m_stateManager->getContext()->m_soundManager->loadSoundProfile("assets/profiles/soundProfiles/intro_state.sound");
 }
 
 void State_Intro::activate()
 {
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Intro_onContinue", std::bind(&State_Intro::onContinue, this));
 	m_stateManager->getContext()->m_windowManager->getRenderWindow()->setView(m_view);
+	// play music
+	m_stateManager->getContext()->m_soundManager->playMusic("intro_music");
 }
 
 void State_Intro::deactivate()

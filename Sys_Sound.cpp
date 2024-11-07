@@ -68,5 +68,5 @@ void Sys_Sound::notify(const Message& msg)
 			sound = "invader_shoot";
 			break;
 	}
-	m_systemManager->getActorManager()->getSoundManager()->play(sound);
+	m_systemManager->getActorManager()->getSoundManager()->playSound(sound);
 }

@@ -12,7 +12,7 @@ SoundManager::~SoundManager()
 	purge();
 }
 
-bool SoundManager::play(const std::string& name)
+bool SoundManager::playSound(const std::string& name)
 {
 	// check audio map for sound info and sound
 	auto& stateSounds = m_audio[m_currentState];
@@ -26,11 +26,29 @@ bool SoundManager::play(const std::string& name)
 	return true;
 }
 
+bool SoundManager::playMusic(const std::string& name)
+{
+	// check audio map for music info and music
+	auto& stateMusic = m_music[m_currentState];
+	auto soundInfo = stateMusic.first;
+	auto msc = stateMusic.second;
+	setUpMusic(msc, &soundInfo);
+	msc->play();
+	return true;
+}
+
 void SoundManager::setUpSound(sf::Sound* sound, const SoundInfo* props)
 {
 	sound->setVolume(props->m_volume);
 	sound->setPitch(props->m_pitch);
 	sound->setRelativeToListener(false);
+}
+
+void SoundManager::setUpMusic(sf::Music* music, const SoundInfo* props)
+{
+	music->setVolume(props->m_volume);
+	music->setPitch(props->m_pitch);
+	music->setRelativeToListener(false);
 }
 
 void SoundManager::loadSoundProfile(const std::string& filePath)
@@ -48,19 +66,38 @@ void SoundManager::loadSoundProfile(const std::string& filePath)
 	{
 		if (line[0] == '#') continue;
 		std::stringstream ss(line);
-		std::string name;
-		float volume, pitch, minDist, attenuation;
-		ss >> name >> volume >> pitch;
+		std::string type, name;
+		float volume, pitch;
+		ss >> type >> name >> volume >> pitch;
 		SoundInfo soundInfo(name, volume, pitch);
-		auto it = m_audio[m_currentState].find(name);
-		if (it == m_audio[m_currentState].end())
+		if (type == "sound")
 		{
-			if (!m_audioManager->requireResource(name))
+			if (m_audio.find(m_currentState) == m_audio.end()) return;
+			auto it = m_audio[m_currentState].find(name);
+			if (it == m_audio[m_currentState].end())
 			{
-				std::cerr << "SoundEngine::loadSoundProfile() failed to load resource " << name << std::endl;
-				continue;
+				if (!m_audioManager->requireResource(name))
+				{
+					std::cerr << "SoundEngine::loadSoundProfile() failed to load sound " << name << std::endl;
+					continue;
+				}
+				m_audio[m_currentState].emplace(name, std::make_pair(soundInfo, new sf::Sound(*m_audioManager->getResource(name))));
 			}
-			m_audio[m_currentState].emplace(name, std::make_pair(soundInfo, new sf::Sound(*m_audioManager->getResource(name))));
+		}
+		else if (type == "music")
+		{
+			if (m_music.find(m_currentState) == m_music.end()) return;
+			std::string musicPath = m_audioManager->getPath(name);
+			if (musicPath == "") return;
+			auto music = new sf::Music();
+			if (!music->openFromFile(Utils::getWorkingDirectory() + musicPath))
+			{
+				std::cerr << "SoundManager::loadSoundProfile() failed to load music from file: " << name << std::endl;
+				return;
+			}
+			music->setLoop(true);
+			m_music[m_currentState].first = soundInfo;
+			m_music[m_currentState].second = music;
 		}
 	}
 }
@@ -70,6 +107,11 @@ void SoundManager::switchState(StateType state)
 	pauseAll(m_currentState);
 	m_currentState = state;
 	unpauseAll(m_currentState);
+
+	if (m_music.find(m_currentState) != m_music.end()) return;
+	SoundInfo info = SoundInfo();
+	sf::Music* music = nullptr;
+	m_music.emplace(m_currentState, std::make_pair(info, music));
 }
 
 void SoundManager::removeState(StateType state)
@@ -86,6 +128,7 @@ void SoundManager::removeState(StateType state)
 
 void SoundManager::purge()
 {
+	// clear sounds
 	for (auto& state : m_audio)
 	{
 		for (auto& sound : state.second)
@@ -95,24 +138,42 @@ void SoundManager::purge()
 		}
 	}
 	m_audio.clear();
+	// clear music
+	for (auto& music : m_music)
+		delete music.second.second;
+	m_music.clear();
 }
 
 void SoundManager::pauseAll(const StateType& state)
 {
+	// pause sounds
 	auto& soundMap = m_audio[state];
 	for (auto& [str, soundData] : soundMap)
 	{
 		if (soundData.second->getStatus() == sf::Sound::Playing)
 			soundData.second->pause();
 	}
+	// pause music
+	auto music = m_music.find(state);
+	if (music == m_music.end()) return;
+	if (!music->second.second) return;
+	if (music->second.second->getStatus() == sf::Sound::Playing)
+		music->second.second->pause();
 }
 
 void SoundManager::unpauseAll(const StateType& state)
 {
+	// unpause sounds
 	auto& soundMap = m_audio[state];
 	for (auto& [str, soundData] : soundMap)
 	{
 		if (soundData.second->getStatus() == sf::Sound::Paused)
 			soundData.second->play();
 	}
+	// unpause music
+	auto music = m_music.find(state);
+	if (music == m_music.end()) return;
+	if (!music->second.second) return;
+	if (music->second.second->getStatus() == sf::Sound::Paused)
+		music->second.second->play();
 }
