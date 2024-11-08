@@ -10,7 +10,7 @@ Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	m_gen(m_rd()),
 	m_unifFloat(1.f, 30.f),
 	m_unifInt(0, 1),
-	m_currentInvaderSpeed(0),
+	m_aiSpeed(0),
 	m_invaderBulletIndex(0),
 	m_leftInvader(-1),
 	m_rightInvader(-1),
@@ -52,22 +52,25 @@ void Sys_InvaderControl::start()
 	m_movingRight = m_unifInt(m_gen);
 
 	auto levelManager = m_systemManager->getLevelManager();
-	m_currentInvaderSpeed = levelManager->getInvaderBaseSpeed() + (levelManager->getLevel() - 1) * levelManager->getLevelSpeedIncrease();
+	m_aiTarget = levelManager->getScreenCenter();
+	m_aiSpeed = levelManager->getInvaderBaseSpeed() + (levelManager->getLevel() - 1) * levelManager->getLevelSpeedIncrease();
 
 	for (auto& id : m_actorIds)
 	{
 		auto invader = m_systemManager->getActorManager()->getActor(id);
 		auto posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
 		auto invComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
-		posComp->setPosition(invComp->getSpawnPosition());
+		//posComp->setPosition(invComp->getSpawnPosition());
+		posComp->setPosition(m_aiTarget + invComp->getSpawnOffset());
 		auto targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
-		targetComp->setTarget(invComp->getSpawnPosition());
+		//targetComp->setTarget(invComp->getSpawnPosition());
+		targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
 		auto moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
 		moveComp->setVelocity(sf::Vector2f(0, 0));
 		auto controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
-		controlComp->setMaxSpeed(m_currentInvaderSpeed);
+		//controlComp->setMaxSpeed(m_aiSpeed);
 		auto spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		spriteComp->setFPS(spriteComp->getDefaultFPS() * m_currentInvaderSpeed / levelManager->getInvaderBaseSpeed());
+		spriteComp->setFPS(spriteComp->getDefaultFPS() * m_aiSpeed / levelManager->getInvaderBaseSpeed());
 	}
 	selectTrackedInvaders();
 }
@@ -75,6 +78,7 @@ void Sys_InvaderControl::start()
 void Sys_InvaderControl::update(const float& deltaTime)
 {
 	if (m_actorIds.empty()) return;
+	handleAITargetMovement(deltaTime);
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	for (auto& id : m_actorIds)
 	{
@@ -86,7 +90,7 @@ void Sys_InvaderControl::update(const float& deltaTime)
 		auto controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
 		auto colComp = invader->getComponent<Comp_Collision>(ComponentType::Collision);
 
-		handleMovement(deltaTime, id, posComp, moveComp, controlComp, targetComp, colComp);
+		handleInvaderMovement(deltaTime, id, posComp, moveComp, controlComp, targetComp, colComp, invComp);
 		handleShooting(deltaTime, id, invComp);
 	}
 }
@@ -153,6 +157,11 @@ void Sys_InvaderControl::debugOverlay(WindowManager* windowManager)
 		target.setPosition(targetComp->getTarget());
 		window->draw(target);
 	}
+	sf::CircleShape aiTarget(5.f);
+	aiTarget.setOrigin(aiTarget.getRadius(), aiTarget.getRadius());
+	aiTarget.setFillColor(sf::Color::Yellow);
+	aiTarget.setPosition(m_aiTarget);
+	window->draw(aiTarget);
 }
 
 void Sys_InvaderControl::notify(const Message& msg)
@@ -227,7 +236,7 @@ void Sys_InvaderControl::instantiateShockwave(sf::Vector2f position)
 
 void Sys_InvaderControl::increaseInvaderSpeed()
 {
-	m_currentInvaderSpeed += m_systemManager->getLevelManager()->getDefeatSpeedIncrease();
+	m_aiSpeed += m_systemManager->getLevelManager()->getKillSpeedIncrease();
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	for (auto& invaderId : m_actorIds)
 	{
@@ -235,15 +244,21 @@ void Sys_InvaderControl::increaseInvaderSpeed()
 		auto moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
 		auto controlComp = invader->getComponent<Comp_Control>(ComponentType::Control);
 		auto spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		controlComp->setMaxSpeed(m_currentInvaderSpeed);
-		spriteComp->setFPS(spriteComp->getDefaultFPS() * m_currentInvaderSpeed / m_systemManager->getLevelManager()->getInvaderBaseSpeed());
+		//controlComp->setMaxSpeed(m_aiSpeed);
+		spriteComp->setFPS(spriteComp->getDefaultFPS() * m_aiSpeed / m_systemManager->getLevelManager()->getInvaderBaseSpeed());
 	}
 }
 
-void Sys_InvaderControl::handleMovement(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, std::shared_ptr<Comp_Control> controlComp, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp)
+void Sys_InvaderControl::handleAITargetMovement(const float& deltaTime)
+{
+	m_aiTarget += sf::Vector2f(m_movingRight ? m_aiSpeed : -m_aiSpeed, 0) * deltaTime;
+}
+
+void Sys_InvaderControl::handleInvaderMovement(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, std::shared_ptr<Comp_Control> controlComp, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp, std::shared_ptr<Comp_Invader> invComp)
 {
 	// invader movement
-	targetComp->setTarget(targetComp->getTarget() + sf::Vector2f(m_movingRight ? controlComp->getMaxSpeed() : -controlComp->getMaxSpeed(), 0) * deltaTime);
+	//targetComp->setTarget(targetComp->getTarget() + sf::Vector2f(m_movingRight ? controlComp->getMaxSpeed() : -controlComp->getMaxSpeed(), 0) * deltaTime);
+	targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
 	sf::Vector2f direction = targetComp->getTarget() - posComp->getPosition();
 	controlComp->setMovementInput(direction / m_maxTargetDistance);
 	moveComp->accelerate(controlComp->getMovementDirection() * controlComp->getMaxAcceleration());
@@ -262,12 +277,13 @@ void Sys_InvaderControl::handleMovement(const float& deltaTime, const ActorId& i
 		);
 		// change movement direction
 		m_movingRight = boundsLeft ? true : false;
+		m_aiTarget += resolve;
 		// set new movement target for all invaders
 		for (auto& actorId : m_actorIds)
 		{
 			auto invader = m_systemManager->getActorManager()->getActor(actorId);
 			auto targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
-			targetComp->setTarget(targetComp->getTarget() + resolve);
+			//targetComp->setTarget(targetComp->getTarget() + resolve);
 		}
 	}
 }

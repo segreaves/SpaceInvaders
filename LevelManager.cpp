@@ -11,7 +11,10 @@ LevelManager::LevelManager(ActorManager* actorManager) :
 	m_playerExplosion(-1),
 	m_playerLives(0),
 	m_remainingInvaders(0),
-	m_kills(0)
+	m_kills(0),
+	m_score(0),
+	m_invaderPoints(0),
+	m_state(LevelState::PlayerAlive)
 {
 }
 
@@ -38,6 +41,7 @@ void LevelManager::createPlayer()
 void LevelManager::createInvaders()
 {
 	const auto offset = (m_viewSpace.width - m_invaderSeparation.x * m_invaderCols) / 2.f;
+	const sf::Vector2f screenCenter = getScreenCenter();
 	std::vector<std::string> invaderProfiles = { "invader1", "invader2", "invader3", "invader2", "invader1" };
 	for (auto i = 0; i < invaderProfiles.size(); i++)
 	{
@@ -49,7 +53,8 @@ void LevelManager::createInvaders()
 				j * m_invaderSeparation.x + offset,
 				(i + 1) * m_invaderSeparation.y);
 			auto invaderComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Invader>(ComponentType::Invader);
-			invaderComp->setSpawnPosition(spawnPos);
+			//invaderComp->setSpawnPosition(spawnPos);
+			invaderComp->setSpawnOffset(spawnPos - screenCenter);
 			// adjust collider to fit sprite
 			auto colComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Collision>(ComponentType::Collision);
 			auto sprite = m_actorManager->getActor(invaderId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
@@ -121,12 +126,25 @@ void LevelManager::onInvaderDefeated()
 {
 	m_kills++;
 	--m_remainingInvaders;
+	m_score += m_killStreak ? ++m_invaderPoints : m_invaderBasePoints;
+	m_killStreak = true;
+}
+
+void LevelManager::onPlayerDefeated()
+{
+	m_score = 0;
 }
 
 sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)
 {
 	if (m_bunkerSpawn.find(id) == m_bunkerSpawn.end()) return sf::Vector2f();
 	return m_bunkerSpawn[id];
+}
+
+void LevelManager::resetKillStreak()
+{
+	m_invaderPoints = m_invaderBasePoints;
+	m_killStreak = false;
 }
 
 void LevelManager::newGame()

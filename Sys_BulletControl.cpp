@@ -50,7 +50,11 @@ void Sys_BulletControl::update(const float& deltaTime)
 		sf::FloatRect bulletAABB = colComp->getAABB();
 		// check if bullet is out of bounds
 		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_systemManager->getLevelManager()->getViewSpace().getSize().y)
+		{
 			m_systemManager->addEvent(bullet->getId(), (EventId)ActorEventType::Despawned);
+			if (bullet->getTag() == "bullet_player")
+				m_systemManager->getLevelManager()->resetKillStreak();
+		}
 #ifdef DEBUG
 		auto posComp = bullet->getComponent<Comp_Position>(ComponentType::Position);
 		sf::RectangleShape rectTip(sf::Vector2f(4.f, 4.f));

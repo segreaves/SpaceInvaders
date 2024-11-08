@@ -122,7 +122,7 @@ void State_Game::newGame()
 
 void State_Game::updateHUD()
 {
-	m_scoreText.setString("Score: " + std::to_string(0));
+	m_scoreText.setString("Score: " + std::to_string(m_levelManager.getScore()));
 	m_levelText.setString("Level: " + std::to_string(m_levelManager.getLevel()));
 	m_livesText.setString("Lives: " + std::to_string(m_levelManager.getPlayerLives()));
 	m_killsText.setString("Kills: " + std::to_string(m_levelManager.getKills()));

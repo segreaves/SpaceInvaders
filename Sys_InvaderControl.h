@@ -25,12 +25,14 @@ private:
 	void selectTrackedInvaders();
 	void instantiateShockwave(sf::Vector2f position);
 	void increaseInvaderSpeed();
-	void handleMovement(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, std::shared_ptr<Comp_Control> controlComp, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp);
+	void handleAITargetMovement(const float& deltaTime);
+	void handleInvaderMovement(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, std::shared_ptr<Comp_Control> controlComp, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp, std::shared_ptr<Comp_Invader> invComp);
 	void handleShooting(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Invader> invComp);
 	void onInvaderDeath(const ActorId& id);
 
+	sf::Vector2f m_aiTarget;
 	bool m_movingRight;
-	float m_currentInvaderSpeed;
+	float m_aiSpeed;
 	unsigned int m_invaderBulletIndex;
 	unsigned int m_shockwaveIndex;
 	const float m_maxTargetDistance = 50.0f;

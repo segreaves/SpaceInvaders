@@ -169,4 +169,5 @@ void Sys_PlayerControl::onPlayerDestroyed(ActorId id)
 	particlesComp->getParticleSystem()->setEmitterPosition(explosionPos->getPosition());
 	particlesComp->getParticleSystem()->emitParticles();
 	m_systemManager->getActorManager()->enableActor(explosionId);
+	m_systemManager->getLevelManager()->onPlayerDefeated();
 }

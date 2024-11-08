@@ -24,6 +24,7 @@ public:
 
 	sf::FloatRect getViewSpace() const { return m_viewSpace; }
 	void setViewSpace(sf::FloatRect viewSpace) { m_viewSpace = viewSpace; }
+	sf::Vector2f getScreenCenter() { return sf::Vector2f(m_viewSpace.left + m_viewSpace.width / 2.f, m_viewSpace.top + m_viewSpace.height / 2.f); }
 	void createPlayer();
 	void createInvaders();
 	void createPlayerBullets();
@@ -43,6 +44,7 @@ public:
 	int getInvaderCount() const { return m_remainingInvaders; }
 	void resetInvaderCount() { m_remainingInvaders = static_cast<int>(m_invaders.size()); }
 	void onInvaderDefeated();
+	void onPlayerDefeated();
 	int getKills() const { return m_kills; }
 	sf::Vector2f getBunkerSpawn(ActorId id);
 	unsigned int getLevel() const { return m_level; }
@@ -50,7 +52,9 @@ public:
 	void setState(const LevelState state) { m_state = state; }
 	float getInvaderBaseSpeed() const { return m_invaderBaseSpeed; }
 	float getLevelSpeedIncrease() const { return m_levelSpeedIncrease; }
-	float getDefeatSpeedIncrease() const { return m_defeatSpeedIncrease; }
+	float getKillSpeedIncrease() const { return m_defeatSpeedIncrease; }
+	unsigned int getScore() { return m_score; }
+	void resetKillStreak();
 	void newGame();
 	void purge();
 
@@ -73,6 +77,10 @@ private:
 	unsigned int m_remainingInvaders;
 	unsigned int m_playerLives;
 	unsigned int m_kills;
+	unsigned int m_score;
+	unsigned int m_invaderBasePoints = 1;
+	unsigned int m_invaderPoints = 1;
+	bool m_killStreak = false;
 	const int m_invaderCols = 12;
 	const sf::Vector2f m_invaderSeparation = sf::Vector2f(50, 45);
 	const int m_nBullets = 100;
@@ -81,7 +89,6 @@ private:
 	const float m_bunkerSpawnHeight = 160;
 	std::unordered_map<ActorId, sf::Vector2f> m_bunkerSpawn;
 	sf::FloatRect m_viewSpace;
-	const float m_invaderPadding = 10.f;
 	const float m_invaderBaseSpeed = 100;
 	const float m_levelSpeedIncrease = 10;
 	const float m_defeatSpeedIncrease = 3;
