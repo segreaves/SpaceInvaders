@@ -181,6 +181,7 @@
     <ClCompile Include="Sys_Movement.cpp" />
     <ClCompile Include="Sys_Renderer.cpp" />
     <ClCompile Include="Sys_Sound.cpp" />
+    <ClCompile Include="Sys_Spring.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -197,6 +198,7 @@
     <ClInclude Include="Comp_Particles.h" />
     <ClInclude Include="Comp_Health.h" />
     <ClInclude Include="Comp_SoundEmitter.h" />
+    <ClInclude Include="Comp_Spring.h" />
     <ClInclude Include="Comp_Target.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="IDrawable.h" />
@@ -230,6 +232,7 @@
     <ClInclude Include="Sys_LevelState.h" />
     <ClInclude Include="Sys_ShockwaveControl.h" />
     <ClInclude Include="Sys_Sound.h" />
+    <ClInclude Include="Sys_Spring.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Trigger.h" />
     <ClInclude Include="ISubscriber.h" />

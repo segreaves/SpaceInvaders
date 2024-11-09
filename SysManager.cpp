@@ -18,6 +18,7 @@ SysManager::SysManager() :
 	m_systems[SystemType::Renderer] = new Sys_Renderer(this);
 	m_systems[SystemType::LevelState] = new Sys_LevelState(this);
 	m_systems[SystemType::Sound] = new Sys_Sound(this);
+	m_systems[SystemType::Spring] = new Sys_Spring(this);
 }
 
 SysManager::~SysManager()

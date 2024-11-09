@@ -180,6 +180,9 @@
     <ClCompile Include="Sys_LevelState.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sys_Spring.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowManager.h">
@@ -388,6 +391,12 @@
     </ClInclude>
     <ClInclude Include="StateType.h">
       <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Spring.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_Spring.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

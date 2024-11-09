@@ -31,13 +31,27 @@ void Sys_Movement::unsubscribeFromChannels()
 
 void Sys_Movement::start()
 {
+	for (auto& id : m_actorIds)
+	{
+		auto actor = m_systemManager->getActorManager()->getActor(id);
+		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+		moveComp->setVelocity(sf::Vector2f(0, 0));
+		posComp->setAngleDegrees(0);
+	}
 }
 
 void Sys_Movement::update(const float& deltaTime)
 {
 	if (m_actorIds.empty()) return;
 	for (auto& id : m_actorIds)
-		move(id, deltaTime);
+	{
+		auto actor = m_systemManager->getActorManager()->getActor(id);
+		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+		handleMovement(posComp, moveComp, deltaTime);
+		handleRotation(posComp, moveComp, deltaTime);
+	}
 }
 
 void Sys_Movement::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
@@ -52,20 +66,24 @@ void Sys_Movement::notify(const Message& msg)
 {
 }
 
-void Sys_Movement::move(const ActorId& actorId, const float& deltaTime)
+void Sys_Movement::handleMovement(std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, const float& deltaTime)
 {
-	auto actor = m_systemManager->getActorManager()->getActor(actorId);
-	auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-	auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
 	// movement
 	sf::Vector2f acceleration = sf::Vector2f(
 		moveComp->getAcceleration().x * !moveComp->getCollidingOnX(),
 		moveComp->getAcceleration().y * !moveComp->getCollidingOnY());
-	moveComp->updatePrevVelocity();
 	moveComp->addVelocity(acceleration * deltaTime);
 	moveComp->setAcceleration(sf::Vector2f(0, 0));
 	moveComp->resetCollisionFlags();
 	if (moveComp->getFrictionCoefficient() > 0)
 		moveComp->applyBaseFriction(moveComp->getVelocity() * deltaTime);
 	posComp->move(moveComp->getVelocity() * deltaTime);
+}
+
+void Sys_Movement::handleRotation(std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, const float& deltaTime)
+{
+	// rotation
+	moveComp->addAngularVelocity(moveComp->getTorque() * deltaTime);
+	moveComp->setTorque(0);
+	posComp->rotate(moveComp->getAngularVelocity() * deltaTime);
 }

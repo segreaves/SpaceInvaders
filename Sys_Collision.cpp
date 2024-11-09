@@ -260,7 +260,7 @@ bool Sys_Collision::detectActorCollision(const ActorId& actorId, const ActorId& 
 		sf::RectangleShape rectIntersect(sf::Vector2f(intersect.width, intersect.height));
 		rectIntersect.setPosition(sf::Vector2f(intersect.left, intersect.top));
 		sf::Color color = sf::Color::Red;
-		color.a = 100;
+		color.a = 150;
 		rectIntersect.setFillColor(color);
 		m_intersects.emplace_back(rectIntersect);
 #endif

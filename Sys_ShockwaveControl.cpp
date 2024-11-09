@@ -67,6 +67,7 @@ void Sys_ShockwaveControl::handleEvent(const ActorId& actorId, const ActorEventT
 
 void Sys_ShockwaveControl::debugOverlay(WindowManager* windowManager)
 {
+#ifdef DEBUG
 	for (auto& id : m_actorIds)
 	{
 		auto actor = m_systemManager->getActorManager()->getActor(id);
@@ -75,9 +76,10 @@ void Sys_ShockwaveControl::debugOverlay(WindowManager* windowManager)
 		sf::CircleShape circle(shockwaveComp->getRadius());
 		circle.setOrigin(shockwaveComp->getRadius(), shockwaveComp->getRadius());
 		circle.setPosition(posComp->getPosition());
-		circle.setFillColor(sf::Color(255, 255, 0, 50));
+		circle.setFillColor(sf::Color(0, 0, 255, 50));
 		windowManager->getRenderWindow()->draw(circle);
 	}
+#endif
 }
 
 void Sys_ShockwaveControl::notify(const Message& msg)

@@ -16,6 +16,7 @@
 #include "Comp_Particles.h"
 #include "Comp_Grid.h"
 #include "Comp_SoundEmitter.h"
+#include "Comp_Spring.h"
 #include "ActorEventType.h"
 #include "TextureManager.h"
 #include "AudioManager.h"

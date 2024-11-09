@@ -29,44 +29,8 @@ void StateManager::update(const float& deltaTime)
 void StateManager::draw()
 {
 	if (m_states.empty()) { return; }
-	if (m_states.back().second->isTransparent() && m_states.size() > 1)
-	{
-		auto itr = m_states.end();
-		while (itr != m_states.begin())
-		{
-			if (itr != m_states.end())
-			{
-				if (!itr->second->isTransparent()) break;
-			}
-			itr--;
-		}
-		for (; itr != m_states.end(); itr++)
-		{
-			itr->second->draw();
-		}
-	}
-	else m_states.back().second->draw();
-	// after everything is drawn, draw the render lines
-	// vertical lines
-	for (unsigned int x = 0; x < m_context->m_windowManager->getRenderWindow()->getSize().x; x += 3)
-	{
-		sf::Vertex line[] =
-		{
-			sf::Vertex(sf::Vector2f(static_cast<float>(x), 0.f), sf::Color(0, 0, 0, 50)),
-			sf::Vertex(sf::Vector2f(static_cast<float>(x), static_cast<float>(m_context->m_windowManager->getRenderWindow()->getSize().y)), sf::Color(0, 0, 0, 50))
-		};
-		m_context->m_windowManager->getRenderWindow()->draw(line, 2, sf::Lines);
-	}
-	// horizontal lines
-	for (unsigned int y = 0; y < m_context->m_windowManager->getRenderWindow()->getSize().y; y += 3)
-	{
-		sf::Vertex line[] =
-		{
-			sf::Vertex(sf::Vector2f(0, static_cast<float>(y)), sf::Color(0, 0, 0, 100)),
-			sf::Vertex(sf::Vector2f(static_cast<float>(m_context->m_windowManager->getRenderWindow()->getSize().x), static_cast<float>(y)), sf::Color(0, 0, 0, 100))
-		};
-		m_context->m_windowManager->getRenderWindow()->draw(line, 2, sf::Lines);
-	}
+	drawStates();
+	postProcess();
 }
 
 void StateManager::lateUpdate()
@@ -149,5 +113,51 @@ void StateManager::removeState(const StateType& removeState)
 			m_context->m_soundManager->removeState(removeState);
 			return;
 		}
+	}
+}
+
+void StateManager::drawStates()
+{
+	if (m_states.back().second->isTransparent() && m_states.size() > 1)
+	{
+		auto itr = m_states.end();
+		while (itr != m_states.begin())
+		{
+			if (itr != m_states.end())
+			{
+				if (!itr->second->isTransparent()) break;
+			}
+			itr--;
+		}
+		for (; itr != m_states.end(); itr++)
+		{
+			itr->second->draw();
+		}
+	}
+	else m_states.back().second->draw();
+}
+
+void StateManager::postProcess()
+{
+	// after everything is drawn, draw the render lines
+	// vertical lines
+	for (unsigned int x = 0; x < m_context->m_windowManager->getRenderWindow()->getSize().x; x += 3)
+	{
+		sf::Vertex line[] =
+		{
+			sf::Vertex(sf::Vector2f(static_cast<float>(x), 0.f), sf::Color(0, 0, 0, 50)),
+			sf::Vertex(sf::Vector2f(static_cast<float>(x), static_cast<float>(m_context->m_windowManager->getRenderWindow()->getSize().y)), sf::Color(0, 0, 0, 50))
+		};
+		m_context->m_windowManager->getRenderWindow()->draw(line, 2, sf::Lines);
+	}
+	// horizontal lines
+	for (unsigned int y = 0; y < m_context->m_windowManager->getRenderWindow()->getSize().y; y += 3)
+	{
+		sf::Vertex line[] =
+		{
+			sf::Vertex(sf::Vector2f(0, static_cast<float>(y)), sf::Color(0, 0, 0, 100)),
+			sf::Vertex(sf::Vector2f(static_cast<float>(m_context->m_windowManager->getRenderWindow()->getSize().x), static_cast<float>(y)), sf::Color(0, 0, 0, 100))
+		};
+		m_context->m_windowManager->getRenderWindow()->draw(line, 2, sf::Lines);
 	}
 }

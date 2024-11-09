@@ -20,5 +20,6 @@ public:
 
 	void notify(const Message& msg);
 
-	void move(const ActorId& actorId, const float& deltaTime);
+	void handleMovement(std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, const float& deltaTime);
+	void handleRotation(std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, const float& deltaTime);
 };

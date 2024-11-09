@@ -13,6 +13,7 @@
 #include "Sys_Health.h"
 #include "Sys_LevelState.h"
 #include "Sys_Sound.h"
+#include "Sys_Spring.h"
 #include "MessageHandler.h"
 #include <map>
 #include <queue>

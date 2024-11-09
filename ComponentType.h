@@ -16,5 +16,6 @@ enum class ComponentType
 	Particles,
 	Health,
 	Grid,
-	SoundEmitter
+	SoundEmitter,
+	Spring
 };

@@ -14,5 +14,6 @@ enum class SystemType
 	Health,
 	Renderer,
 	LevelState,
-	Sound
+	Sound,
+	Spring
 };

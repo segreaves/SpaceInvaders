@@ -51,9 +51,8 @@ void LevelManager::createInvaders()
 			m_invaders.emplace_back(invaderId);
 			const auto spawnPos = sf::Vector2f(
 				j * m_invaderSeparation.x + offset,
-				(i + 1) * m_invaderSeparation.y);
+				(i + 2) * m_invaderSeparation.y);
 			auto invaderComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Invader>(ComponentType::Invader);
-			//invaderComp->setSpawnPosition(spawnPos);
 			invaderComp->setSpawnOffset(spawnPos - screenCenter);
 			// adjust collider to fit sprite
 			auto colComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Collision>(ComponentType::Collision);
