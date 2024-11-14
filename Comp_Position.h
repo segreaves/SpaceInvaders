@@ -21,8 +21,15 @@ public:
 		m_position.y += y;
 	}
 
-	void move(sf::Vector2f vec) { m_position += vec; }
-	void rotate(float angle) { m_angle += angle; }
+	void move(sf::Vector2f vec)
+	{
+		m_position += vec;
+	}
+
+	void rotate(float angle)
+	{
+		m_angle += angle;
+	}
 private:
 	void load(std::stringstream& ss) override
 	{

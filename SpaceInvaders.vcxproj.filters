@@ -183,6 +183,9 @@
     <ClCompile Include="Sys_Spring.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sys_Gravity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowManager.h">
@@ -332,9 +335,6 @@
     <ClInclude Include="Direction.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
-    <ClInclude Include="IDrawable.h">
-      <Filter>Header Files\Core\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="ShapeType.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
@@ -397,6 +397,18 @@
     </ClInclude>
     <ClInclude Include="Sys_Spring.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_Gravity.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_Mass.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_TorqueSpring.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="IDrawable.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

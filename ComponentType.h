@@ -17,5 +17,7 @@ enum class ComponentType
 	Health,
 	Grid,
 	SoundEmitter,
-	Spring
+	Spring,
+	TorqueSpring,
+	Mass
 };

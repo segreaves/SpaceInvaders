@@ -45,7 +45,7 @@ void State_Intro::activate()
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Intro_onContinue", std::bind(&State_Intro::onContinue, this));
 	m_stateManager->getContext()->m_windowManager->getRenderWindow()->setView(m_view);
 	// play music
-	m_stateManager->getContext()->m_soundManager->playMusic("intro_music");
+	//m_stateManager->getContext()->m_soundManager->playMusic("intro_music");
 }
 
 void State_Intro::deactivate()

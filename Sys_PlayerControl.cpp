@@ -11,6 +11,7 @@ Sys_PlayerControl::Sys_PlayerControl(SysManager* systemManager) :
 	m_playerBulletIndex(0)
 {
 	onCreate();
+	m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
 }
 
 Sys_PlayerControl::~Sys_PlayerControl()
@@ -63,9 +64,8 @@ void Sys_PlayerControl::update(const float& deltaTime)
 		
 		auto controlComp = player->getComponent<Comp_Control>(ComponentType::Control);
 		auto posComp = player->getComponent<Comp_Position>(ComponentType::Position);
-		sf::Vector2f direction = targetComp->getTarget() - posComp->getPosition();
-
 		auto moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
+		sf::Vector2f direction = targetComp->getTarget() - posComp->getPosition();
 		controlComp->setMovementInput(direction);
 		moveComp->accelerate(controlComp->getMovementInput() * controlComp->getMaxAcceleration());
 
@@ -97,7 +97,8 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 	{
 	case ActorEventType::Shoot:
 	{
-		const int bulletId = m_systemManager->getLevelManager()->getPlayerBulletIds()[m_playerBulletIndex++ % m_systemManager->getLevelManager()->getPlayerBulletIds().size()];
+		const int bulletId = m_systemManager->getLevelManager()->getPlayerBulletIds()[m_playerBulletIndex];
+		m_playerBulletIndex = (m_playerBulletIndex + 1) % m_systemManager->getLevelManager()->getPlayerBulletIds().size();
 		ActorManager* actorManager = m_systemManager->getActorManager();
 		actorManager->enableActor(bulletId);
 		sf::Vector2f shootDirection(0, -1);
@@ -109,12 +110,12 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 		auto bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
 		auto bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
 		bulletPos->setPosition(shooterPos->getPosition() +
-			shootDirection * (bulletCol->getAABB().getSize().y / 2 + shooterCol->getAABB().getSize().y / 2.f));
+			shootDirection * (bulletCol->getAABB().height / 2.f + shooterCol->getAABB().height / 2.f));
 		auto bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
 		auto bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
 		bulletMove->setVelocity(shootDirection * bulletComp->getBulletSpeed());
 		// knock-back
-		float knockback = 1000000;
+		float knockback = 700000;
 		auto moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
 		moveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
 		// play sound
@@ -145,6 +146,13 @@ void Sys_PlayerControl::debugOverlay(WindowManager* windowManager)
 		target.setPosition(targetComp->getTarget());
 		window->draw(target);
 	}
+	// show bullet count text
+	m_bulletCountText.setFont(m_font);
+	m_bulletCountText.setCharacterSize(70);
+	m_bulletCountText.setFillColor(sf::Color::White);
+	m_bulletCountText.setPosition(10, 10);
+	m_bulletCountText.setString("Bullets: " + std::to_string(m_playerBulletIndex));
+	window->draw(m_bulletCountText);
 }
 
 void Sys_PlayerControl::notify(const Message& msg)

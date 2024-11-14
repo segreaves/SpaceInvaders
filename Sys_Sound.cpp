@@ -67,6 +67,9 @@ void Sys_Sound::notify(const Message& msg)
 		case SoundType::InvaderShoot:
 			sound = "invader_shoot";
 			break;
+		case SoundType::BulletExplode:
+			sound = "bullet_hit";
+			break;
 	}
 	m_systemManager->getActorManager()->getSoundManager()->playSound(sound);
 }

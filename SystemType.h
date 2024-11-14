@@ -15,5 +15,6 @@ enum class SystemType
 	Renderer,
 	LevelState,
 	Sound,
-	Spring
+	Spring,
+	Gravity
 };

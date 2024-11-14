@@ -52,13 +52,13 @@ public:
 	void setState(const LevelState state) { m_state = state; }
 	float getInvaderBaseSpeed() const { return m_invaderBaseSpeed; }
 	float getLevelSpeedIncrease() const { return m_levelSpeedIncrease; }
-	float getKillSpeedIncrease() const { return m_defeatSpeedIncrease; }
+	float getKillSpeedIncrease() const { return m_killSpeedIncrease; }
+	float getLevelBaseSpeed() const { return m_invaderBaseSpeed + (m_level - 1) * m_levelSpeedIncrease; }
 	unsigned int getScore() { return m_score; }
 	void resetKillStreak();
 	void newGame();
 	void purge();
 
-	// overload the ++ operator
 	unsigned int operator++() { return ++m_level; }
 	unsigned int operator++(int) { return m_level++; }
 private:
@@ -89,7 +89,7 @@ private:
 	const float m_bunkerSpawnHeight = 160;
 	std::unordered_map<ActorId, sf::Vector2f> m_bunkerSpawn;
 	sf::FloatRect m_viewSpace;
-	const float m_invaderBaseSpeed = 100;
-	const float m_levelSpeedIncrease = 10;
-	const float m_defeatSpeedIncrease = 3;
+	const float m_invaderBaseSpeed = 50;
+	const float m_levelSpeedIncrease = 20;
+	const float m_killSpeedIncrease = 4;
 };

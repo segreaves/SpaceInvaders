@@ -68,7 +68,7 @@ void State_Game::activate()
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
 	if (m_newGame)
 		newGame();
-	m_stateManager->getContext()->m_soundManager->playMusic("game_music");
+	//m_stateManager->getContext()->m_soundManager->playMusic("game_music");
 }
 
 void State_Game::deactivate()

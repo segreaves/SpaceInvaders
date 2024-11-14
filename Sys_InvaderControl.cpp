@@ -17,6 +17,7 @@ Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	m_shockwaveIndex(0)
 {
 	onCreate();
+	m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
 }
 
 Sys_InvaderControl::~Sys_InvaderControl()
@@ -53,20 +54,18 @@ void Sys_InvaderControl::start()
 
 	auto levelManager = m_systemManager->getLevelManager();
 	m_aiTarget = levelManager->getScreenCenter();
-	m_aiSpeed = levelManager->getInvaderBaseSpeed() + (levelManager->getLevel() - 1) * levelManager->getLevelSpeedIncrease();
+	setInvaderSpeed(levelManager->getLevelBaseSpeed());
 
 	for (auto& id : m_actorIds)
 	{
 		auto invader = m_systemManager->getActorManager()->getActor(id);
-		auto posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
 		auto invComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
-		posComp->setPosition(m_aiTarget + invComp->getSpawnOffset() + m_spawnOffset);
+		auto posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
 		auto targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
-		targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
 		auto moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
+		targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
+		posComp->setPosition(targetComp->getTarget());
 		moveComp->setVelocity(sf::Vector2f(0, 0));
-		auto spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		spriteComp->setFPS(spriteComp->getDefaultFPS() * m_aiSpeed / levelManager->getInvaderBaseSpeed());
 	}
 	selectTrackedInvaders();
 }
@@ -102,13 +101,14 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 			if (!m_actorIds.empty())
 			{
 				selectTrackedInvaders();
-				increaseInvaderSpeed();
+				setInvaderSpeed(m_aiSpeed + m_systemManager->getLevelManager()->getKillSpeedIncrease());
 			}
 			break;
 		}
 		case ActorEventType::Shoot:
 		{
-			const int bulletId = m_systemManager->getLevelManager()->getInvaderBulletIds()[m_invaderBulletIndex++ % m_systemManager->getLevelManager()->getInvaderBulletIds().size()];
+			const int bulletId = m_systemManager->getLevelManager()->getInvaderBulletIds()[m_invaderBulletIndex];
+			m_invaderBulletIndex = (m_invaderBulletIndex + 1) % m_systemManager->getLevelManager()->getPlayerBulletIds().size();
 			ActorManager* actorManager = m_systemManager->getActorManager();
 			actorManager->enableActor(bulletId);
 			sf::Vector2f shootDirection(0, 1);
@@ -158,6 +158,13 @@ void Sys_InvaderControl::debugOverlay(WindowManager* windowManager)
 	aiTarget.setFillColor(sf::Color::Yellow);
 	aiTarget.setPosition(m_aiTarget);
 	window->draw(aiTarget);
+	// show bullet count text
+	m_bulletCountText.setFont(m_font);
+	m_bulletCountText.setCharacterSize(70);
+	m_bulletCountText.setFillColor(sf::Color::White);
+	m_bulletCountText.setPosition(10, 90);
+	m_bulletCountText.setString("Bullets: " + std::to_string(m_invaderBulletIndex));
+	window->draw(m_bulletCountText);
 }
 
 void Sys_InvaderControl::notify(const Message& msg)
@@ -206,6 +213,9 @@ void Sys_InvaderControl::selectTrackedInvaders()
 			m_rightInvader = actorId;
 			maxX = posComp->getPosition().x + colComp->getAABB().width;
 		}
+#ifdef DEBUG
+		actorManager->getActor(actorId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet)->getSpriteSheet()->setSpriteColor(APP_COLOR);
+#endif
 	}
 #ifdef DEBUG
 	auto leftSprite = actorManager->getActor(m_leftInvader)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
@@ -229,18 +239,6 @@ void Sys_InvaderControl::instantiateShockwave(sf::Vector2f position)
 	actorManager->enableActor(shockwaveId);
 }
 
-void Sys_InvaderControl::increaseInvaderSpeed()
-{
-	m_aiSpeed += m_systemManager->getLevelManager()->getKillSpeedIncrease();
-	ActorManager* actorManager = m_systemManager->getActorManager();
-	for (auto& invaderId : m_actorIds)
-	{
-		auto invader = actorManager->getActor(invaderId);
-		auto spriteComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		spriteComp->setFPS(spriteComp->getDefaultFPS() * m_aiSpeed / m_systemManager->getLevelManager()->getInvaderBaseSpeed());
-	}
-}
-
 void Sys_InvaderControl::handleAITargetMovement(const float& deltaTime)
 {
 	m_aiTarget += sf::Vector2f(m_movingRight ? m_aiSpeed : -m_aiSpeed, 0) * deltaTime;
@@ -250,8 +248,6 @@ void Sys_InvaderControl::handleInvaderMovement(const float& deltaTime, const Act
 {
 	// invader movement
 	targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
-	sf::Vector2f direction = targetComp->getTarget() - posComp->getPosition();
-	springComp->setAnchor(targetComp->getTarget());
 
 	// check if invader is out of bounds. This is done only for the tracked invaders
 	if (id != m_leftInvader && id != m_rightInvader) return;
@@ -303,4 +299,14 @@ void Sys_InvaderControl::onInvaderDeath(const ActorId& id)
 	instantiateShockwave(posComp->getPosition());
 	m_systemManager->getActorManager()->disableActor(id);
 	m_systemManager->getLevelManager()->onInvaderDefeated();
+}
+
+void Sys_InvaderControl::setInvaderSpeed(const float& speed)
+{
+	// set invader AI speed
+	m_aiSpeed = speed;
+	// send speed change message
+	Message msg((MessageType)ActorMessageType::SpeedChange);
+	msg.m_float = m_aiSpeed;
+	m_systemManager->getMessageHandler()->dispatch(msg);
 }

@@ -19,6 +19,7 @@ SysManager::SysManager() :
 	m_systems[SystemType::LevelState] = new Sys_LevelState(this);
 	m_systems[SystemType::Sound] = new Sys_Sound(this);
 	m_systems[SystemType::Spring] = new Sys_Spring(this);
+	m_systems[SystemType::Gravity] = new Sys_Gravity(this);
 }
 
 SysManager::~SysManager()
@@ -34,9 +35,21 @@ void SysManager::start()
 
 void SysManager::update(const float& deltaTime)
 {
-	for (auto& [type, sys] : m_systems)
-		sys->update(deltaTime);
 	handleEvents();
+	m_systems[SystemType::PlayerControl]->update(deltaTime);
+	m_systems[SystemType::InvaderControl]->update(deltaTime);
+	m_systems[SystemType::BulletControl]->update(deltaTime);
+	m_systems[SystemType::Shockwave]->update(deltaTime);
+	m_systems[SystemType::BunkerControl]->update(deltaTime);
+	m_systems[SystemType::Animator]->update(deltaTime);
+	m_systems[SystemType::Sound]->update(deltaTime);
+	m_systems[SystemType::Gravity]->update(deltaTime);
+	m_systems[SystemType::Spring]->update(deltaTime);
+	m_systems[SystemType::Movement]->update(deltaTime);
+	m_systems[SystemType::Collision]->update(deltaTime);
+	m_systems[SystemType::Health]->update(deltaTime);
+	m_systems[SystemType::LevelState]->update(deltaTime);
+	m_systems[SystemType::Renderer]->update(deltaTime);
 }
 
 void SysManager::draw(WindowManager* windowManager)

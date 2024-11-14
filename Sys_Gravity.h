@@ -1,15 +1,13 @@
 #pragma once
 #include "Sys.h"
-#include "Trigger.h"
 
 class SysManager;
-class LevelManager;
 
-class Sys_PlayerControl : public Sys
+class Sys_Gravity : public Sys
 {
 public:
-	Sys_PlayerControl(SysManager* systemManager);
-	~Sys_PlayerControl();
+	Sys_Gravity(SysManager* systemManager);
+	~Sys_Gravity();
 
 	void start();
 	void setupRequirements();
@@ -21,10 +19,4 @@ public:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
-private:
-	void onPlayerDestroyed(ActorId id);
-
-	unsigned int m_playerBulletIndex;
-	sf::Text m_bulletCountText;
-	sf::Font m_font;
 };

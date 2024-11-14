@@ -2,6 +2,7 @@
 #include "SysManager.h"
 #include "LevelManager.h"
 #include "WindowManager.h"
+#include "SoundType.h"
 
 Sys_BulletControl::Sys_BulletControl(SysManager* systemManager) :
 	Sys(systemManager)
@@ -45,18 +46,14 @@ void Sys_BulletControl::update(const float& deltaTime)
 	for (auto& id : m_actorIds)
 	{
 		auto bullet = actorManager->getActor(id);
-		// no need to update bullet movement as their velocity is constant and set up on creation
 		auto colComp = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
+		auto posComp = bullet->getComponent<Comp_Position>(ComponentType::Position);
+		colComp->setPosition(posComp->getPosition());
 		sf::FloatRect bulletAABB = colComp->getAABB();
 		// check if bullet is out of bounds
 		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_systemManager->getLevelManager()->getViewSpace().getSize().y)
-		{
 			m_systemManager->addEvent(bullet->getId(), (EventId)ActorEventType::Despawned);
-			if (bullet->getTag() == "bullet_player")
-				m_systemManager->getLevelManager()->resetKillStreak();
-		}
 #ifdef DEBUG
-		auto posComp = bullet->getComponent<Comp_Position>(ComponentType::Position);
 		sf::RectangleShape rectTip(sf::Vector2f(4.f, 4.f));
 		rectTip.setPosition(posComp->getPosition());
 		rectTip.setOrigin(rectTip.getSize().x / 2, rectTip.getSize().y / 2);
@@ -81,11 +78,9 @@ void Sys_BulletControl::handleEvent(const ActorId& actorId, const ActorEventType
 
 void Sys_BulletControl::debugOverlay(WindowManager* windowManager)
 {
-#ifdef DEBUG
 	for (auto& rect : m_bulletTips)
 		windowManager->getRenderWindow()->draw(rect);
 	m_bulletTips.clear();
-#endif
 }
 
 void Sys_BulletControl::notify(const Message& msg)
@@ -94,7 +89,18 @@ void Sys_BulletControl::notify(const Message& msg)
 	switch ((ActorMessageType)msg.m_type)
 	{
 	case ActorMessageType::Collision:
+		onBulletDestroyed(msg.m_receiver);
 		m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
 		break;
 	}
+}
+
+void Sys_BulletControl::onBulletDestroyed(ActorId id)
+{
+	// play bullet hit sound
+	Message msg((MessageType)ActorMessageType::Sound);
+	msg.m_sender = id;
+	msg.m_receiver = id;
+	msg.m_int = (int)SoundType::BulletExplode;
+	m_systemManager->getMessageHandler()->dispatch(msg);
 }

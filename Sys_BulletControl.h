@@ -22,9 +22,7 @@ public:
 
 	void notify(const Message& msg);
 private:
-	unsigned int m_currentBullet;
+	void onBulletDestroyed(ActorId id);
 
-#ifdef DEBUG
 	std::vector<sf::RectangleShape> m_bulletTips;
-#endif
 };

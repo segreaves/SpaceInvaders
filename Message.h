@@ -32,5 +32,6 @@ struct Message
 		XY m_xy;
 		bool m_bool;
 		int m_int;
+		float m_float;
 	};
 };

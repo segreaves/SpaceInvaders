@@ -171,6 +171,7 @@
     <ClCompile Include="SysManager.cpp" />
     <ClCompile Include="Sys_Animator.cpp" />
     <ClCompile Include="Sys_BunkerControl.cpp" />
+    <ClCompile Include="Sys_Gravity.cpp" />
     <ClCompile Include="Sys_Health.cpp" />
     <ClCompile Include="Sys_LevelState.cpp" />
     <ClCompile Include="Sys_ShockwaveControl.cpp" />
@@ -194,12 +195,14 @@
     <ClInclude Include="Channel.h" />
     <ClInclude Include="Comp.h" />
     <ClInclude Include="ComponentType.h" />
+    <ClInclude Include="Comp_Mass.h" />
     <ClInclude Include="Comp_Grid.h" />
     <ClInclude Include="Comp_Particles.h" />
     <ClInclude Include="Comp_Health.h" />
     <ClInclude Include="Comp_SoundEmitter.h" />
     <ClInclude Include="Comp_Spring.h" />
     <ClInclude Include="Comp_Target.h" />
+    <ClInclude Include="Comp_TorqueSpring.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="Comp_Shockwave.h" />
@@ -228,6 +231,7 @@
     <ClInclude Include="State_Paused.h" />
     <ClInclude Include="Sys_Animator.h" />
     <ClInclude Include="Sys_BunkerControl.h" />
+    <ClInclude Include="Sys_Gravity.h" />
     <ClInclude Include="Sys_Health.h" />
     <ClInclude Include="Sys_LevelState.h" />
     <ClInclude Include="Sys_ShockwaveControl.h" />

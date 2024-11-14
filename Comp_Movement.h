@@ -13,12 +13,21 @@ public:
 		m_velocity.x = velocityX;
 		m_velocity.y = velocityY;
 	}
-	void addVelocity(const sf::Vector2f& velocity) { m_velocity += velocity; }
+	void addVelocity(const sf::Vector2f& velocity)
+	{
+		m_velocity += velocity;
+	}
 
 	const sf::Vector2f& getAcceleration() const { return m_acceleration; }
-	void setAcceleration(const sf::Vector2f& acceleration) { m_acceleration = acceleration; }
+	void setAcceleration(const sf::Vector2f& acceleration)
+	{
+		m_acceleration = acceleration;
+	}
 	void setAcceleration(const float& accelerationX, const float& accelerationY) { m_acceleration = sf::Vector2f(accelerationX, accelerationY); }
-	void accelerate(const sf::Vector2f& acceleration) { m_acceleration += acceleration; }
+	void accelerate(const sf::Vector2f& acceleration)
+	{
+		m_acceleration += acceleration;
+	}
 
 	const float& getAngularVelocity() const { return m_angularVelocity; }
 	void setAngularVelocity(const float& angularVelocity) { m_angularVelocity = angularVelocity; }
@@ -66,9 +75,9 @@ private:
 		ss >> m_frictionCoefficient;
 	}
 
-	float m_frictionCoefficient = 100.f;
+	float m_frictionCoefficient = 0.f;
 	sf::Vector2f m_velocity;
-	sf::Vector2f m_acceleration;
+	sf::Vector2f m_acceleration = sf::Vector2f(0, 0);
 	float m_angularVelocity;
 	float m_torque;
 	bool m_collidingOnX = false;

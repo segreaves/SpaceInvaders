@@ -6,7 +6,10 @@ class Comp_Target : public Comp
 {
 public:
 	sf::Vector2f getTarget() { return m_target; }
-	void setTarget(sf::Vector2f target) { m_target = target; }
+	void setTarget(sf::Vector2f target)
+	{
+		m_target = target;
+	}
 private:
 	void load(std::stringstream& ss) override
 	{

@@ -24,6 +24,8 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	addComponentType<Comp_Grid>(ComponentType::Grid);
 	addComponentType<Comp_SoundEmitter>(ComponentType::SoundEmitter);
 	addComponentType<Comp_Spring>(ComponentType::Spring);
+	addComponentType<Comp_TorqueSpring>(ComponentType::TorqueSpring);
+	addComponentType<Comp_Mass>(ComponentType::Mass);
 }
 
 ActorManager::~ActorManager()
@@ -228,12 +230,24 @@ unsigned int ActorManager::loadActorProfile(const std::string actorName, const s
 			ss >> *sound;
 			sound->create(m_soundManager);
 		}
+		else if (attr == "Mass")
+		{
+			addComponent(actorId, ComponentType::Mass);
+			auto mass = actor->getComponent<Comp_Mass>(ComponentType::Mass);
+			ss >> *mass;
+		}
 		else if (attr == "Spring")
 		{
 			addComponent(actorId, ComponentType::Spring);
 			auto spring = actor->getComponent<Comp_Spring>(ComponentType::Spring);
 			ss >> *spring;
 		}
+		else if (attr == "TorqueSpring")
+		{
+			addComponent(actorId, ComponentType::TorqueSpring);
+			auto torqueSpring = actor->getComponent<Comp_TorqueSpring>(ComponentType::TorqueSpring);
+			ss >> *torqueSpring;
+			}
 		else
 			std::cerr << "Unknown attribute: " << attr << std::endl;
 	}

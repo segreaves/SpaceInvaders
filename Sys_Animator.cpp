@@ -24,10 +24,12 @@ void Sys_Animator::setupRequirements()
 
 void Sys_Animator::subscribeToChannels()
 {
+	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::SpeedChange, this);
 }
 
 void Sys_Animator::unsubscribeFromChannels()
 {
+	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::SpeedChange, this);
 }
 
 void Sys_Animator::start()
@@ -39,6 +41,7 @@ void Sys_Animator::start()
 		spriteComp->resetFrameStep();
 		spriteComp->cropSprite();
 		spriteComp->setFrameTime(0);
+		spriteComp->setFPS(spriteComp->getDefaultFPS() * m_systemManager->getLevelManager()->getLevelBaseSpeed() / m_systemManager->getLevelManager()->getInvaderBaseSpeed());
 	}
 }
 
@@ -61,6 +64,19 @@ void Sys_Animator::debugOverlay(WindowManager* windowManager)
 
 void Sys_Animator::notify(const Message& msg)
 {
+	ActorMessageType msgType = (ActorMessageType)msg.m_type;
+	switch (msgType)
+	{
+	case ActorMessageType::SpeedChange:
+	{
+		for (auto& id : m_actorIds)
+		{
+			auto actor = m_systemManager->getActorManager()->getActor(id);
+			auto spriteComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+			spriteComp->setFPS(spriteComp->getDefaultFPS() * msg.m_float / m_systemManager->getLevelManager()->getInvaderBaseSpeed());
+		}
+	}
+	}
 }
 
 void Sys_Animator::handleAnimation(std::shared_ptr<Comp_SpriteSheet> spriteSheetComp, const float& deltaTime)
