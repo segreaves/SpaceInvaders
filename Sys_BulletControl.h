@@ -10,7 +10,7 @@ class Sys_BulletControl : public Sys
 public:
 	Sys_BulletControl(SysManager* systemManager);
 	~Sys_BulletControl();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

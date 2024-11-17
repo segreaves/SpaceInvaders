@@ -9,7 +9,7 @@ class Sys_Sound : public Sys
 	public:
 	Sys_Sound(SysManager* systemManager);
 	~Sys_Sound();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

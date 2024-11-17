@@ -3,11 +3,11 @@
 
 class SysManager;
 
-class Sys_Spring : public Sys
+class Sys_TorqueSpring : public Sys
 {
 public:
-	Sys_Spring(SysManager* systemManager);
-	~Sys_Spring();
+	Sys_TorqueSpring(SysManager* systemManager);
+	~Sys_TorqueSpring();
 protected:
 	void start();
 	void setupRequirements();
@@ -19,6 +19,4 @@ protected:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
-private:
-	sf::Vector2f calculateSpringForce(const sf::Vector2f& anchor, const sf::Vector2f& pos, const sf::Vector2f& vel, const float& strength, const float& length, const float& dampingCoeff);
 };

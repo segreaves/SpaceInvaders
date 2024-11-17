@@ -8,7 +8,7 @@ class Sys_Gravity : public Sys
 public:
 	Sys_Gravity(SysManager* systemManager);
 	~Sys_Gravity();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

@@ -10,7 +10,7 @@ class Sys_PlayerControl : public Sys
 public:
 	Sys_PlayerControl(SysManager* systemManager);
 	~Sys_PlayerControl();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

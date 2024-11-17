@@ -41,8 +41,8 @@ public:
 	ActorId& getPlayerExplosionId() { return m_playerExplosion; }
 	int getPlayerLives() const;
 	void setPlayerLives(const unsigned int lives) { m_playerLives = lives; }
-	int getInvaderCount() const { return m_remainingInvaders; }
-	void resetInvaderCount() { m_remainingInvaders = static_cast<int>(m_invaders.size()); }
+	int getEnemyCount() const { return m_remainingEnemies; }
+	void resetInvaderCount();
 	void onInvaderDefeated();
 	void onPlayerDefeated();
 	int getKills() const { return m_kills; }
@@ -74,7 +74,7 @@ private:
 	std::vector<ActorId> m_bunkers;
 	std::vector<ActorId> m_shockwaves;
 	ActorId m_playerExplosion;
-	unsigned int m_remainingInvaders;
+	unsigned int m_remainingEnemies;
 	unsigned int m_playerLives;
 	unsigned int m_kills;
 	unsigned int m_score;

@@ -6,10 +6,11 @@ class WindowManager;
 
 class Sys_Renderer : public Sys
 {
+	friend class SysManager;
 public:
 	Sys_Renderer(SysManager* systemManager);
 	~Sys_Renderer();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

@@ -6,7 +6,7 @@ class Sys_ShockwaveControl : public Sys
 public:
 	Sys_ShockwaveControl(SysManager* systemManager);
 	~Sys_ShockwaveControl();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

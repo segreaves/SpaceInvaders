@@ -10,11 +10,13 @@ enum class SystemType
 	BulletControl,
 	BunkerControl,
 	Animator,
-	Shockwave,
+	ShockwaveControl,
 	Health,
 	Renderer,
 	LevelState,
 	Sound,
 	Spring,
-	Gravity
+	Gravity,
+	ShipSway,
+	TorqueSpring
 };

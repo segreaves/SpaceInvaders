@@ -9,9 +9,8 @@ public:
 	
 	void setPosition(const float& x, const float& y) { m_position = sf::Vector2f(x, y); }
 
-	float getAngleDegrees() { return m_angle; }
-	void setAngleDegrees(const float& angle) { m_angle = angle; }
-	float getAngleRadians() { return m_angle * M_PI / 180.f; }
+	float getAngle() { return m_angle; }
+	void setAngle(const float& angle) { m_angle = angle; }
 
 	void setPosition(sf::Vector2f pos) { m_position = pos; }
 

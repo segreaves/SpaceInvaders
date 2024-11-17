@@ -78,15 +78,15 @@ void Sys_InvaderControl::update(const float& deltaTime)
 	for (auto& id : m_actorIds)
 	{
 		auto invader = actorManager->getActor(id);
-		auto posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
 		auto invComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
-		auto moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
 		auto targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
 		auto colComp = invader->getComponent<Comp_Collision>(ComponentType::Collision);
-		auto springComp = invader->getComponent<Comp_Spring>(ComponentType::Spring);
 
-		handleInvaderMovement(deltaTime, id, posComp, moveComp, targetComp, colComp, invComp, springComp);
-		handleShooting(deltaTime, id, invComp);
+		// update the target position
+		updateMoveTarget(deltaTime, id, targetComp, invComp);
+		tryShooting(deltaTime, id, invComp);
+		if (id == m_leftInvader || id == m_rightInvader)
+			checkBounds(deltaTime, id, targetComp, colComp);
 	}
 }
 
@@ -190,6 +190,9 @@ void Sys_InvaderControl::notify(const Message& msg)
 	}
 }
 
+/// <summary>
+/// Select the leftmost and rightmost invaders to track their movement.
+/// </summary>
 void Sys_InvaderControl::selectTrackedInvaders()
 {
 	if (m_actorIds.empty()) return;
@@ -229,7 +232,8 @@ void Sys_InvaderControl::instantiateShockwave(sf::Vector2f position)
 {
 	auto numShockwaves = m_systemManager->getLevelManager()->getShockwaveIds().size();
 	if (numShockwaves == 0) return;
-	const int shockwaveId = m_systemManager->getLevelManager()->getShockwaveIds()[m_shockwaveIndex++ % numShockwaves];
+	const int shockwaveId = m_systemManager->getLevelManager()->getShockwaveIds()[m_shockwaveIndex];
+	m_shockwaveIndex = (m_shockwaveIndex + 1) % numShockwaves;
 	auto actorManager = m_systemManager->getActorManager();
 	auto shockwavePos = actorManager->getActor(shockwaveId)->getComponent<Comp_Position>(ComponentType::Position);
 	shockwavePos->setPosition(position);
@@ -244,21 +248,21 @@ void Sys_InvaderControl::handleAITargetMovement(const float& deltaTime)
 	m_aiTarget += sf::Vector2f(m_movingRight ? m_aiSpeed : -m_aiSpeed, 0) * deltaTime;
 }
 
-void Sys_InvaderControl::handleInvaderMovement(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp, std::shared_ptr<Comp_Invader> invComp, std::shared_ptr<Comp_Spring> springComp)
+void Sys_InvaderControl::updateMoveTarget(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Invader> invComp)
 {
-	// invader movement
 	targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
+}
 
-	// check if invader is out of bounds. This is done only for the tracked invaders
-	if (id != m_leftInvader && id != m_rightInvader) return;
+void Sys_InvaderControl::checkBounds(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp)
+{
 	sf::FloatRect invaderAABB = colComp->getAABB();
-	bool boundsLeft = targetComp->getTarget().x - invaderAABB.width / 2.f < m_bounds;
-	bool boundsRight = targetComp->getTarget().x + invaderAABB.width / 2.f > m_systemManager->getLevelManager()->getViewSpace().getSize().x - m_bounds;
+	bool boundsLeft = targetComp->getTarget().x < m_bounds;
+	bool boundsRight = targetComp->getTarget().x > m_systemManager->getLevelManager()->getViewSpace().getSize().x - m_bounds;
 	if (boundsLeft || boundsRight)
 	{
 		// drop invaders
 		sf::Vector2f resolve(
-			boundsLeft ? (m_bounds + invaderAABB.width / 2.f - targetComp->getTarget().x) : (m_systemManager->getLevelManager()->getViewSpace().getSize().x - m_bounds - invaderAABB.width / 2.f - targetComp->getTarget().x),
+			boundsLeft ? (m_bounds - targetComp->getTarget().x) : (m_systemManager->getLevelManager()->getViewSpace().getSize().x - m_bounds - targetComp->getTarget().x),
 			m_dropDistance
 		);
 		// change movement direction
@@ -267,7 +271,7 @@ void Sys_InvaderControl::handleInvaderMovement(const float& deltaTime, const Act
 	}
 }
 
-void Sys_InvaderControl::handleShooting(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Invader> invComp)
+void Sys_InvaderControl::tryShooting(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Invader> invComp)
 {
 	if (invComp->canShoot())
 	{
@@ -295,9 +299,12 @@ void Sys_InvaderControl::onInvaderDeath(const ActorId& id)
 	msg.m_receiver = id;
 	msg.m_int = (int)SoundType::InvaderExplode;
 	m_systemManager->getMessageHandler()->dispatch(msg);
+	// create shockwave
 	auto posComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_Position>(ComponentType::Position);
 	instantiateShockwave(posComp->getPosition());
+	// disable invader
 	m_systemManager->getActorManager()->disableActor(id);
+	// update level manager
 	m_systemManager->getLevelManager()->onInvaderDefeated();
 }
 

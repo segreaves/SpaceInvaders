@@ -8,7 +8,7 @@ class Sys_Health : public Sys
 public:
 	Sys_Health(SysManager* systemManager);
 	~Sys_Health();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

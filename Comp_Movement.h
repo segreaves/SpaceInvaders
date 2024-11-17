@@ -18,6 +18,14 @@ public:
 		m_velocity += velocity;
 	}
 
+	sf::Vector2f getPrevVelocity() { return m_prevVelocity; }
+	void updateSpeedChange()
+	{
+		m_speedChange = m_velocity - m_prevVelocity;
+		m_prevVelocity = m_velocity;
+	}
+	sf::Vector2f getSpeedChange() { return m_speedChange; }
+
 	const sf::Vector2f& getAcceleration() const { return m_acceleration; }
 	void setAcceleration(const sf::Vector2f& acceleration)
 	{
@@ -35,6 +43,7 @@ public:
 	const float& getTorque() const { return m_torque; }
 	void setTorque(const float& torque) { m_torque = torque; }
 	void addTorque(const float& torque) { m_torque += torque; }
+	float getTorque() { return m_torque; }
 
 	const float& getFrictionCoefficient() const { return m_frictionCoefficient; }
 
@@ -45,9 +54,12 @@ public:
 
 	void applyBaseFriction(const sf::Vector2f& velocity)
 	{
-		if (sqrt(pow(m_velocity.x, 2) + pow(m_velocity.y, 2)) == 0) return;
-		sf::Vector2f friction = m_frictionCoefficient * velocity;
-		m_velocity = m_velocity - friction;
+		m_velocity -= m_frictionCoefficient * velocity;
+	}
+
+	void applyAngularDampening(const float& angularVelocity)
+	{
+		m_angularVelocity -= m_angularFrictionCoefficient * angularVelocity;
 	}
 
 	void setCollidingOnX(const bool& collidingOnX)
@@ -72,12 +84,15 @@ public:
 private:
 	void load(std::stringstream& ss) override
 	{
-		ss >> m_frictionCoefficient;
+		ss >> m_frictionCoefficient >> m_angularFrictionCoefficient;
 	}
 
 	float m_frictionCoefficient = 0.f;
+	float m_angularFrictionCoefficient = 0.f;
 	sf::Vector2f m_velocity;
+	sf::Vector2f m_prevVelocity;
 	sf::Vector2f m_acceleration = sf::Vector2f(0, 0);
+	sf::Vector2f m_speedChange = sf::Vector2f(0, 0);
 	float m_angularVelocity;
 	float m_torque;
 	bool m_collidingOnX = false;

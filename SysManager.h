@@ -3,6 +3,7 @@
 #include "Sys.h"
 #include "Sys_Renderer.h"
 #include "Sys_Movement.h"
+#include "Sys_Rotation.h"
 #include "Sys_PlayerControl.h"
 #include "Sys_Collision.h"
 #include "Sys_InvaderControl.h"
@@ -15,6 +16,8 @@
 #include "Sys_Sound.h"
 #include "Sys_Spring.h"
 #include "Sys_Gravity.h"
+#include "Sys_ShipSway.h"
+#include "Sys_TorqueSpring.h"
 #include "MessageHandler.h"
 #include <map>
 #include <queue>
@@ -65,4 +68,5 @@ private:
 	std::unordered_map<ActorId, std::queue<EventId>> m_actorEvents;
 	MessageHandler m_messageHandler;
 	LevelManager* m_levelManager;
+	std::vector<SystemType> m_systemOrder;
 };

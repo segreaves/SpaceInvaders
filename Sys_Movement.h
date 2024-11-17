@@ -8,7 +8,7 @@ class Sys_Movement : public Sys
 public:
 	Sys_Movement(SysManager* systemManager);
 	~Sys_Movement();
-
+protected:
 	void setupRequirements();
 	void subscribeToChannels();
 	void unsubscribeFromChannels();
@@ -19,7 +19,4 @@ public:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
-
-	void handleMovement(std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, const float& deltaTime);
-	void handleRotation(std::shared_ptr<Comp_Position> posComp, std::shared_ptr<Comp_Movement> moveComp, const float& deltaTime);
 };

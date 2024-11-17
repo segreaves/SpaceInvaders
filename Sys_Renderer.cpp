@@ -28,7 +28,7 @@ void Sys_Renderer::update(const float& deltaTime)
 		if (spriteSheetComp)
 		{
 			spriteSheetComp->updatePosition(posComp->getPosition());
-			spriteSheetComp->updateRotation(posComp->getAngleRadians());
+			spriteSheetComp->updateRotation(posComp->getAngle());
 		}
 		auto particlesComp = actor->getComponent<Comp_Particles>(ComponentType::Particles);
 		if (particlesComp)

@@ -19,6 +19,7 @@
 #include "Comp_Spring.h"
 #include "Comp_TorqueSpring.h"
 #include "Comp_Mass.h"
+#include "Comp_ShipSway.h"
 #include "ActorEventType.h"
 #include "TextureManager.h"
 #include "AudioManager.h"

@@ -10,7 +10,7 @@ class Sys_BunkerControl : public Sys
 public:
 	Sys_BunkerControl(SysManager* systemManager);
 	~Sys_BunkerControl();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

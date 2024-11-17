@@ -19,5 +19,6 @@ enum class ComponentType
 	SoundEmitter,
 	Spring,
 	TorqueSpring,
-	Mass
+	Mass,
+	ShipSway
 };

@@ -9,7 +9,7 @@ class Sys_Animator : public Sys
 public:
 	Sys_Animator(SysManager* systemManager);
 	~Sys_Animator();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

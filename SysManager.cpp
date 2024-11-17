@@ -9,9 +9,10 @@ SysManager::SysManager() :
 	m_systems[SystemType::PlayerControl] = new Sys_PlayerControl(this);
 	m_systems[SystemType::Health] = new Sys_Health(this);
 	m_systems[SystemType::Movement] = new Sys_Movement(this);
+	m_systems[SystemType::Rotation] = new Sys_Rotation(this);
 	m_systems[SystemType::InvaderControl] = new Sys_InvaderControl(this);
 	m_systems[SystemType::BulletControl] = new Sys_BulletControl(this);
-	m_systems[SystemType::Shockwave] = new Sys_ShockwaveControl(this);
+	m_systems[SystemType::ShockwaveControl] = new Sys_ShockwaveControl(this);
 	m_systems[SystemType::Collision] = new Sys_Collision(this);
 	m_systems[SystemType::BunkerControl] = new Sys_BunkerControl(this);
 	m_systems[SystemType::Animator] = new Sys_Animator(this);
@@ -19,7 +20,28 @@ SysManager::SysManager() :
 	m_systems[SystemType::LevelState] = new Sys_LevelState(this);
 	m_systems[SystemType::Sound] = new Sys_Sound(this);
 	m_systems[SystemType::Spring] = new Sys_Spring(this);
+	m_systems[SystemType::TorqueSpring] = new Sys_TorqueSpring(this);
 	m_systems[SystemType::Gravity] = new Sys_Gravity(this);
+	m_systems[SystemType::ShipSway] = new Sys_ShipSway(this);
+	m_systemOrder = {
+		SystemType::PlayerControl,
+		SystemType::InvaderControl,
+		SystemType::BulletControl,
+		SystemType::BunkerControl,
+		SystemType::ShockwaveControl,
+		SystemType::Gravity,
+		SystemType::Spring,
+		SystemType::Movement,
+		SystemType::ShipSway,
+		SystemType::TorqueSpring,
+		SystemType::Rotation,
+		SystemType::Collision,
+		SystemType::Animator,
+		SystemType::Sound,
+		SystemType::Health,
+		SystemType::LevelState,
+		SystemType::Renderer
+	};
 }
 
 SysManager::~SysManager()
@@ -36,20 +58,8 @@ void SysManager::start()
 void SysManager::update(const float& deltaTime)
 {
 	handleEvents();
-	m_systems[SystemType::PlayerControl]->update(deltaTime);
-	m_systems[SystemType::InvaderControl]->update(deltaTime);
-	m_systems[SystemType::BulletControl]->update(deltaTime);
-	m_systems[SystemType::Shockwave]->update(deltaTime);
-	m_systems[SystemType::BunkerControl]->update(deltaTime);
-	m_systems[SystemType::Animator]->update(deltaTime);
-	m_systems[SystemType::Sound]->update(deltaTime);
-	m_systems[SystemType::Gravity]->update(deltaTime);
-	m_systems[SystemType::Spring]->update(deltaTime);
-	m_systems[SystemType::Movement]->update(deltaTime);
-	m_systems[SystemType::Collision]->update(deltaTime);
-	m_systems[SystemType::Health]->update(deltaTime);
-	m_systems[SystemType::LevelState]->update(deltaTime);
-	m_systems[SystemType::Renderer]->update(deltaTime);
+	for (auto& type : m_systemOrder)
+		m_systems[type]->update(deltaTime);
 }
 
 void SysManager::draw(WindowManager* windowManager)

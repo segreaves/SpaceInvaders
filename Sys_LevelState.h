@@ -8,7 +8,7 @@ class Sys_LevelState : public Sys
 public:
 	Sys_LevelState(SysManager* systemManager);
 	~Sys_LevelState();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

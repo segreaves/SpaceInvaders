@@ -184,7 +184,16 @@
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Sys_Gravity.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys_ShipSway.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys_TorqueSpring.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys_Rotation.cpp">
+      <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,11 +413,23 @@
     <ClInclude Include="Comp_Mass.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="IDrawable.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_ShipSway.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Comp_ShipSway.h">
+      <Filter>Header Files\Core\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="Comp_TorqueSpring.h">
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="IDrawable.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="Sys_TorqueSpring.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys_Rotation.h">
+      <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

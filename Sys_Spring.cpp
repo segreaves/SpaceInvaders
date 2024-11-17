@@ -45,13 +45,14 @@ void Sys_Spring::update(const float& deltaTime)
 		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 		auto targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 
+		// save the previous attach->anchor vector
+		const sf::Vector2f prevOffset = springComp->getAnchor() - springComp->getAttach();
 		// set the spring attach and anchor
 		springComp->setAttach(posComp->getPosition());
 		springComp->setAnchor(targetComp->getTarget());
 
 		// compute the spring vector
 		const sf::Vector2f springForce = calculateSpringForce(springComp->getAnchor(), springComp->getAttach(), moveComp->getVelocity(), springComp->getStrength(), springComp->getLength(), springComp->getDampingCoeff());
-		
 		// apply the spring force to the actor
 		moveComp->accelerate(springForce);
 	}
@@ -105,22 +106,4 @@ sf::Vector2f Sys_Spring::calculateSpringForce(const sf::Vector2f& anchor, const 
 	// apply damping force
 	force -= dampingCoeff * vel;
 	return force;
-}
-
-float Sys_Spring::calculateSpringTorque(const float& currentAngle, const float& targetAngle, const float& angularVelocity, const float& strength, const float& dampingCoeff)
-{
-	// compute the angular displacement
-	float angleDisplacement = targetAngle - currentAngle;
-
-	// normalize the angle to the range [-pi, pi]
-	while (angleDisplacement > M_PI) angleDisplacement -= 2 * M_PI;
-	while (angleDisplacement < -M_PI) angleDisplacement += 2 * M_PI;
-
-	// compute the damping torque
-	float dampingTorque = angularVelocity * dampingCoeff;
-
-	// compute the spring torque
-	float springTorque = strength * angleDisplacement - dampingTorque;
-
-	return springTorque;
 }
