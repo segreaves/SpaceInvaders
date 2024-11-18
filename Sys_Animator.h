@@ -4,6 +4,9 @@
 class SysManager;
 class WindowManager;
 
+/// <summary>
+/// Handles the frame changes of all actors with a sprite sheet component.
+/// </summary>
 class Sys_Animator : public Sys
 {
 public:

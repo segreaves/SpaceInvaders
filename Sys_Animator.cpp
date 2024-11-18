@@ -79,6 +79,11 @@ void Sys_Animator::notify(const Message& msg)
 	}
 }
 
+/// <summary>
+/// Update the frame of the sprite sheet component if enough time has passed.
+/// </summary>
+/// <param name="spriteSheetComp"></param>
+/// <param name="deltaTime"></param>
 void Sys_Animator::handleAnimation(std::shared_ptr<Comp_SpriteSheet> spriteSheetComp, const float& deltaTime)
 {
 	if (!spriteSheetComp->isAnimated()) return;

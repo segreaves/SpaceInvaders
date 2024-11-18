@@ -38,8 +38,8 @@ void State_GameOver::onCreate()
 		m_gameOverText.getLocalBounds().left + m_gameOverText.getLocalBounds().width / 2.0f,
 		m_gameOverText.getLocalBounds().top + m_gameOverText.getLocalBounds().height / 2.0f
 	);
-	// options to tell player what to do
-	m_optionsText.setString({ "Press ENTER to restart or ESCAPE to exit" });
+	// player options text
+	m_optionsText.setString({ "Press SPACE to restart or ESC to exit" });
 	m_optionsText.setFont(m_font);
 	m_optionsText.setCharacterSize(75);
 	m_optionsText.setFillColor(APP_COLOR);
@@ -52,15 +52,15 @@ void State_GameOver::onCreate()
 
 void State_GameOver::activate()
 {
-	m_stateManager->getContext()->m_controller->m_onEnter.addCallback("GameOver_onEnter", std::bind(&State_GameOver::OnEnter, this));
+	m_stateManager->getContext()->m_controller->m_onSelect.addCallback("GameOver_onSelect", std::bind(&State_GameOver::OnSelect, this));
 }
 
 void State_GameOver::deactivate()
 {
-	m_stateManager->getContext()->m_controller->m_onEnter.removeCallback("GameOver_onEnter");
+	m_stateManager->getContext()->m_controller->m_onSelect.removeCallback("GameOver_onSelect");
 }
 
-void State_GameOver::OnEnter()
+void State_GameOver::OnSelect()
 {
 	m_stateManager->switchTo(StateType::Game);
 }

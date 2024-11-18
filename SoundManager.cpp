@@ -126,6 +126,23 @@ void SoundManager::removeState(StateType state)
 	m_audio.erase(state);
 }
 
+void SoundManager::turnOffSound()
+{
+	auto audio = m_audio.find(m_currentState);
+	if (audio == m_audio.end()) return;
+	if (audio->second.empty()) return;
+	for (auto& sound : audio->second)
+		sound.second.second->setVolume(0.f);
+}
+
+void SoundManager::setMusic(bool musicOn)
+{
+	auto music = m_music.find(m_currentState);
+	if (music == m_music.end()) return;
+	if (!music->second.second) return;
+	music->second.second->setVolume(musicOn ? music->second.first.m_volume : 0.f);
+}
+
 void SoundManager::purge()
 {
 	// clear sounds

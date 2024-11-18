@@ -77,32 +77,11 @@ void Sys_Collision::notify(const Message& msg)
 {
 }
 
-void Sys_Collision::onActorAdded(const ActorId& actorId)
-{
-	auto actor = m_systemManager->getActorManager()->getActor(actorId);
-	auto actorTag = actor->getTag();
-	// look for tag in actor groups. If not there, add it
-	if (m_actorGroups.find(actorTag) == m_actorGroups.end())
-		m_actorGroups.emplace(actorTag, std::vector<ActorId>());
-	// add actor to group
-	m_actorGroups[actorTag].emplace_back(actorId);
-}
-
 /// <summary>
 /// Detect collisions between actors. Not all actors can collide with one another, so we
 /// only need to check for collisions between certain actor groups.
 /// Once invaders have detected a collision, we can break the for loop, as this means that either
 /// the invader has been destroyed or the game has been lost.
-/// Collisions:
-/// - Player bullets -> Invaders
-/// - Invader bullets -> Player
-/// - Invaders -> Player
-/// - Invaders -> Bunkers
-/// - Shockwave -> Invaders
-/// - Bunkers -> Player bullets
-/// - Bunkers -> Invader bullets
-/// - Player bullets -> Invader bullets
-/// - Mystery Ship -> Player bullets
 /// </summary>
 void Sys_Collision::detectCollisions()
 {

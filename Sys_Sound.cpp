@@ -50,6 +50,7 @@ void Sys_Sound::debugOverlay(WindowManager* windowManager)
 
 void Sys_Sound::notify(const Message& msg)
 {
+	if (!m_soundOn) return;
 	if (!hasActor(msg.m_receiver)) return;
 	auto posComp = m_systemManager->getActorManager()->getActor(msg.m_receiver)->getComponent<Comp_Position>(ComponentType::Position);
 	std::string sound;
@@ -72,4 +73,11 @@ void Sys_Sound::notify(const Message& msg)
 			break;
 	}
 	m_systemManager->getActorManager()->getSoundManager()->playSound(sound);
+}
+
+void Sys_Sound::setSound(bool soundOn)
+{
+	m_soundOn = soundOn;
+	if (!m_soundOn)
+		m_systemManager->getActorManager()->getSoundManager()->turnOffSound();
 }

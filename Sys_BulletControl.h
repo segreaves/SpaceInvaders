@@ -5,6 +5,9 @@
 class SysManager;
 class LevelManager;
 
+/// <summary>
+/// Handles bullet de-spawning. Checks if bullets have left the screen or collided and destroys them.
+/// </summary>
 class Sys_BulletControl : public Sys
 {
 public:

@@ -15,7 +15,6 @@ private:
 	void deactivate() override;
 
 	sf::View m_view;
-	sf::Font m_font;
-	sf::Text m_text;
+	sf::Text m_titleText, m_instructionsText;
 	std::string m_continueInput = "Intro_Continue";
 };

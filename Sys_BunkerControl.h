@@ -5,6 +5,9 @@
 
 class SysManager;
 
+/// <summary>
+/// Manages the bunker damage system.
+/// </summary>
 class Sys_BunkerControl : public Sys
 {
 public:

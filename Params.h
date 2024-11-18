@@ -8,6 +8,6 @@
 #define M_PI 3.14159265358979323846f
 #define M_GRAVITY 9.8f
 #define M_DOWN sf::Vector2f(0, 1)
-#define DEBUG
+//#define DEBUG
 
 using Bitmask = std::bitset<MAX_COMPONENTS>;

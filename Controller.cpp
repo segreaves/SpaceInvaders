@@ -20,13 +20,17 @@ void Controller::handleEvent(sf::Event event)
 	if (event.type == sf::Event::KeyPressed)
 	{
 		if (event.key.code == sf::Keyboard::Space)
-			m_onShoot.dispatch();
-		else if (event.key.code == sf::Keyboard::Return)
-			m_onEnter.dispatch();
+			m_onSelect.dispatch();
 		else if (event.key.code == sf::Keyboard::Escape)
 			m_onEscape.dispatch();
 		else if (event.key.code == sf::Keyboard::P)
 			m_onPause.dispatch();
+		else if (event.key.code == sf::Keyboard::H)
+			m_onToggleHelp.dispatch();
+		else if (event.key.code == sf::Keyboard::S)
+			m_onToggleSound.dispatch();
+		else if (event.key.code == sf::Keyboard::M)
+			m_onToggleMusic.dispatch();
 		else if (event.key.code == sf::Keyboard::F5)
 			m_onToggleFullscreen.dispatch();
 	}

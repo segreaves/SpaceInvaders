@@ -13,7 +13,7 @@ private:
 	void activate() override;
 	void deactivate() override;
 
-	void OnEnter();
+	void OnSelect();
 	sf::RectangleShape m_panel;
 	sf::Text m_gameOverText;
 	sf::Text m_optionsText;

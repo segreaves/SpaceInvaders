@@ -14,26 +14,29 @@ void State_Intro::update(const float& deltaTime) {}
 void State_Intro::draw()
 {
 	sf::RenderWindow* window = m_stateManager->getContext()->m_windowManager->getRenderWindow();
-	window->draw(m_text);
+	window->draw(m_titleText);
+	window->draw(m_instructionsText);
 }
 
 void State_Intro::onCreate()
 {
-	// set up intro text
-	m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
-	m_text.setFont(m_font);
-	m_text.setString({ "SPACE INVADERS" });
-	m_text.setCharacterSize(150);
-	m_text.setFillColor(APP_COLOR);
-	sf::FloatRect textBounds = m_text.getLocalBounds();
-	m_text.setOrigin(
-		textBounds.left + textBounds.width / 2.0f,
-		textBounds.top + textBounds.height / 2.0f
-	);
 	WindowManager* windowManager = m_stateManager->getContext()->m_windowManager;
 	windowManager->getRenderWindow()->setView(m_view);
-	sf::Vector2f windowSize = windowManager->getCurrentViewSpace().getSize();
-	m_text.setPosition(windowSize.x / 2.0f, windowSize.y / 2.0f);
+	// set up intro text
+	m_titleText.setFont(m_font);
+	m_titleText.setString({ "SPACE INVADERS" });
+	m_titleText.setCharacterSize(250);
+	m_titleText.setFillColor(APP_COLOR);
+	sf::FloatRect titleBounds = m_titleText.getLocalBounds();
+	m_titleText.setOrigin(titleBounds.width / 2.f, titleBounds.top + titleBounds.height / 2.f);
+	m_titleText.setPosition(windowManager->getRenderWindow()->getView().getCenter());
+	// set up instructions text
+	m_instructionsText = m_titleText;
+	m_instructionsText.setString({ "Press SPACE to Start" });
+	m_instructionsText.setCharacterSize(75);
+	sf::FloatRect instBounds = m_instructionsText.getLocalBounds();
+	m_instructionsText.setOrigin(instBounds.width / 2.f, instBounds.height / 2.f);
+	m_instructionsText.setPosition(windowManager->getRenderWindow()->getView().getCenter().x, m_titleText.getPosition().y + 100.0f);
 
 	m_transparent = true;
 	// load music
@@ -42,15 +45,15 @@ void State_Intro::onCreate()
 
 void State_Intro::activate()
 {
-	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Intro_onContinue", std::bind(&State_Intro::onContinue, this));
+	m_stateManager->getContext()->m_controller->m_onSelect.addCallback("Intro_onContinue", std::bind(&State_Intro::onContinue, this));
 	m_stateManager->getContext()->m_windowManager->getRenderWindow()->setView(m_view);
 	// play music
-	//m_stateManager->getContext()->m_soundManager->playMusic("intro_music");
+	m_stateManager->getContext()->m_soundManager->playMusic("intro_music");
 }
 
 void State_Intro::deactivate()
 {
-	m_stateManager->getContext()->m_controller->m_onShoot.removeCallback("Intro_onContinue");
+	m_stateManager->getContext()->m_controller->m_onSelect.removeCallback("Intro_onContinue");
 }
 
 void State_Intro::onContinue()

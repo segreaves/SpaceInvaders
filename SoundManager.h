@@ -39,6 +39,9 @@ public:
 	void switchState(StateType state);
 	void removeState(StateType state);
 
+	void turnOffSound();
+	void setMusic(bool musicOn);
+
 	void purge();
 private:
 	void pauseAll(const StateType& state);

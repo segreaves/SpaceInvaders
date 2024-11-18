@@ -11,7 +11,8 @@ struct Context
 		m_windowManager(nullptr),
 		m_controller(nullptr),
 		m_actorManager(nullptr),
-		m_systemManager(nullptr)
+		m_systemManager(nullptr),
+		m_soundManager(nullptr)
 	{
 	}
 

@@ -51,14 +51,21 @@ void State_Game::draw()
 
 void State_Game::onCreate()
 {
+	sf::Vector2u windowSize = m_stateManager->getContext()->m_windowManager->getRenderWindow()->getSize();
 	m_gameView.setViewport(sf::FloatRect(0.15f, 0, 0.7f, 1));
+	m_hudView.setSize(static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
+	m_hudView.setCenter(static_cast<float>(windowSize.x) / 2, static_cast<float>(windowSize.y) / 2);
 	m_hudView.setViewport(sf::FloatRect(0, 0, 1, 1));
 
 	m_stateManager->getContext()->m_systemManager->setLevelManager(&m_levelManager);
-	setHUDStyle();
-	setWindowOutline();
-	m_stateManager->getContext()->m_soundManager->loadSoundProfile("assets/profiles/soundProfiles/game_state.sound");
 	m_levelManager.setViewSpace(getGameViewSpace());
+	initializeHUD();
+	initializeSoundHUD();
+	setupHelpPanel();
+	// load music
+	m_stateManager->getContext()->m_soundManager->loadSoundProfile("assets/profiles/soundProfiles/game_state.sound");
+	// play  music
+	m_stateManager->getContext()->m_soundManager->playMusic("game_music");
 }
 
 void State_Game::activate()
@@ -66,9 +73,11 @@ void State_Game::activate()
 	m_stateManager->getContext()->m_controller->m_onPause.addCallback("Game_onPause", std::bind(&StateManager::switchTo, m_stateManager, StateType::Paused));
 	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
+	m_stateManager->getContext()->m_controller->m_onToggleHelp.addCallback("Game_onToggleHelp", std::bind(&State_Game::onToggleHelp, this));
+	m_stateManager->getContext()->m_controller->m_onToggleSound.addCallback("Game_onToggleSound", std::bind(&State_Game::onToggleSound, this));
+	m_stateManager->getContext()->m_controller->m_onToggleMusic.addCallback("Game_onToggleMusic", std::bind(&State_Game::onToggleMusic, this));
 	if (m_newGame)
 		newGame();
-	//m_stateManager->getContext()->m_soundManager->playMusic("game_music");
 }
 
 void State_Game::deactivate()
@@ -76,6 +85,9 @@ void State_Game::deactivate()
 	m_stateManager->getContext()->m_controller->m_onPause.removeCallback("Game_onPause");
 	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onMove");
 	m_stateManager->getContext()->m_controller->m_onShoot.removeCallback("Game_onShoot");
+	m_stateManager->getContext()->m_controller->m_onToggleHelp.removeCallback("Game_onToggleHelp");
+	m_stateManager->getContext()->m_controller->m_onToggleSound.removeCallback("Game_onToggleSound");
+	m_stateManager->getContext()->m_controller->m_onToggleMusic.removeCallback("Game_onToggleMusic");
 }
 
 void State_Game::loadNextLevel()
@@ -104,6 +116,26 @@ void State_Game::onPlayerShoot()
 	m_stateManager->getContext()->m_systemManager->addEvent(m_levelManager.getPlayerId(), (EventId)ActorEventType::Shoot);
 }
 
+void State_Game::onToggleHelp()
+{
+	m_showHelp = !m_showHelp;
+}
+
+void State_Game::onToggleSound()
+{
+	m_soundOn = !m_soundOn;
+	auto soundSys = m_stateManager->getContext()->m_systemManager->getSystem<Sys_Sound>(SystemType::Sound);
+	soundSys->setSound(m_soundOn);
+	m_soundLed.setFillColor(m_soundOn ? APP_COLOR : sf::Color::Transparent);
+}
+
+void State_Game::onToggleMusic()
+{
+	m_musicOn = !m_musicOn;
+	m_stateManager->getContext()->m_soundManager->setMusic(m_musicOn);
+	m_musicLed.setFillColor(m_soundOn ? APP_COLOR : sf::Color::Transparent);
+}
+
 void State_Game::gameOverScreen()
 {
 	m_newGame = true;
@@ -122,11 +154,11 @@ void State_Game::newGame()
 
 void State_Game::updateHUD()
 {
-	m_scoreText.setString("Score: " + std::to_string(m_levelManager.getScore()));
-	m_levelText.setString("Level: " + std::to_string(m_levelManager.getLevel()));
-	m_livesText.setString("Lives: " + std::to_string(m_levelManager.getPlayerLives()));
-	m_killsText.setString("Kills: " + std::to_string(m_levelManager.getKills()));
-	m_fpsText.setString("FPS: " + std::to_string(m_fps));
+	m_scoreText.setString("Score:\n" + std::to_string(m_levelManager.getScore()));
+	m_levelText.setString("Level:\n" + std::to_string(m_levelManager.getLevel()));
+	m_livesText.setString("Lives:\n" + std::to_string(m_levelManager.getPlayerLives()));
+	m_killsText.setString("Kills:\n" + std::to_string(m_levelManager.getKills()));
+	m_fpsText.setString("FPS:\n" + std::to_string(m_fps));
 }
 
 void State_Game::drawGame()
@@ -145,52 +177,82 @@ void State_Game::drawHUD()
 	windowManager->getRenderWindow()->draw(m_livesText);
 	windowManager->getRenderWindow()->draw(m_killsText);
 	windowManager->getRenderWindow()->draw(m_fpsText);
+	windowManager->getRenderWindow()->draw(m_helpText);
+	windowManager->getRenderWindow()->draw(m_soundLed);
+	if (m_showHelp)
+	{
+		windowManager->getRenderWindow()->draw(m_helpPanel);
+		windowManager->getRenderWindow()->draw(m_helpPanelTitle);
+		windowManager->getRenderWindow()->draw(m_helpPanelText);
+	}
 }
 
-void State_Game::setHUDStyle()
+void State_Game::initializeHUD()
 {
-	m_scoreText.setFont(m_font);
-	m_scoreText.setCharacterSize(m_fontSize);
-	m_scoreText.setPosition(m_hudPadding, m_hudPadding);
-	m_scoreText.setFillColor(APP_COLOR);
-	m_levelText.setFont(m_font);
-	m_levelText.setCharacterSize(m_fontSize);
-	m_levelText.setPosition(m_hudPadding, m_hudPadding + m_fontSize);
-	m_levelText.setFillColor(APP_COLOR);
-	m_livesText.setFont(m_font);
-	m_livesText.setCharacterSize(m_fontSize);
-	m_livesText.setPosition(m_hudPadding, m_hudPadding + 2 * m_fontSize);
-	m_livesText.setFillColor(APP_COLOR);
-	m_killsText.setFont(m_font);
-	m_killsText.setCharacterSize(m_fontSize);
-	m_killsText.setPosition(m_hudPadding, m_hudPadding + 3 * m_fontSize);
-	m_killsText.setFillColor(APP_COLOR);
-	m_fpsText.setFont(m_font);
-	m_fpsText.setCharacterSize(m_fontSize);
-	m_fpsText.setPosition(m_hudPadding, m_hudPadding + 4 * m_fontSize);
-	m_fpsText.setFillColor(APP_COLOR);
+	setWindowOutline();
+	initializeHUDText(m_scoreText);
+	m_scoreText.setPosition(m_hudPadding.x, m_hudPadding.y);
+	initializeHUDText(m_levelText);
+	m_levelText.setPosition(m_hudPadding.x, m_hudPadding.y + m_fontSize);
+	initializeHUDText(m_livesText);
+	m_livesText.setPosition(m_hudPadding.x, m_hudPadding.y + 2 * m_fontSize);
+	initializeHUDText(m_killsText);
+	m_killsText.setPosition(m_hudPadding.x, m_hudPadding.y + 3 * m_fontSize);
+	initializeHUDText(m_fpsText);
+	m_fpsText.setPosition(m_hudPadding.x, m_hudPadding.y + 4 * m_fontSize);
+	initializeHUDText(m_helpText);
+	m_helpText.setPosition(m_hudPadding.x, m_levelManager.getViewSpace().height - 2 * m_fontSize);
+	m_helpText.setString("HELP (H)");
+}
+
+void State_Game::initializeSoundHUD()
+{
+	m_soundLed = sf::RectangleShape(ledSize);
+	m_soundLed.setFillColor(APP_COLOR);
+	m_soundLed.setPosition(m_hudView.getCenter());
+}
+
+void State_Game::initializeHUDText(sf::Text& text)
+{
+	text.setFont(m_font);
+	text.setCharacterSize(m_fontSize);
+	text.setFillColor(APP_COLOR);
 }
 
 void State_Game::setWindowOutline()
 {
-	float outlineThickness = 2;
-	m_background.setSize(m_gameView.getSize() - sf::Vector2f(2 * outlineThickness, 2 * outlineThickness));
-	m_background.setPosition(outlineThickness, outlineThickness);
+	m_background.setSize(m_gameView.getSize() - sf::Vector2f(2 * m_outlineThickness, 2 * m_outlineThickness));
+	m_background.setPosition(m_levelManager.getScreenCenter() - m_background.getSize() / 2.f);
 	m_background.setFillColor(sf::Color::Transparent);
 	m_background.setOutlineColor(APP_COLOR);
-	m_background.setOutlineThickness(outlineThickness);
+	m_background.setOutlineThickness(m_outlineThickness);
+}
+
+void State_Game::setupHelpPanel()
+{
+	m_helpPanel.setSize(m_helpPanelSize);
+	m_helpPanel.setOrigin(m_helpPanel.getSize() / 2.f);
+	m_helpPanel.setPosition(m_hudView.getCenter());
+	m_helpPanel.setFillColor(BGD_COLOR);
+	m_helpPanel.setOutlineColor(APP_COLOR);
+	m_helpPanel.setOutlineThickness(m_outlineThickness);
+	m_helpPanelTitle.setFont(m_font);
+	m_helpPanelTitle.setCharacterSize(m_fontSize + 20);
+	m_helpPanelTitle.setString("HELP");
+	m_helpPanelTitle.setOrigin(m_helpPanelTitle.getLocalBounds().width / 2.f, m_helpPanelTitle.getLocalBounds().height / 2.f);
+	m_helpPanelTitle.setFillColor(APP_COLOR);
+	m_helpPanelTitle.setPosition(m_helpPanel.getPosition().x, m_helpPanel.getPosition().y - m_helpPanel.getSize().y / 2.f);
+	m_helpPanelText.setFont(m_font);
+	m_helpPanelText.setCharacterSize(m_fontSize);
+	m_helpPanelText.setString("Move (Mouse)\nShoot (Mouse L)\nPause (P)\nHelp (H)\nMusic (M)\nSound (S)");
+	m_helpPanelText.setFillColor(APP_COLOR);
+	m_helpPanelText.setOrigin(m_helpPanelText.getLocalBounds().width / 2.f, m_helpPanelText.getLocalBounds().height / 2.f);
+	m_helpPanelText.setPosition(m_helpPanel.getPosition().x, m_helpPanel.getPosition().y);
 }
 
 sf::FloatRect State_Game::getGameViewSpace()
 {
 	sf::Vector2f viewCenter = m_gameView.getCenter();
 	sf::Vector2f viewSize = m_gameView.getSize();
-	return sf::FloatRect(viewCenter - viewSize / 2.f, viewSize);
-}
-
-sf::FloatRect State_Game::getHUDViewSpace()
-{
-	sf::Vector2f viewCenter = m_hudView.getCenter();
-	sf::Vector2f viewSize = m_hudView.getSize();
 	return sf::FloatRect(viewCenter - viewSize / 2.f, viewSize);
 }

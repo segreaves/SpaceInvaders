@@ -98,9 +98,12 @@ void Sys_BunkerControl::damageBunker(const ActorId& actorId, const ActorId& othe
 		static_cast<int>(std::ceil(localIntersect.left + localIntersect.width)),
 		static_cast<int>(std::ceil(localIntersect.top + localIntersect.height)));
 
-	// check for collision against non-transparent pixels
+	// check for collision against non-transparent pixels. If true, instantiate damage
 	if (nonTransparentPixels(start.x, end.x, start.y, end.y, image))
 	{
+		// turn off pixels in the overlap between the two actors
+		turnOffPixels(start.x, end.x, start.y, end.y, image);
+
 		// position at which to initiate explosion
 		sf::Vector2f rayOrigin = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Position>(ComponentType::Position)->getPosition();
 		const unsigned int rayNum = 20;
