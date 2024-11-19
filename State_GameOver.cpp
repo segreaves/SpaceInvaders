@@ -31,7 +31,7 @@ void State_GameOver::onCreate()
 	// game over text
 	m_gameOverText.setString({ "GAME OVER" });
 	m_gameOverText.setFont(m_font);
-	m_gameOverText.setCharacterSize(150);
+	m_gameOverText.setCharacterSize(350);
 	m_gameOverText.setFillColor(APP_COLOR);
 	m_gameOverText.setPosition(windowManager->getCurrentViewSpace().getSize().x / 2.0f, windowManager->getCurrentViewSpace().getSize().y / 2.0f);
 	m_gameOverText.setOrigin(
@@ -39,11 +39,11 @@ void State_GameOver::onCreate()
 		m_gameOverText.getLocalBounds().top + m_gameOverText.getLocalBounds().height / 2.0f
 	);
 	// player options text
-	m_optionsText.setString({ "Press SPACE to restart or ESC to exit" });
+	m_optionsText.setString({ "Restart (SPACE) - Exit (ESC)" });
 	m_optionsText.setFont(m_font);
-	m_optionsText.setCharacterSize(75);
+	m_optionsText.setCharacterSize(m_fontSize);
 	m_optionsText.setFillColor(APP_COLOR);
-	m_optionsText.setPosition(windowManager->getCurrentViewSpace().getSize().x / 2.0f, windowManager->getCurrentViewSpace().getSize().y / 2.0f + 50);
+	m_optionsText.setPosition(windowManager->getCurrentViewSpace().getSize().x / 2.0f, m_gameOverText.getPosition().y + 100);
 	m_optionsText.setOrigin(
 		m_optionsText.getLocalBounds().left + m_optionsText.getLocalBounds().width / 2.0f,
 		m_optionsText.getLocalBounds().top + m_optionsText.getLocalBounds().height / 2.0f

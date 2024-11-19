@@ -29,6 +29,8 @@ protected:
 	virtual void deactivate() = 0;
 
 	StateManager* m_stateManager;
+	sf::View m_fullWindowView;
 	bool m_transparent;
 	sf::Font m_font;
+	float m_fontSize = 100.f;
 };

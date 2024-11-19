@@ -6,7 +6,6 @@
 State_Intro::State_Intro(StateManager* stateManager) :
 	State(stateManager)
 {
-	m_view.setViewport(sf::FloatRect(0, 0, 1, 1));
 }
 
 void State_Intro::update(const float& deltaTime) {}
@@ -21,22 +20,21 @@ void State_Intro::draw()
 void State_Intro::onCreate()
 {
 	WindowManager* windowManager = m_stateManager->getContext()->m_windowManager;
-	windowManager->getRenderWindow()->setView(m_view);
 	// set up intro text
 	m_titleText.setFont(m_font);
 	m_titleText.setString({ "SPACE INVADERS" });
-	m_titleText.setCharacterSize(250);
+	m_titleText.setCharacterSize(350);
 	m_titleText.setFillColor(APP_COLOR);
 	sf::FloatRect titleBounds = m_titleText.getLocalBounds();
 	m_titleText.setOrigin(titleBounds.width / 2.f, titleBounds.top + titleBounds.height / 2.f);
 	m_titleText.setPosition(windowManager->getRenderWindow()->getView().getCenter());
 	// set up instructions text
 	m_instructionsText = m_titleText;
-	m_instructionsText.setString({ "Press SPACE to Start" });
-	m_instructionsText.setCharacterSize(75);
+	m_instructionsText.setString({ "Start (SPACE)" });
+	m_instructionsText.setCharacterSize(m_fontSize);
 	sf::FloatRect instBounds = m_instructionsText.getLocalBounds();
 	m_instructionsText.setOrigin(instBounds.width / 2.f, instBounds.height / 2.f);
-	m_instructionsText.setPosition(windowManager->getRenderWindow()->getView().getCenter().x, m_titleText.getPosition().y + 100.0f);
+	m_instructionsText.setPosition(windowManager->getRenderWindow()->getView().getCenter().x, m_titleText.getPosition().y + 40);
 
 	m_transparent = true;
 	// load music
@@ -46,7 +44,6 @@ void State_Intro::onCreate()
 void State_Intro::activate()
 {
 	m_stateManager->getContext()->m_controller->m_onSelect.addCallback("Intro_onContinue", std::bind(&State_Intro::onContinue, this));
-	m_stateManager->getContext()->m_windowManager->getRenderWindow()->setView(m_view);
 	// play music
 	m_stateManager->getContext()->m_soundManager->playMusic("intro_music");
 }

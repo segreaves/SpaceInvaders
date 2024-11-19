@@ -30,7 +30,7 @@ void State_Paused::onCreate()
 
 	m_pausedText.setString({ "PAUSED" });
 	m_pausedText.setFont(m_font);
-	m_pausedText.setCharacterSize(75);
+	m_pausedText.setCharacterSize(m_fontSize);
 	m_pausedText.setFillColor(APP_COLOR);
 	m_pausedText.setPosition(windowManager->getCurrentViewSpace().getSize().x / 2.0f, windowManager->getCurrentViewSpace().getSize().y / 2.0f);
 	m_pausedText.setOrigin(

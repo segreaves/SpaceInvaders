@@ -28,6 +28,8 @@ private:
 	void onPlayerMove(sf::Vector2f xy);
 	void onPlayerShoot();
 	void onToggleHelp();
+	void setSound(bool soundOn);
+	void setMusic(bool musicOn);
 	void onToggleSound();
 	void onToggleMusic();
 	void gameOverScreen();
@@ -37,7 +39,6 @@ private:
 	void drawGame();
 	void drawHUD();
 	void initializeHUD();
-	void initializeSoundHUD();
 	void initializeHUDText(sf::Text& text);
 	void setWindowOutline();
 	void setupHelpPanel();
@@ -45,7 +46,7 @@ private:
 
 	LevelManager m_levelManager;
 	sf::View m_gameView;
-	sf::View m_hudView;
+	sf::View m_view;
 	bool m_newGame;
 	unsigned int m_fps;
 	sf::RectangleShape m_background;
@@ -55,21 +56,18 @@ private:
 	unsigned int m_outlineThickness = 3;
 	float m_hudUpdateTimer;
 	const float m_hudUpdateInterval = 0.2f;
-	float m_fontSize = 100.f;
-	sf::Vector2f m_hudPadding = { 50.f, 100.f };
+	sf::Vector2f m_hudPadding = { 50.f, 50.f };
 	sf::Text m_scoreText;
 	sf::Text m_levelText;
 	sf::Text m_livesText;
 	sf::Text m_killsText;
 	sf::Text m_fpsText;
 	sf::Text m_helpText;
+	sf::Text m_soundText;
+	sf::Text m_musicText;
 	// help panel
 	bool m_showHelp = false;
 	sf::RectangleShape m_helpPanel;
 	sf::Vector2f m_helpPanelSize = { 400, 550 };
 	sf::Text m_helpPanelTitle, m_helpPanelText;
-	// sound setting HUD
-	sf::Vector2f ledSize = { 20, 20 };
-	sf::RectangleShape m_soundLed;
-	sf::RectangleShape m_musicLed;
 };

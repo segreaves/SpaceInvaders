@@ -37,8 +37,6 @@ protected:
 
 	void purge();
 
-	virtual void onActorAdded(const ActorId& actorId) {}
-
 	std::vector<Bitmask> m_requirements;
 	std::vector<ActorId> m_actorIds;
 	SysManager* m_systemManager;
