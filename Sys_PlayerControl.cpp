@@ -100,31 +100,17 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 		const int bulletId = m_systemManager->getLevelManager()->getPlayerBulletIds()[m_playerBulletIndex];
 		m_playerBulletIndex = (m_playerBulletIndex + 1) % m_systemManager->getLevelManager()->getPlayerBulletIds().size();
 		ActorManager* actorManager = m_systemManager->getActorManager();
-		const auto& bullet = actorManager->getActor(bulletId);
-		// shooter components
-		const auto& shooter = actorManager->getActor(actorId);
-		const auto& shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
-		const auto& shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
-		// bullet components
-		const auto& bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
-		const auto& bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
-		const auto& bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
-		// set bullet just above player
-		sf::Vector2f shootDirection(0, bulletComp->getDirection());
-		sf::Vector2f bulletPosition = shooterPos->getPosition() + shootDirection * (bulletCol->getAABB().height / 2.f + shooterCol->getAABB().height / 2.f);
-		bulletPos->setPosition(bulletPosition);
 		// enable bullet
 		actorManager->enableActor(bulletId);
+		// message bullet
+		Message msg((MessageType)ActorMessageType::Shoot);
+		msg.m_sender = actorId;
+		msg.m_receiver = bulletId;
+		m_systemManager->getMessageHandler()->dispatch(msg);
 		// knock-back
 		float knockback = 700000;
-		auto moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
-		moveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
-		// play sound
-		Message msg((MessageType)ActorMessageType::Sound);
-		msg.m_sender = actorId;
-		msg.m_receiver = actorId;
-		msg.m_int = (int)SoundType::PlayerShoot;
-		m_systemManager->getMessageHandler()->dispatch(msg);
+		const auto& moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
+		moveComp->accelerate(sf::Vector2f(0, -knockback * -1));
 		break;
 	}
 	case ActorEventType::Despawned:

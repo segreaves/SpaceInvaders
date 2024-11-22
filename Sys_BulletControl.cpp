@@ -33,11 +33,13 @@ void Sys_BulletControl::setupRequirements()
 void Sys_BulletControl::subscribeToChannels()
 {
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
+	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Shoot, this);
 }
 
 void Sys_BulletControl::unsubscribeFromChannels()
 {
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
+	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Shoot, this);
 }
 
 void Sys_BulletControl::update(const float& deltaTime)
@@ -83,12 +85,14 @@ void Sys_BulletControl::handleEvent(const ActorId& actorId, const ActorEventType
 	{
 	case ActorEventType::Spawned:
 	{
+		// play sound
+		Message msg((MessageType)ActorMessageType::Sound);
+		msg.m_sender = actorId;
+		msg.m_receiver = actorId;
 		const auto& actor = m_systemManager->getActorManager()->getActor(actorId);
-		const auto& bulletComp = actor->getComponent<Comp_Bullet>(ComponentType::Bullet);
-		const auto& bulletMove = actor->getComponent<Comp_Movement>(ComponentType::Movement);
-		bulletComp->resetBulletFrameTime();
-		sf::Vector2f direction(0, bulletComp->getDirection());
-		bulletMove->setVelocity(direction * bulletComp->getBulletSpeed());
+		const auto& tag = actor->getTag();
+		msg.m_int = static_cast<int>(tag == "bullet_player" ? SoundType::PlayerShoot : SoundType::InvaderShoot);
+		m_systemManager->getMessageHandler()->dispatch(msg);
 		break;
 	}
 	case ActorEventType::Despawned:
@@ -113,6 +117,29 @@ void Sys_BulletControl::notify(const Message& msg)
 		onBulletDestroyed(msg.m_receiver);
 		m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
 		break;
+	case ActorMessageType::Shoot:
+	{
+		const auto& bullet = m_systemManager->getActorManager()->getActor(msg.m_receiver);
+		const auto& shooter = m_systemManager->getActorManager()->getActor(msg.m_sender);
+		// shooter components
+		const auto& shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
+		// bullet components
+		const auto& bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
+		const auto& bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
+		const auto& bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
+		// set bullet just above player
+		sf::Vector2f shootDirection(0, bulletComp->getDirection());
+		sf::Vector2f bulletPosition = shooterPos->getPosition() + shootDirection * (bulletCol->getAABB().height / 2.f + shooterCol->getAABB().height / 2.f);
+		bulletPos->setPosition(bulletPosition);
+		// set bullet velocity and direction
+		sf::Vector2f direction(0, bulletComp->getDirection());
+		bulletMove->setVelocity(direction * bulletComp->getBulletSpeed());
+		// initiate bullet animation
+		bulletComp->resetBulletFrameTime();
+		break;
+	}
 	}
 }
 

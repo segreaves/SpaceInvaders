@@ -6,6 +6,7 @@ enum class SoundType
 	PlayerHit,
 	PlayerExplode,
 	InvaderShoot,
+	InvaderSpawn,
 	InvaderExplode,
 	MysteryShipFly,
 	MysteryShipExplode,

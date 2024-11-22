@@ -138,48 +138,45 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 	if (!hasActor(actorId)) return;
 	switch (eventId)
 	{
-		case ActorEventType::Despawned:
+	case ActorEventType::Spawned:
+	{
+		// play sound
+		Message msg((MessageType)ActorMessageType::Sound);
+		msg.m_sender = actorId;
+		msg.m_receiver = actorId;
+		msg.m_int = (int)SoundType::InvaderSpawn;
+		m_systemManager->getMessageHandler()->dispatch(msg);
+		break;
+	}
+	case ActorEventType::Despawned:
+	{
+		onInvaderDeath(actorId);
+		if (!m_actorIds.empty())
 		{
-			onInvaderDeath(actorId);
-			if (!m_actorIds.empty())
-			{
-				selectTrackedInvaders();
-				setInvaderSpeed(m_aiSpeed + m_systemManager->getLevelManager()->getKillSpeedIncrease());
-			}
-			break;
+			selectTrackedInvaders();
+			setInvaderSpeed(m_aiSpeed + m_systemManager->getLevelManager()->getKillSpeedIncrease());
 		}
-		case ActorEventType::Shoot:
-		{
-			const int bulletId = m_systemManager->getLevelManager()->getInvaderBulletIds()[m_invaderBulletIndex];
-			m_invaderBulletIndex = (m_invaderBulletIndex + 1) % m_systemManager->getLevelManager()->getPlayerBulletIds().size();
-			ActorManager* actorManager = m_systemManager->getActorManager();
-			const auto& bullet = actorManager->getActor(bulletId);
-			// shooter components
-			const auto& shooter = actorManager->getActor(actorId);
-			const auto& shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
-			const auto& shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
-			const auto& shooterMoveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
-			// bullet components
-			const auto& bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
-			const auto& bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
-			const auto& bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
-			// set bullet just below invader
-			sf::Vector2f shootDirection(0, bulletComp->getDirection());
-			sf::Vector2f bulletPosition = shooterPos->getPosition() + shootDirection * (bulletCol->getAABB().getSize().y / 2 + shooterCol->getAABB().getSize().y / 2.f);
-			bulletPos->setPosition(bulletPosition);
-			// enable bullet
-			actorManager->enableActor(bulletId);
-			// knock-back
-			float knockback = 50000;
-			shooterMoveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
-			// play sound
-			Message msg((MessageType)ActorMessageType::Sound);
-			msg.m_sender = actorId;
-			msg.m_receiver = actorId;
-			msg.m_int = (int)SoundType::InvaderShoot;
-			m_systemManager->getMessageHandler()->dispatch(msg);
-			break;
-		}
+		break;
+	}
+	case ActorEventType::Shoot:
+	{
+		const int bulletId = m_systemManager->getLevelManager()->getInvaderBulletIds()[m_invaderBulletIndex];
+		m_invaderBulletIndex = (m_invaderBulletIndex + 1) % m_systemManager->getLevelManager()->getPlayerBulletIds().size();
+		ActorManager* actorManager = m_systemManager->getActorManager();
+		// shooter components
+		const auto& moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
+		// enable bullet
+		actorManager->enableActor(bulletId);
+		// message bullet
+		Message msg((MessageType)ActorMessageType::Shoot);
+		msg.m_sender = actorId;
+		msg.m_receiver = bulletId;
+		m_systemManager->getMessageHandler()->dispatch(msg);
+		// knock-back
+		float knockback = 50000;
+		moveComp->accelerate(sf::Vector2f(0, -knockback * 1));
+		break;
+	}
 	}
 }
 
