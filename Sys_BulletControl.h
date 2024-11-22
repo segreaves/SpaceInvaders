@@ -7,6 +7,7 @@ class LevelManager;
 
 /// <summary>
 /// Handles bullet de-spawning. Checks if bullets have left the screen or collided and destroys them.
+/// Updates the bullet frame depending on the bullet's frame duration.
 /// </summary>
 class Sys_BulletControl : public Sys
 {

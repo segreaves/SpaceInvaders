@@ -32,7 +32,7 @@ public:
 	void createBunkers();
 	void createShockwaves();
 	void createPlayerExplosion();
-	int getTotalInvaders() const { return m_invaderCols * m_invaderProfiles.size(); }
+	int getTotalInvaders() const { return m_invaderCols * static_cast<int>(m_invaderProfiles.size()); }
 	ActorId& getPlayerId() { return m_playerId; }
 	std::vector<ActorId>& getInvaderIds() { return m_invaders; }
 	std::vector<ActorId>& getPlayerBulletIds() { return m_playerBullets; }

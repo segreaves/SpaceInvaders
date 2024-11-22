@@ -171,7 +171,6 @@
     <ClCompile Include="State_Paused.cpp" />
     <ClCompile Include="Sys.cpp" />
     <ClCompile Include="SysManager.cpp" />
-    <ClCompile Include="Sys_Animator.cpp" />
     <ClCompile Include="Sys_BunkerControl.cpp" />
     <ClCompile Include="Sys_Gravity.cpp" />
     <ClCompile Include="Sys_Health.cpp" />
@@ -235,7 +234,6 @@
     <ClInclude Include="StateType.h" />
     <ClInclude Include="State_GameOver.h" />
     <ClInclude Include="State_Paused.h" />
-    <ClInclude Include="Sys_Animator.h" />
     <ClInclude Include="Sys_BunkerControl.h" />
     <ClInclude Include="Sys_Gravity.h" />
     <ClInclude Include="Sys_Health.h" />

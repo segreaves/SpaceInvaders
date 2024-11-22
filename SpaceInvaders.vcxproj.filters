@@ -150,9 +150,6 @@
     <ClCompile Include="Sys_ShockwaveControl.cpp">
       <Filter>Source Files\Core\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Sys_Animator.cpp">
-      <Filter>Source Files\Core\ECS\Systems</Filter>
-    </ClCompile>
     <ClCompile Include="State_Paused.cpp">
       <Filter>Source Files\Core\Engine States</Filter>
     </ClCompile>
@@ -333,9 +330,6 @@
       <Filter>Header Files\Core\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="Sys_ShockwaveControl.h">
-      <Filter>Header Files\Core\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Sys_Animator.h">
       <Filter>Header Files\Core\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="OriginType.h">

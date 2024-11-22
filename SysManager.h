@@ -10,7 +10,6 @@
 #include "Sys_BulletControl.h"
 #include "Sys_BunkerControl.h"
 #include "Sys_ShockwaveControl.h"
-#include "Sys_Animator.h"
 #include "Sys_Health.h"
 #include "Sys_LevelState.h"
 #include "Sys_Sound.h"

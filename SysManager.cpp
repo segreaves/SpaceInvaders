@@ -15,7 +15,6 @@ SysManager::SysManager() :
 	m_systems[SystemType::ShockwaveControl] = new Sys_ShockwaveControl(this);
 	m_systems[SystemType::Collision] = new Sys_Collision(this);
 	m_systems[SystemType::BunkerControl] = new Sys_BunkerControl(this);
-	//m_systems[SystemType::Animator] = new Sys_Animator(this);
 	m_systems[SystemType::Renderer] = new Sys_Renderer(this);
 	m_systems[SystemType::LevelState] = new Sys_LevelState(this);
 	m_systems[SystemType::Sound] = new Sys_Sound(this);
@@ -36,7 +35,6 @@ SysManager::SysManager() :
 		SystemType::TorqueSpring,
 		SystemType::Rotation,
 		SystemType::Collision,
-		//SystemType::Animator,
 		SystemType::Sound,
 		SystemType::Health,
 		SystemType::LevelState,
