@@ -94,6 +94,7 @@ void ActorManager::enableActor(const ActorId& id)
 {
 	getActor(id)->setEnabled(true);
 	m_systemManager->actorModified(id, *getActor(id)->getComponentBitmask());
+	m_systemManager->addEvent(id, (EventId)ActorEventType::Spawned);
 }
 
 void ActorManager::enableAllActors()
@@ -259,6 +260,5 @@ unsigned int ActorManager::loadActorProfile(const std::string actorName, const s
 			std::cerr << "Unknown attribute: " << attr << std::endl;
 	}
 	file.close();
-	m_systemManager->addEvent(actorId, (EventId)ActorEventType::Spawned);
 	return actorId;
 }

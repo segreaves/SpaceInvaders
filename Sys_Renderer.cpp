@@ -22,15 +22,16 @@ void Sys_Renderer::update(const float& deltaTime)
 {
 	for (auto& id : m_actorIds)
 	{
-		auto actor = m_systemManager->getActorManager()->getActor(id);
-		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		auto spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		const auto& actor = m_systemManager->getActorManager()->getActor(id);
+		const auto& posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		if (spriteSheetComp)
 		{
+			spriteSheetComp->cropSprite();
 			spriteSheetComp->updatePosition(posComp->getPosition());
 			spriteSheetComp->updateRotation(posComp->getAngle());
 		}
-		auto particlesComp = actor->getComponent<Comp_Particles>(ComponentType::Particles);
+		const auto& particlesComp = actor->getComponent<Comp_Particles>(ComponentType::Particles);
 		if (particlesComp)
 			particlesComp->getParticleSystem()->update(deltaTime);
 	}

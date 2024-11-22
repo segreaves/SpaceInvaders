@@ -2,6 +2,7 @@
 #include "Sys.h"
 #include "LevelManager.h"
 #include <random>
+#include <queue>
 
 class LevelManager;
 
@@ -14,18 +15,24 @@ class Sys_InvaderControl : public Sys
 public:
 	Sys_InvaderControl(SysManager* systemManager);
 	~Sys_InvaderControl();
+
+	void queueInvaders(std::vector<ActorId>& invaders);
 protected:
 	void start();
+	void loadInvader(const ActorId& id);
 	void setupRequirements();
 	void subscribeToChannels();
 	void unsubscribeFromChannels();
 
 	void update(const float& deltaTime);
+	bool updateBeat(const float& deltaTime);
+	void loadNextInvader(const float& deltaTime);
 	void handleEvent(const ActorId& actorId, const ActorEventType& eventId);
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
 private:
+	void handleInvaders(const float& deltaTime);
 	void selectTrackedInvaders();
 	void instantiateShockwave(sf::Vector2f position);
 	void handleAITargetMovement(const float& deltaTime);
@@ -47,6 +54,11 @@ private:
 	ActorId m_rightInvader;
 	const float m_dropDistance = 32.f;
 	const float m_bounds = 20.f;
+	std::queue<ActorId> m_invaderQueue = std::queue<ActorId>();
+	const float m_invaderLoadTime = 0.02f;
+	float m_loadTimer;
+	float m_beatDuration;
+	float m_beatTimer;
 
 	std::random_device m_rd;
 	std::mt19937 m_gen; // Mersenne Twister engine

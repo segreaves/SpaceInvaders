@@ -5,6 +5,8 @@
 Sys::Sys(SysManager* systemManager) :
 	m_systemManager(systemManager)
 {
+	m_actorIds.reserve(MAX_ACTORS);
+	m_requirements.reserve(MAX_REQUIREMENTS);
 }
 
 Sys::~Sys()
@@ -13,7 +15,6 @@ Sys::~Sys()
 
 void Sys::onCreate()
 {
-	m_requirements = std::vector<Bitmask>();
 	setupRequirements();
 	subscribeToChannels();
 }
@@ -41,8 +42,7 @@ bool Sys::removeActor(const ActorId& actor)
 
 bool Sys::hasActor(const ActorId& actor)
 {
-	if (std::find(m_actorIds.begin(), m_actorIds.end(), actor) != m_actorIds.end()) return true;
-	return false;
+	return std::find(m_actorIds.begin(), m_actorIds.end(), actor) != m_actorIds.end();
 }
 
 bool Sys::fitsRequirements(const Bitmask& mask)

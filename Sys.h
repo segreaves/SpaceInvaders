@@ -37,7 +37,7 @@ protected:
 
 	void purge();
 
-	std::vector<Bitmask> m_requirements;
-	std::vector<ActorId> m_actorIds;
+	std::vector<Bitmask> m_requirements = std::vector<Bitmask>();
+	std::vector<ActorId> m_actorIds = std::vector<ActorId>();
 	SysManager* m_systemManager;
 };

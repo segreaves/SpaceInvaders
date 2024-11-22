@@ -14,10 +14,12 @@ Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	m_invaderBulletIndex(0),
 	m_leftInvader(-1),
 	m_rightInvader(-1),
-	m_shockwaveIndex(0)
+	m_shockwaveIndex(0),
+	m_loadTimer(0),
+	m_beatDuration(0.5f),
+	m_beatTimer(0)
 {
 	onCreate();
-	m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
 }
 
 Sys_InvaderControl::~Sys_InvaderControl()
@@ -55,38 +57,79 @@ void Sys_InvaderControl::start()
 	auto levelManager = m_systemManager->getLevelManager();
 	m_aiTarget = levelManager->getScreenCenter();
 	setInvaderSpeed(levelManager->getLevelBaseSpeed());
+	// set beat duration: 1 per sec at base speed, then decreases as speed increases
+	m_beatDuration = m_systemManager->getLevelManager()->getLevelBaseSpeed() / m_systemManager->getLevelManager()->getInvaderBaseSpeed();
+	m_beatTimer = 0;
+}
 
-	for (auto& id : m_actorIds)
-	{
-		auto invader = m_systemManager->getActorManager()->getActor(id);
-		auto invComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
-		auto posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
-		auto targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
-		auto moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
-		targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
-		posComp->setPosition(targetComp->getTarget());
-		moveComp->setVelocity(sf::Vector2f(0, 0));
-	}
-	selectTrackedInvaders();
+void Sys_InvaderControl::loadInvader(const ActorId& id)
+{
+	const auto& invader = m_systemManager->getActorManager()->getActor(id);
+	const auto& invComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
+	const auto& posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
+	const auto& targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
+	const auto& moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
+	targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
+	posComp->setPosition(targetComp->getTarget());
+	moveComp->setVelocity(sf::Vector2f(0, 0));
+	m_systemManager->getActorManager()->enableActor(id);
 }
 
 void Sys_InvaderControl::update(const float& deltaTime)
 {
+	// load invaders or update them
+	if (m_invaderQueue.empty())
+		handleInvaders(deltaTime);
+	else
+		loadNextInvader(deltaTime);
+}
+
+bool Sys_InvaderControl::updateBeat(const float& deltaTime)
+{
+	// update beat timer
+	m_beatTimer -= deltaTime;
+	if (m_beatTimer > 0) return false;
+	// reset timer
+	m_beatTimer = m_beatDuration;
+	// send message to update animation frame
+	Message msg((MessageType)ActorMessageType::Beat);
+	m_systemManager->getMessageHandler()->dispatch(msg);
+	return true;
+}
+
+void Sys_InvaderControl::loadNextInvader(const float& deltaTime)
+{
+	m_loadTimer += deltaTime;
+	if (m_loadTimer < m_invaderLoadTime) return;
+	loadInvader(m_invaderQueue.front());
+	m_invaderQueue.pop();
+	m_loadTimer = 0;
+	// if all invaders are loaded, select ones to track
+	if (m_invaderQueue.empty())
+		selectTrackedInvaders();
+}
+
+void Sys_InvaderControl::handleInvaders(const float& deltaTime)
+{
 	if (m_actorIds.empty()) return;
 	handleAITargetMovement(deltaTime);
+	bool beat = updateBeat(deltaTime);
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	for (auto& id : m_actorIds)
 	{
-		auto invader = actorManager->getActor(id);
-		auto invComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
-		auto targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
-		auto colComp = invader->getComponent<Comp_Collision>(ComponentType::Collision);
+		const auto& invader = actorManager->getActor(id);
+		const auto& invComp = invader->getComponent<Comp_Invader>(ComponentType::Invader);
+		const auto& targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
+		const auto& colComp = invader->getComponent<Comp_Collision>(ComponentType::Collision);
+		const auto& spriteSheetComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 
 		// update the target position
 		updateMoveTarget(deltaTime, id, targetComp, invComp);
 		tryShooting(deltaTime, id, invComp);
 		if (id == m_leftInvader || id == m_rightInvader)
 			checkBounds(deltaTime, id, targetComp, colComp);
+		if (beat)
+			spriteSheetComp->frameStep();
 	}
 }
 
@@ -110,24 +153,25 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 			const int bulletId = m_systemManager->getLevelManager()->getInvaderBulletIds()[m_invaderBulletIndex];
 			m_invaderBulletIndex = (m_invaderBulletIndex + 1) % m_systemManager->getLevelManager()->getPlayerBulletIds().size();
 			ActorManager* actorManager = m_systemManager->getActorManager();
-			actorManager->enableActor(bulletId);
-			sf::Vector2f shootDirection(0, 1);
-			auto bullet = actorManager->getActor(bulletId);
-			auto shooter = actorManager->getActor(actorId);
-			auto shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
-			auto shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
+			const auto& bullet = actorManager->getActor(bulletId);
+			// shooter components
+			const auto& shooter = actorManager->getActor(actorId);
+			const auto& shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
+			const auto& shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
+			const auto& shooterMoveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
+			// bullet components
+			const auto& bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
+			const auto& bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
+			const auto& bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
 			// set bullet just below invader
-			auto bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
-			auto bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
-			bulletPos->setPosition(shooterPos->getPosition() +
-				shootDirection * (bulletCol->getAABB().getSize().y / 2 + shooterCol->getAABB().getSize().y / 2.f));
-			auto bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
-			auto bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
-			bulletMove->setVelocity(shootDirection * bulletComp->getBulletSpeed());
+			sf::Vector2f shootDirection(0, bulletComp->getDirection());
+			sf::Vector2f bulletPosition = shooterPos->getPosition() + shootDirection * (bulletCol->getAABB().getSize().y / 2 + shooterCol->getAABB().getSize().y / 2.f);
+			bulletPos->setPosition(bulletPosition);
+			// enable bullet
+			actorManager->enableActor(bulletId);
 			// knock-back
 			float knockback = 50000;
-			auto moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
-			moveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
+			shooterMoveComp->accelerate(sf::Vector2f(0, -knockback * shootDirection.y));
 			// play sound
 			Message msg((MessageType)ActorMessageType::Sound);
 			msg.m_sender = actorId;
@@ -174,6 +218,7 @@ void Sys_InvaderControl::notify(const Message& msg)
 	switch (msgType)
 	{
 		case ActorMessageType::Collision:
+		{
 			auto actor = m_systemManager->getActorManager()->getActor(msg.m_receiver);
 			auto other = m_systemManager->getActorManager()->getActor(msg.m_sender);
 			if (other->getTag() == "player")// invader collided with player, player loses
@@ -187,7 +232,13 @@ void Sys_InvaderControl::notify(const Message& msg)
 				m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
 			}
 			break;
+		}
 	}
+}
+
+void Sys_InvaderControl::queueInvaders(std::vector<ActorId>& invaders)
+{
+	m_invaderQueue = std::queue<ActorId>(std::deque<ActorId>(invaders.begin(), invaders.end()));
 }
 
 /// <summary>
@@ -300,7 +351,7 @@ void Sys_InvaderControl::onInvaderDeath(const ActorId& id)
 	msg.m_int = (int)SoundType::InvaderExplode;
 	m_systemManager->getMessageHandler()->dispatch(msg);
 	// create shockwave
-	auto posComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_Position>(ComponentType::Position);
+	const auto& posComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_Position>(ComponentType::Position);
 	instantiateShockwave(posComp->getPosition());
 	// disable invader
 	m_systemManager->getActorManager()->disableActor(id);
@@ -312,8 +363,6 @@ void Sys_InvaderControl::setInvaderSpeed(const float& speed)
 {
 	// set invader AI speed
 	m_aiSpeed = speed;
-	// send speed change message
-	Message msg((MessageType)ActorMessageType::SpeedChange);
-	msg.m_float = m_aiSpeed;
-	m_systemManager->getMessageHandler()->dispatch(msg);
+	// decrease beat duration as speed increases
+	m_beatDuration = m_systemManager->getLevelManager()->getLevelBaseSpeed() / m_aiSpeed;
 }

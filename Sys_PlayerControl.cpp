@@ -100,20 +100,21 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 		const int bulletId = m_systemManager->getLevelManager()->getPlayerBulletIds()[m_playerBulletIndex];
 		m_playerBulletIndex = (m_playerBulletIndex + 1) % m_systemManager->getLevelManager()->getPlayerBulletIds().size();
 		ActorManager* actorManager = m_systemManager->getActorManager();
-		actorManager->enableActor(bulletId);
-		sf::Vector2f shootDirection(0, -1);
-		auto bullet = actorManager->getActor(bulletId);
-		auto shooter = actorManager->getActor(actorId);
-		auto shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
-		auto shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
+		const auto& bullet = actorManager->getActor(bulletId);
+		// shooter components
+		const auto& shooter = actorManager->getActor(actorId);
+		const auto& shooterPos = shooter->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& shooterCol = shooter->getComponent<Comp_Collision>(ComponentType::Collision);
+		// bullet components
+		const auto& bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
+		const auto& bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
 		// set bullet just above player
-		auto bulletPos = bullet->getComponent<Comp_Position>(ComponentType::Position);
-		auto bulletCol = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
-		bulletPos->setPosition(shooterPos->getPosition() +
-			shootDirection * (bulletCol->getAABB().height / 2.f + shooterCol->getAABB().height / 2.f));
-		auto bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
-		auto bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
-		bulletMove->setVelocity(shootDirection * bulletComp->getBulletSpeed());
+		sf::Vector2f shootDirection(0, bulletComp->getDirection());
+		sf::Vector2f bulletPosition = shooterPos->getPosition() + shootDirection * (bulletCol->getAABB().height / 2.f + shooterCol->getAABB().height / 2.f);
+		bulletPos->setPosition(bulletPosition);
+		// enable bullet
+		actorManager->enableActor(bulletId);
 		// knock-back
 		float knockback = 700000;
 		auto moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);

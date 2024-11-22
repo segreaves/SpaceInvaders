@@ -2,7 +2,7 @@
 
 enum class ActorMessageType
 {
-	SpeedChange,
+	Beat,
 	Collision,
 	Damage,
 	Sound

@@ -32,5 +32,5 @@ protected:
 	sf::View m_fullWindowView;
 	bool m_transparent;
 	sf::Font m_font;
-	float m_fontSize = 100.f;
+	unsigned int m_fontSize = 100;
 };

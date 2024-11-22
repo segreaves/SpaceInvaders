@@ -38,9 +38,9 @@ void Sys_Movement::update(const float& deltaTime)
 	if (m_actorIds.empty()) return;
 	for (auto& id : m_actorIds)
 	{
-		auto actor = m_systemManager->getActorManager()->getActor(id);
-		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+		const auto& actor = m_systemManager->getActorManager()->getActor(id);
+		const auto& posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
 		// handle movement
 		sf::Vector2f acceleration = sf::Vector2f(
 			moveComp->getAcceleration().x * !moveComp->getCollidingOnX(),

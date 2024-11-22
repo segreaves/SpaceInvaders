@@ -98,8 +98,10 @@ void State_Game::loadNextLevel()
 	// reset invader count
 	m_levelManager.resetInvaderCount();
 	// enable (or re-enable) all actors
-	for (auto& invaderId : m_levelManager.getInvaderIds())
-		m_stateManager->getContext()->m_actorManager->enableActor(invaderId);
+	//for (auto& invaderId : m_levelManager.getInvaderIds())
+	//	m_stateManager->getContext()->m_actorManager->enableActor(invaderId);
+	auto invaderSys = m_stateManager->getContext()->m_systemManager->getSystem<Sys_InvaderControl>(SystemType::InvaderControl);
+	invaderSys->queueInvaders(m_levelManager.getInvaderIds());
 	// start (or re-start) all systems
 	m_stateManager->getContext()->m_systemManager->start();
 }

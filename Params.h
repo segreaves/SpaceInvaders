@@ -1,6 +1,8 @@
 #pragma once
 #include <bitset>
 #define MAX_COMPONENTS 32
+#define MAX_ACTORS 1000
+#define MAX_REQUIREMENTS 5
 #define APP_COLOR sf::Color(0, 255, 51)
 #define APP_COLOR_TRANSP sf::Color(0, 255, 51, 50)
 #define BGD_COLOR sf::Color(20, 20, 20)

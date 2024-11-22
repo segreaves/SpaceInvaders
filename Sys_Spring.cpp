@@ -39,11 +39,11 @@ void Sys_Spring::update(const float& deltaTime)
 {
 	for (auto& id : m_actorIds)
 	{
-		auto actor = m_systemManager->getActorManager()->getActor(id);
-		auto springComp = actor->getComponent<Comp_Spring>(ComponentType::Spring);
-		auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
-		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		auto targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
+		const auto& actor = m_systemManager->getActorManager()->getActor(id);
+		const auto& springComp = actor->getComponent<Comp_Spring>(ComponentType::Spring);
+		const auto& moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+		const auto& posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 
 		// save the previous attach->anchor vector
 		const sf::Vector2f prevOffset = springComp->getAnchor() - springComp->getAttach();
@@ -93,6 +93,7 @@ void Sys_Spring::notify(const Message& msg)
 
 sf::Vector2f Sys_Spring::calculateSpringForce(const sf::Vector2f& anchor, const sf::Vector2f& pos, const sf::Vector2f& vel, const float& strength, const float& length, const float& dampingCoeff)
 {
+	if (pos == anchor) return sf::Vector2f(0, 0);
 	// compute the spring vector
 	const sf::Vector2f displacement = pos - anchor;
 	// compute the distance from the anchor

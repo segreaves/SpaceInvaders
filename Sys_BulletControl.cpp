@@ -26,6 +26,7 @@ void Sys_BulletControl::setupRequirements()
 	req.set((unsigned int)ComponentType::Movement);
 	req.set((unsigned int)ComponentType::Collision);
 	req.set((unsigned int)ComponentType::Bullet);
+	req.set((unsigned int)ComponentType::SpriteSheet);
 	m_requirements.emplace_back(req);
 }
 
@@ -45,9 +46,19 @@ void Sys_BulletControl::update(const float& deltaTime)
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	for (auto& id : m_actorIds)
 	{
-		auto bullet = actorManager->getActor(id);
-		auto colComp = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
-		auto posComp = bullet->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& bullet = actorManager->getActor(id);
+		const auto& colComp = bullet->getComponent<Comp_Collision>(ComponentType::Collision);
+		const auto& posComp = bullet->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& bulletComp = bullet->getComponent<Comp_Bullet>(ComponentType::Bullet);
+		const auto& spriteComp = bullet->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		// update bullet frame
+		bulletComp->incrementBulletFrameTime(deltaTime);
+		if (bulletComp->getBulletFrameTime() >= bulletComp->getBulletFrameDuration())
+		{
+			bulletComp->resetBulletFrameTime();
+			spriteComp->frameStep();
+		}
+		// update collider before checking if it has gone out of bounds
 		colComp->setPosition(posComp->getPosition());
 		sf::FloatRect bulletAABB = colComp->getAABB();
 		// check if bullet is out of bounds
@@ -70,6 +81,16 @@ void Sys_BulletControl::handleEvent(const ActorId& actorId, const ActorEventType
 	if (!hasActor(actorId)) return;
 	switch (eventId)
 	{
+	case ActorEventType::Spawned:
+	{
+		const auto& actor = m_systemManager->getActorManager()->getActor(actorId);
+		const auto& bulletComp = actor->getComponent<Comp_Bullet>(ComponentType::Bullet);
+		const auto& bulletMove = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+		bulletComp->resetBulletFrameTime();
+		sf::Vector2f direction(0, bulletComp->getDirection());
+		bulletMove->setVelocity(direction * bulletComp->getBulletSpeed());
+		break;
+	}
 	case ActorEventType::Despawned:
 		m_systemManager->getActorManager()->disableActor(actorId);
 		break;

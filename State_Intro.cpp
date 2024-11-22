@@ -26,14 +26,20 @@ void State_Intro::onCreate()
 	m_titleText.setCharacterSize(350);
 	m_titleText.setFillColor(APP_COLOR);
 	sf::FloatRect titleBounds = m_titleText.getLocalBounds();
-	m_titleText.setOrigin(titleBounds.width / 2.f, titleBounds.top + titleBounds.height / 2.f);
+	m_titleText.setOrigin(
+		titleBounds.width / 2.f,
+		titleBounds.top + titleBounds.height / 2.f
+	);
 	m_titleText.setPosition(windowManager->getRenderWindow()->getView().getCenter());
 	// set up instructions text
 	m_instructionsText = m_titleText;
 	m_instructionsText.setString({ "Start (SPACE)" });
 	m_instructionsText.setCharacterSize(m_fontSize);
 	sf::FloatRect instBounds = m_instructionsText.getLocalBounds();
-	m_instructionsText.setOrigin(instBounds.width / 2.f, instBounds.height / 2.f);
+	m_instructionsText.setOrigin(
+		instBounds.width / 2.f,
+		instBounds.height / 2.f
+	);
 	m_instructionsText.setPosition(windowManager->getRenderWindow()->getView().getCenter().x, m_titleText.getPosition().y + 40);
 
 	m_transparent = true;

@@ -32,6 +32,7 @@ public:
 	void createBunkers();
 	void createShockwaves();
 	void createPlayerExplosion();
+	int getTotalInvaders() const { return m_invaderCols * m_invaderProfiles.size(); }
 	ActorId& getPlayerId() { return m_playerId; }
 	std::vector<ActorId>& getInvaderIds() { return m_invaders; }
 	std::vector<ActorId>& getPlayerBulletIds() { return m_playerBullets; }
@@ -82,6 +83,7 @@ private:
 	unsigned int m_invaderPoints = 1;
 	bool m_killStreak = false;
 	const int m_invaderCols = 12;
+	const std::vector<std::string> m_invaderProfiles = { "invader1", "invader2", "invader3", "invader2", "invader1" };
 	const sf::Vector2f m_invaderSeparation = sf::Vector2f(50, 45);
 	const int m_nBullets = 100;
 	const int m_nBunkers = 5;

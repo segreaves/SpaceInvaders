@@ -39,9 +39,9 @@ void Sys_Collision::update(const float& deltaTime)
 	// update all collision components with the current position
 	for (auto& id : m_actorIds)
 	{
-		auto actor = m_systemManager->getActorManager()->getActor(id);
-		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		auto colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
+		const auto& actor = m_systemManager->getActorManager()->getActor(id);
+		const auto& posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
 		colComp->setPosition(posComp->getPosition());
 	}
 	// check collisions between specific actor groups

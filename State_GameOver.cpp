@@ -33,7 +33,7 @@ void State_GameOver::onCreate()
 	m_gameOverText.setFont(m_font);
 	m_gameOverText.setCharacterSize(350);
 	m_gameOverText.setFillColor(APP_COLOR);
-	m_gameOverText.setPosition(windowManager->getCurrentViewSpace().getSize().x / 2.0f, windowManager->getCurrentViewSpace().getSize().y / 2.0f);
+	m_gameOverText.setPosition(windowManager->getRenderWindow()->getView().getCenter().x, windowManager->getRenderWindow()->getView().getCenter().y);
 	m_gameOverText.setOrigin(
 		m_gameOverText.getLocalBounds().left + m_gameOverText.getLocalBounds().width / 2.0f,
 		m_gameOverText.getLocalBounds().top + m_gameOverText.getLocalBounds().height / 2.0f
@@ -43,11 +43,11 @@ void State_GameOver::onCreate()
 	m_optionsText.setFont(m_font);
 	m_optionsText.setCharacterSize(m_fontSize);
 	m_optionsText.setFillColor(APP_COLOR);
-	m_optionsText.setPosition(windowManager->getCurrentViewSpace().getSize().x / 2.0f, m_gameOverText.getPosition().y + 100);
 	m_optionsText.setOrigin(
-		m_optionsText.getLocalBounds().left + m_optionsText.getLocalBounds().width / 2.0f,
-		m_optionsText.getLocalBounds().top + m_optionsText.getLocalBounds().height / 2.0f
+		m_optionsText.getLocalBounds().width / 2.0f,
+		m_optionsText.getLocalBounds().height / 2.0f
 	);
+	m_optionsText.setPosition(windowManager->getRenderWindow()->getView().getCenter().x, windowManager->getRenderWindow()->getView().getCenter().y + 40);
 }
 
 void State_GameOver::activate()

@@ -42,12 +42,11 @@ void LevelManager::createInvaders()
 {
 	const auto offset = (m_viewSpace.width - m_invaderSeparation.x * m_invaderCols) / 2.f;
 	const sf::Vector2f screenCenter = getScreenCenter();
-	std::vector<std::string> invaderProfiles = { "invader1", "invader2", "invader3", "invader2", "invader1" };
-	for (auto i = 0; i < invaderProfiles.size(); i++)
+	for (auto i = 0; i < m_invaderProfiles.size(); i++)
 	{
 		for (auto j = 0; j < m_invaderCols; j++)
 		{
-			const auto invaderId = m_actorManager->loadActorProfile(invaderProfiles[i], "invader");
+			const auto invaderId = m_actorManager->loadActorProfile(m_invaderProfiles[i], "invader");
 			m_invaders.emplace_back(invaderId);
 			const auto spawnPos = sf::Vector2f(
 				j * m_invaderSeparation.x + offset,
@@ -155,12 +154,12 @@ void LevelManager::newGame()
 {
 	m_state = LevelState::PlayerAlive;
 	createPlayer();
-	createPlayerExplosion();
 	createPlayerBullets();
-	createInvaderBullets();
+	createInvaderBullets(); 
 	createInvaders();
 	createShockwaves();
 	createBunkers();
+	createPlayerExplosion();
 }
 
 void LevelManager::purge()

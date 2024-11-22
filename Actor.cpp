@@ -2,8 +2,12 @@
 
 Actor::Actor(const unsigned int id, const std::string tag) :
 	m_id(id),
-	m_tag(tag)
+	m_tag(tag),
+	m_enabled(false),
+	m_componentBitmask(0)
 {
+	// reserve space for components to avoid reallocation
+	m_components.reserve(MAX_COMPONENTS);
 }
 
 Actor::~Actor()

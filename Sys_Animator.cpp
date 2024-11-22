@@ -24,20 +24,18 @@ void Sys_Animator::setupRequirements()
 
 void Sys_Animator::subscribeToChannels()
 {
-	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::SpeedChange, this);
 }
 
 void Sys_Animator::unsubscribeFromChannels()
 {
-	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::SpeedChange, this);
 }
 
 void Sys_Animator::start()
 {
 	for (auto& id : m_actorIds)
 	{
-		auto actor = m_systemManager->getActorManager()->getActor(id);
-		auto spriteComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		const auto& actor = m_systemManager->getActorManager()->getActor(id);
+		const auto& spriteComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		spriteComp->resetFrameStep();
 		spriteComp->cropSprite();
 		spriteComp->setFrameTime(0);
@@ -50,7 +48,7 @@ void Sys_Animator::update(const float& deltaTime)
 	for (auto& id : m_actorIds)
 	{
 		auto spriteSheetComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		handleAnimation(spriteSheetComp, deltaTime);
+		//handleAnimation(spriteSheetComp, deltaTime);
 	}
 }
 
@@ -64,19 +62,6 @@ void Sys_Animator::debugOverlay(WindowManager* windowManager)
 
 void Sys_Animator::notify(const Message& msg)
 {
-	ActorMessageType msgType = (ActorMessageType)msg.m_type;
-	switch (msgType)
-	{
-	case ActorMessageType::SpeedChange:
-	{
-		for (auto& id : m_actorIds)
-		{
-			auto actor = m_systemManager->getActorManager()->getActor(id);
-			auto spriteComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-			spriteComp->setFPS(spriteComp->getDefaultFPS() * msg.m_float / m_systemManager->getLevelManager()->getInvaderBaseSpeed());
-		}
-	}
-	}
 }
 
 /// <summary>
