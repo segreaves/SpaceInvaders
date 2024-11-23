@@ -59,6 +59,7 @@ private:
 	float m_loadTimer;
 	float m_beatDuration;
 	float m_beatTimer;
+	bool m_beatHigh;
 
 	std::random_device m_rd;
 	std::mt19937 m_gen; // Mersenne Twister engine

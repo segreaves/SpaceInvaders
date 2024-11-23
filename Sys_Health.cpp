@@ -1,6 +1,7 @@
 #include "Sys_Health.h"
 #include "SysManager.h"
 #include "LevelManager.h"
+#include "SoundType.h"
 
 Sys_Health::Sys_Health(SysManager* systemManager) :
 	Sys(systemManager)
@@ -57,8 +58,7 @@ void Sys_Health::debugOverlay(WindowManager* windowManager)
 void Sys_Health::notify(const Message& msg)
 {
 	if (!hasActor(msg.m_receiver)) return;
-	ActorMessageType msgType = (ActorMessageType)msg.m_type;
-	switch (msgType)
+	switch ((ActorMessageType)msg.m_type)
 	{
 	case ActorMessageType::Collision:
 	{
@@ -71,8 +71,23 @@ void Sys_Health::notify(const Message& msg)
 			{
 				auto playerHealth = actor->getComponent<Comp_Health>(ComponentType::Health);
 				m_systemManager->getLevelManager()->setPlayerLives(playerHealth->takeDamage());
+				// send out damage message
+				Message dmgMsg((MessageType)ActorMessageType::Damage);
+				dmgMsg.m_sender = msg.m_receiver;
+				dmgMsg.m_receiver = msg.m_receiver;
+				m_systemManager->getMessageHandler()->dispatch(dmgMsg);
+				// handle if hit or dead
 				if (m_systemManager->getLevelManager()->getPlayerLives() > 0)
+				{
+					// blink player sprite
 					spriteSheetComp->startDmgBlink();
+					// play damage sound
+					Message soundMsg((MessageType)ActorMessageType::Sound);
+					soundMsg.m_sender = msg.m_receiver;
+					soundMsg.m_receiver = msg.m_receiver;
+					soundMsg.m_int = static_cast<int>(SoundType::PlayerHit);
+					m_systemManager->getMessageHandler()->dispatch(soundMsg);
+				}
 				else
 					m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
 			}

@@ -4,7 +4,7 @@
 class SysManager;
 
 /// <summary>
-/// Handles collision between actors.
+/// Handles collision between actors. Only tests specific groups of actors.
 /// </summary>
 class Sys_Collision : public Sys
 {

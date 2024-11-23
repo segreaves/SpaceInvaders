@@ -51,22 +51,32 @@ void Sys_Sound::debugOverlay(WindowManager* windowManager)
 void Sys_Sound::notify(const Message& msg)
 {
 	if (!m_soundOn) return;
-	if (!hasActor(msg.m_receiver)) return;
-	auto posComp = m_systemManager->getActorManager()->getActor(msg.m_receiver)->getComponent<Comp_Position>(ComponentType::Position);
 	std::string sound;
 	switch ((SoundType)msg.m_int)
 	{
 		case SoundType::PlayerShoot:
 			sound = "player_shoot";
 			break;
+		case SoundType::PlayerHit:
+			sound = "player_hit";
+			break;
 		case SoundType::PlayerExplode:
 			sound = "player_explode";
+			break;
+		case SoundType::InvaderSpawn:
+			sound = "invader_spawn";
 			break;
 		case SoundType::InvaderExplode:
 			sound = "invader_explode";
 			break;
 		case SoundType::InvaderShoot:
 			sound = "invader_shoot";
+			break;
+		case SoundType::BeatHigh:
+			sound = "invader_beat_high";
+			break;
+		case SoundType::BeatLow:
+			sound = "invader_beat_low";
 			break;
 		case SoundType::BulletExplode:
 			sound = "bullet_hit";

@@ -11,7 +11,9 @@ State_Game::State_Game(StateManager* stateManager) :
 	m_levelManager(stateManager->getContext()->m_actorManager),
 	m_hudUpdateTimer(0),
 	m_newGame(true),
-	m_fps(0)
+	m_fps(0),
+	m_soundOn(true),
+	m_musicOn(false)
 {
 }
 
@@ -66,7 +68,7 @@ void State_Game::onCreate()
 	// play  music
 	m_stateManager->getContext()->m_soundManager->playMusic("game_music");
 	setSound(true);
-	setMusic(true);
+	setMusic(false);
 }
 
 void State_Game::activate()

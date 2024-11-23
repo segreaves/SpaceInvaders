@@ -36,7 +36,9 @@ void Sys_Collision::unsubscribeFromChannels()
 
 void Sys_Collision::update(const float& deltaTime)
 {
-	// update all collision components with the current position
+	// update all collision components with the current position. Better to do this here
+	// than in the collision detection function, as we only need to update the collision
+	// component once per frame.
 	for (auto& id : m_actorIds)
 	{
 		const auto& actor = m_systemManager->getActorManager()->getActor(id);
@@ -250,9 +252,8 @@ bool Sys_Collision::detectActorCollision(const ActorId& actorId, const ActorId& 
 {
 	if (!m_systemManager->getActorManager()->getActor(otherId)->isEnabled()) return false;
 
-	auto actorCollider = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Collision>(ComponentType::Collision);
-	auto otherCollider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision);
-	auto otherPosition = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Position>(ComponentType::Position);
+	const auto& actorCollider = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Collision>(ComponentType::Collision);
+	const auto& otherCollider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision);
 	sf::FloatRect intersect;
 	if (actorCollider->getAABB().intersects(otherCollider->getAABB(), intersect))
 	{

@@ -11,5 +11,7 @@ enum class SoundType
 	MysteryShipFly,
 	MysteryShipExplode,
 	BunkerHit,
-	BulletExplode
+	BulletExplode,
+	BeatHigh,
+	BeatLow
 };

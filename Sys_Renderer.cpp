@@ -4,7 +4,10 @@
 #include "WindowManager.h"
 
 Sys_Renderer::Sys_Renderer(SysManager* systemManager) :
-	Sys(systemManager)
+	Sys(systemManager),
+	m_showDamageOverlay(false),
+	m_damageOverlayTimer(0),
+	m_damageOverlayDuration(0.5f)
 {
 	onCreate();
 }
@@ -16,6 +19,8 @@ Sys_Renderer::~Sys_Renderer()
 
 void Sys_Renderer::start()
 {
+	const auto& view = m_systemManager->getLevelManager()->getViewSpace();
+	m_damageOverlay.setSize(sf::Vector2f(view.getSize()));
 }
 
 void Sys_Renderer::update(const float& deltaTime)
@@ -35,6 +40,12 @@ void Sys_Renderer::update(const float& deltaTime)
 		if (particlesComp)
 			particlesComp->getParticleSystem()->update(deltaTime);
 	}
+	if (m_showDamageOverlay)
+	{
+		m_damageOverlayTimer -= deltaTime;
+		if (m_damageOverlayTimer <= 0)
+			m_showDamageOverlay = false;
+	}
 }
 
 void Sys_Renderer::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
@@ -53,6 +64,12 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 		if (particlesComp && particlesComp->getParticleSystem()->isEnabled())
 			draw(windowManager, std::static_pointer_cast<IDrawable>(particlesComp));
 	}
+	if (m_showDamageOverlay)
+	{
+		m_damageCurrColor.a = static_cast<sf::Uint8>(255 * (m_damageOverlayTimer / m_damageOverlayDuration));
+		m_damageOverlay.setFillColor(m_damageCurrColor);
+		windowManager->getRenderWindow()->draw(m_damageOverlay);
+	}
 }
 
 void Sys_Renderer::debugOverlay(WindowManager* windowManager)
@@ -61,6 +78,18 @@ void Sys_Renderer::debugOverlay(WindowManager* windowManager)
 
 void Sys_Renderer::notify(const Message& msg)
 {
+	// only read messages for the player
+	if (!hasActor(msg.m_receiver)) return;
+	switch ((ActorMessageType)msg.m_type)
+	{
+	case ActorMessageType::Damage:
+	{
+		m_showDamageOverlay = true;
+		m_damageOverlayTimer = m_damageOverlayDuration;
+		m_damageCurrColor = APP_COLOR;
+		break;
+	}
+	}
 }
 
 void Sys_Renderer::draw(WindowManager* windowManager, std::shared_ptr<IDrawable> drawable)
@@ -83,8 +112,10 @@ void Sys_Renderer::setupRequirements()
 
 void Sys_Renderer::subscribeToChannels()
 {
+	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Damage, this);
 }
 
 void Sys_Renderer::unsubscribeFromChannels()
 {
+	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Damage, this);
 }

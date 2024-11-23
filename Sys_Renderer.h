@@ -24,4 +24,10 @@ protected:
 	void notify(const Message& msg);
 
 	void draw(WindowManager* windowManager, std::shared_ptr<IDrawable> drawable);
+private:
+	bool m_showDamageOverlay;
+	float m_damageOverlayTimer;
+	float m_damageOverlayDuration;
+	sf::RectangleShape m_damageOverlay;
+	sf::Color m_damageCurrColor;
 };

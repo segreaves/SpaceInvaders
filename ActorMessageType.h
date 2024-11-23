@@ -2,7 +2,6 @@
 
 enum class ActorMessageType
 {
-	Beat,
 	Collision,
 	Damage,
 	Shoot,

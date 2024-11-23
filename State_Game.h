@@ -50,8 +50,8 @@ private:
 	bool m_newGame;
 	unsigned int m_fps;
 	sf::RectangleShape m_background;
-	bool m_soundOn = true;
-	bool m_musicOn = true;
+	bool m_soundOn;
+	bool m_musicOn;
 	// HUD elements
 	unsigned int m_outlineThickness = 3;
 	float m_hudUpdateTimer;

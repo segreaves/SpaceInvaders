@@ -17,7 +17,8 @@ Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	m_shockwaveIndex(0),
 	m_loadTimer(0),
 	m_beatDuration(0.5f),
-	m_beatTimer(0)
+	m_beatTimer(0),
+	m_beatHigh(false)
 {
 	onCreate();
 }
@@ -60,6 +61,11 @@ void Sys_InvaderControl::start()
 	// set beat duration: 1 per sec at base speed, then decreases as speed increases
 	m_beatDuration = m_systemManager->getLevelManager()->getLevelBaseSpeed() / m_systemManager->getLevelManager()->getInvaderBaseSpeed();
 	m_beatTimer = 0;
+	m_beatHigh = false;
+	// play start level sound
+	Message msg((MessageType)ActorMessageType::Sound);
+	msg.m_int = static_cast<int>(SoundType::InvaderSpawn);
+	m_systemManager->getMessageHandler()->dispatch(msg);
 }
 
 void Sys_InvaderControl::loadInvader(const ActorId& id)
@@ -91,9 +97,11 @@ bool Sys_InvaderControl::updateBeat(const float& deltaTime)
 	if (m_beatTimer > 0) return false;
 	// reset timer
 	m_beatTimer = m_beatDuration;
-	// send message to update animation frame
-	Message msg((MessageType)ActorMessageType::Beat);
+	// play sound
+	Message msg((MessageType)ActorMessageType::Sound);
+	msg.m_int = static_cast<int>(m_beatHigh ? SoundType::BeatHigh : SoundType::BeatLow);
 	m_systemManager->getMessageHandler()->dispatch(msg);
+	m_beatHigh = !m_beatHigh;
 	return true;
 }
 
@@ -138,16 +146,6 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 	if (!hasActor(actorId)) return;
 	switch (eventId)
 	{
-	case ActorEventType::Spawned:
-	{
-		// play sound
-		Message msg((MessageType)ActorMessageType::Sound);
-		msg.m_sender = actorId;
-		msg.m_receiver = actorId;
-		msg.m_int = (int)SoundType::InvaderSpawn;
-		m_systemManager->getMessageHandler()->dispatch(msg);
-		break;
-	}
 	case ActorEventType::Despawned:
 	{
 		onInvaderDeath(actorId);

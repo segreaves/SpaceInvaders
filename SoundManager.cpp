@@ -15,12 +15,12 @@ SoundManager::~SoundManager()
 bool SoundManager::playSound(const std::string& name)
 {
 	// check audio map for sound info and sound
-	auto& stateSounds = m_audio[m_currentState];
-	auto sound = stateSounds.find(name);
+	const auto& stateSounds = m_audio[m_currentState];
+	const auto& sound = stateSounds.find(name);
 	if (sound == stateSounds.end()) return false;
 	// sound exists, set up and play
-	auto soundInfo = sound->second.first;
-	auto snd = sound->second.second;
+	const auto& soundInfo = sound->second.first;
+	const auto& snd = sound->second.second;
 	setUpSound(snd, &soundInfo);
 	snd->play();
 	return true;
@@ -29,9 +29,9 @@ bool SoundManager::playSound(const std::string& name)
 bool SoundManager::playMusic(const std::string& name)
 {
 	// check audio map for music info and music
-	auto& stateMusic = m_music[m_currentState];
-	auto soundInfo = stateMusic.first;
-	auto msc = stateMusic.second;
+	const auto& stateMusic = m_music[m_currentState];
+	const auto& soundInfo = stateMusic.first;
+	const auto& msc = stateMusic.second;
 	setUpMusic(msc, &soundInfo);
 	msc->play();
 	return true;
