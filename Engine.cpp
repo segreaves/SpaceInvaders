@@ -18,6 +18,8 @@ Engine::Engine() :
 	m_stateManager.switchTo(StateType::Intro);
 
 	m_windowManager.getRenderWindow()->setMouseCursorVisible(false);
+
+	m_windowTexture.create(m_windowManager.getRenderWindow()->getSize().x, m_windowManager.getRenderWindow()->getSize().y);
 }
 
 void Engine::update()
@@ -35,9 +37,19 @@ void Engine::lateUpdate()
 
 void Engine::render()
 {
-	m_windowManager.drawStart();
+	m_windowManager.clear();
 	m_stateManager.draw();
-	m_windowManager.drawEnd();
+	afterEffects();
+	m_windowManager.display();
+}
+
+void Engine::afterEffects()
+{
+	sf::RenderWindow& window = *m_windowManager.getRenderWindow();
+	m_windowTexture.update(window);
+	sf::Sprite sprite(m_windowTexture);
+	window.clear();
+	window.draw(sprite);
 }
 
 void Engine::run()

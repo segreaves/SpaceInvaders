@@ -3,7 +3,7 @@
 #include "State_Game.h"
 #include "State_Paused.h"
 #include "State_GameOver.h"
-#include <iostream>
+#include <SFML/OpenGL.hpp>
 
 StateManager::StateManager(Context* context) :
 	m_context(context)
@@ -30,7 +30,7 @@ void StateManager::draw()
 {
 	if (m_states.empty()) { return; }
 	drawStates();
-	postProcess();
+	addRenderLines();
 }
 
 void StateManager::lateUpdate()
@@ -137,7 +137,7 @@ void StateManager::drawStates()
 	else m_states.back().second->draw();
 }
 
-void StateManager::postProcess()
+void StateManager::addRenderLines()
 {
 	// after everything is drawn, draw the render lines
 	// vertical lines

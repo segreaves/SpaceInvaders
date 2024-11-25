@@ -9,8 +9,8 @@ public:
 	~WindowManager();
 
 	void update(float deltaTime);
-	void drawStart();
-	void drawEnd();
+	void clear();
+	void display();
 
 	bool isOpen();
 	bool isFocused();

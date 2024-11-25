@@ -25,7 +25,7 @@ private:
 	void createState(const StateType& newState);
 	void removeState(const StateType& removeState);
 	void drawStates();
-	void postProcess();
+	void addRenderLines();
 
 	template<class T>
 	void registerState(const StateType& stateType)

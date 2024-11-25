@@ -13,9 +13,8 @@ void State_Paused::update(const float& deltaTime)
 
 void State_Paused::draw()
 {
-	sf::RenderWindow* window = m_stateManager->getContext()->m_windowManager->getRenderWindow();
-	window->draw(m_panel);
-	window->draw(m_pausedText);
+	m_stateManager->getContext()->m_windowManager->getRenderWindow()->draw(m_panel);
+	m_stateManager->getContext()->m_windowManager->getRenderWindow()->draw(m_pausedText);
 }
 
 void State_Paused::onCreate()

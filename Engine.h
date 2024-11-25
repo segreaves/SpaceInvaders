@@ -16,12 +16,15 @@ public:
 	void update();
 	void lateUpdate();
 	void render();
+	void afterEffects();
 	void run();
 
 private:
 	sf::Clock m_clock;
 	sf::Time m_elapsed;
+	// shared context used for communication between components
 	Context m_context;
+	// managers
 	WindowManager m_windowManager;
 	StateManager m_stateManager;
 	SysManager m_systemManager;
@@ -29,4 +32,6 @@ private:
 	AudioManager m_audioManager;
 	SoundManager m_soundManager;
 	ActorManager m_actorManager;
+	// graphics
+	sf::Texture m_windowTexture;
 };

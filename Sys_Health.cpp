@@ -84,7 +84,7 @@ void Sys_Health::notify(const Message& msg)
 					// play damage sound
 					Message soundMsg((MessageType)ActorMessageType::Sound);
 					soundMsg.m_sender = msg.m_receiver;
-					soundMsg.m_receiver = msg.m_receiver;
+					soundMsg.m_receiver = msg.m_receiver; 
 					soundMsg.m_int = static_cast<int>(SoundType::PlayerHit);
 					m_systemManager->getMessageHandler()->dispatch(soundMsg);
 				}

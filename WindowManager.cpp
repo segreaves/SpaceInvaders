@@ -35,12 +35,12 @@ void WindowManager::update(float deltaTime)
 	m_controller.update();
 }
 
-void WindowManager::drawStart()
+void WindowManager::clear()
 {
 	m_window.clear(BGD_COLOR);
 }
 
-void WindowManager::drawEnd()
+void WindowManager::display()
 {
 	m_window.display();
 }
