@@ -217,9 +217,9 @@ void Sys_Collision::detectCollisions()
 		}
 	}
 	// check mystery ship collisions
-	if (actorGroups->find("mystery") != actorGroups->end())
+	if (actorGroups->find("ufo") != actorGroups->end())
 	{
-		for (auto& mysteryId : actorGroups->at("mystery"))
+		for (auto& mysteryId : actorGroups->at("ufo"))
 		{
 			if (!actorManager->getActor(mysteryId)->isEnabled()) continue;
 			// check collisions against player bullets

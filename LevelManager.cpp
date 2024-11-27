@@ -32,10 +32,8 @@ void LevelManager::createPlayer()
 	m_playerId = m_actorManager->loadActorProfile("player", "player");
 	auto posComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Position>(ComponentType::Position);
 	posComp->setPosition(getPlayerSpawnPoint());
-	// get collider and adjust to sprite
 	auto colComp = m_actorManager->getActor(m_playerId)->getComponent<Comp_Collision>(ComponentType::Collision);
 	auto sprite = m_actorManager->getActor(m_playerId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-	adjustColliderToSprite(colComp, sprite);
 }
 
 void LevelManager::createInvaders()
@@ -53,10 +51,8 @@ void LevelManager::createInvaders()
 				(i + 1) * m_invaderSeparation.y);
 			auto invaderComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Invader>(ComponentType::Invader);
 			invaderComp->setSpawnOffset(spawnPos - screenCenter);
-			// adjust collider to fit sprite
 			auto colComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Collision>(ComponentType::Collision);
 			auto sprite = m_actorManager->getActor(invaderId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-			adjustColliderToSprite(colComp, sprite);
 		}
 	}
 }
@@ -96,6 +92,11 @@ void LevelManager::createBunkers()
 	}
 }
 
+void LevelManager::createUFO()
+{
+	m_ufo = m_actorManager->loadActorProfile("ufo", "ufo");
+}
+
 void LevelManager::createShockwaves()
 {
 	for (auto i = 0; i < m_invaders.size(); i++)
@@ -111,6 +112,11 @@ void LevelManager::createShockwaves()
 void LevelManager::createPlayerExplosion()
 {
 	m_playerExplosion = m_actorManager->loadActorProfile("player_explosion", "player_explosion");
+}
+
+void LevelManager::createUFOExplosion()
+{
+	m_ufoExplosion = m_actorManager->loadActorProfile("ufo_explosion", "ufo_explosion");
 }
 
 int LevelManager::getPlayerLives() const
@@ -160,6 +166,8 @@ void LevelManager::newGame()
 	createShockwaves();
 	createBunkers();
 	createPlayerExplosion();
+	createUFOExplosion();
+	createUFO();
 }
 
 void LevelManager::purge()

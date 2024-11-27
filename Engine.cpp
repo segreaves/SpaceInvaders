@@ -8,6 +8,7 @@ Engine::Engine() :
 {
 	m_clock.restart();
 
+	// set up context
 	m_context.m_windowManager = &m_windowManager;
 	m_context.m_controller = m_windowManager.getController();
 	m_context.m_actorManager = &m_actorManager;
@@ -15,10 +16,11 @@ Engine::Engine() :
 	m_context.m_systemManager = &m_systemManager;
 	m_context.m_soundManager = &m_soundManager;
 
+	// initialize state manager
 	m_stateManager.switchTo(StateType::Intro);
-
+	// set cursor invisible
 	m_windowManager.getRenderWindow()->setMouseCursorVisible(false);
-
+	// create texture to draw to
 	m_windowTexture.create(m_windowManager.getRenderWindow()->getSize().x, m_windowManager.getRenderWindow()->getSize().y);
 }
 
@@ -47,9 +49,11 @@ void Engine::afterEffects()
 {
 	sf::RenderWindow& window = *m_windowManager.getRenderWindow();
 	m_windowTexture.update(window);
-	sf::Sprite sprite(m_windowTexture);
 	window.clear();
+	
+	sf::Sprite sprite(m_windowTexture);
 	window.draw(sprite);
+	addRenderLines();
 }
 
 void Engine::run()
@@ -59,5 +63,31 @@ void Engine::run()
 		update();
 		render();
 		lateUpdate();
+	}
+}
+
+void Engine::addRenderLines()
+{
+	// after everything is drawn, draw the render lines
+	sf::RenderWindow* window = m_windowManager.getRenderWindow();
+	// vertical lines
+	for (unsigned int x = 0; x < window->getSize().x; x += 3)
+	{
+		sf::Vertex line[] =
+		{
+			sf::Vertex(sf::Vector2f(static_cast<float>(x), 0.f), sf::Color(0, 0, 0, 50)),
+			sf::Vertex(sf::Vector2f(static_cast<float>(x), static_cast<float>(window->getSize().y)), sf::Color(0, 0, 0, 50))
+		};
+		window->draw(line, 2, sf::Lines);
+	}
+	// horizontal lines
+	for (unsigned int y = 0; y < window->getSize().y; y += 3)
+	{
+		sf::Vertex line[] =
+		{
+			sf::Vertex(sf::Vector2f(0, static_cast<float>(y)), sf::Color(0, 0, 0, 100)),
+			sf::Vertex(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(y)), sf::Color(0, 0, 0, 100))
+		};
+		window->draw(line, 2, sf::Lines);
 	}
 }

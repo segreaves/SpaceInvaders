@@ -108,7 +108,7 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 		msg.m_receiver = bulletId;
 		m_systemManager->getMessageHandler()->dispatch(msg);
 		// knock-back
-		float knockback = 700000;
+		float knockback = 250000;
 		const auto& moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
 		moveComp->accelerate(sf::Vector2f(0, -knockback * -1));
 		break;
@@ -156,10 +156,10 @@ void Sys_PlayerControl::onPlayerDestroyed(ActorId id)
 	m_systemManager->getMessageHandler()->dispatch(msg);
 	// enable player explosion particle system
 	ActorId explosionId = m_systemManager->getLevelManager()->getPlayerExplosionId();
-	auto explosionPos = m_systemManager->getActorManager()->getActor(explosionId)->getComponent<Comp_Position>(ComponentType::Position);
-	auto playerPos = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_Position>(ComponentType::Position);
+	const auto& explosionPos = m_systemManager->getActorManager()->getActor(explosionId)->getComponent<Comp_Position>(ComponentType::Position);
+	const auto& playerPos = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_Position>(ComponentType::Position);
 	explosionPos->setPosition(playerPos->getPosition());
-	auto particlesComp = m_systemManager->getActorManager()->getActor(explosionId)->getComponent<Comp_Particles>(ComponentType::Particles);
+	const auto& particlesComp = m_systemManager->getActorManager()->getActor(explosionId)->getComponent<Comp_Particles>(ComponentType::Particles);
 	particlesComp->getParticleSystem()->initialize();
 	particlesComp->getParticleSystem()->setEmitterPosition(explosionPos->getPosition());
 	particlesComp->getParticleSystem()->emitParticles();

@@ -4,6 +4,7 @@
 class Particle
 {
 public:
+	Particle();
 	Particle(sf::Vector2f direction);
 
 	void update(float deltaTime);

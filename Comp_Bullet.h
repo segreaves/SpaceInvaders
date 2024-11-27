@@ -17,9 +17,9 @@ private:
 		ss >> m_bulletTag >> m_bulletSpeed >> m_bulletFrameDuration >> m_direction;
 	}
 
-	float m_bulletSpeed;
-	float m_bulletFrameDuration;
-	float m_bulletFrameTime;
-	float m_direction;
+	float m_bulletSpeed = 0;
+	float m_bulletFrameDuration = 0;
+	float m_bulletFrameTime = 0;
+	float m_direction = 0;
 	std::string m_bulletTag;
 };

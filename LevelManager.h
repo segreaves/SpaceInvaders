@@ -30,8 +30,10 @@ public:
 	void createPlayerBullets();
 	void createInvaderBullets();
 	void createBunkers();
+	void createUFO();
 	void createShockwaves();
 	void createPlayerExplosion();
+	void createUFOExplosion();
 	int getTotalInvaders() const { return m_invaderCols * static_cast<int>(m_invaderProfiles.size()); }
 	ActorId& getPlayerId() { return m_playerId; }
 	std::vector<ActorId>& getInvaderIds() { return m_invaders; }
@@ -40,6 +42,8 @@ public:
 	std::vector<ActorId>& getBunkerIds() { return m_bunkers; }
 	std::vector<ActorId>& getShockwaveIds() { return m_shockwaves; }
 	ActorId& getPlayerExplosionId() { return m_playerExplosion; }
+	ActorId& getUFOExplosionId() { return m_ufoExplosion; }
+	ActorId& getUFOId() { return m_ufo; }
 	int getPlayerLives() const;
 	void setPlayerLives(const unsigned int lives) { m_playerLives = lives; }
 	int getEnemyCount() const { return m_remainingEnemies; }
@@ -74,7 +78,9 @@ private:
 	std::vector<ActorId> m_invaderBullets;
 	std::vector<ActorId> m_bunkers;
 	std::vector<ActorId> m_shockwaves;
+	ActorId m_ufo;
 	ActorId m_playerExplosion;
+	ActorId m_ufoExplosion;
 	unsigned int m_remainingEnemies;
 	unsigned int m_playerLives;
 	unsigned int m_kills;
@@ -84,7 +90,7 @@ private:
 	bool m_killStreak = false;
 	const int m_invaderCols = 12;
 	const std::vector<std::string> m_invaderProfiles = { "invader1", "invader2", "invader3", "invader2", "invader1" };
-	const sf::Vector2f m_invaderSeparation = sf::Vector2f(50, 45);
+	const sf::Vector2f m_invaderSeparation = sf::Vector2f(50, 50);
 	const int m_nBullets = 100;
 	const int m_nBunkers = 5;
 	const float m_bunkerSeparation = 170;

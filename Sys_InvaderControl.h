@@ -36,7 +36,7 @@ private:
 	void selectTrackedInvaders();
 	void instantiateShockwave(sf::Vector2f position);
 	void handleAITargetMovement(const float& deltaTime);
-	void updateMoveTarget(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Invader> invComp);
+	void updateMoveTarget(std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Invader> invComp);
 	void checkBounds(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp);
 	void tryShooting(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Invader> invComp);
 	void onInvaderDeath(const ActorId& id);

@@ -17,6 +17,7 @@
 #include "Sys_Gravity.h"
 #include "Sys_ShipSway.h"
 #include "Sys_TorqueSpring.h"
+#include "Sys_UFOControl.h"
 #include "MessageHandler.h"
 #include <map>
 #include <queue>

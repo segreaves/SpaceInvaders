@@ -187,6 +187,7 @@
     <ClCompile Include="Sys_Spring.cpp" />
     <ClCompile Include="Sys_ShipSway.cpp" />
     <ClCompile Include="Sys_TorqueSpring.cpp" />
+    <ClCompile Include="Sys_UFOControl.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +209,7 @@
     <ClInclude Include="Comp_Spring.h" />
     <ClInclude Include="Comp_Target.h" />
     <ClInclude Include="Comp_TorqueSpring.h" />
+    <ClInclude Include="Comp_UFO.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="Comp_Shockwave.h" />
@@ -244,6 +246,7 @@
     <ClInclude Include="Sys_Spring.h" />
     <ClInclude Include="Sys_ShipSway.h" />
     <ClInclude Include="Sys_TorqueSpring.h" />
+    <ClInclude Include="Sys_UFOControl.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Trigger.h" />
     <ClInclude Include="ISubscriber.h" />

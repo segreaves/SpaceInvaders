@@ -1,5 +1,10 @@
 #include "Particle.h"
 
+Particle::Particle()
+{
+	m_velocity = sf::Vector2f();
+}
+
 Particle::Particle(sf::Vector2f direction)
 {
 	m_velocity = direction;

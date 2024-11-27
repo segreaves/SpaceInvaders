@@ -79,7 +79,7 @@ public:
 		m_spriteSheet->frameStep();
 	}
 
-	void resetFrameStep()
+	void resetFrame()
 	{
 		m_spriteSheet->resetFrame();
 	}

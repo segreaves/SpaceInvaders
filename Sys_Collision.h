@@ -11,7 +11,7 @@ class Sys_Collision : public Sys
 public:
 	Sys_Collision(SysManager* systemManager);
 	~Sys_Collision();
-
+protected:
 	void start();
 	void setupRequirements();
 	void subscribeToChannels();

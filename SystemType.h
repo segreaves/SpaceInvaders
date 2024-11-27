@@ -18,5 +18,6 @@ enum class SystemType
 	Spring,
 	Gravity,
 	ShipSway,
-	TorqueSpring
+	TorqueSpring,
+	UFOControl
 };

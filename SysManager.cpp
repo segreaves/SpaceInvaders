@@ -22,15 +22,17 @@ SysManager::SysManager() :
 	m_systems[SystemType::TorqueSpring] = new Sys_TorqueSpring(this);
 	m_systems[SystemType::Gravity] = new Sys_Gravity(this);
 	m_systems[SystemType::ShipSway] = new Sys_ShipSway(this);
+	m_systems[SystemType::UFOControl] = new Sys_UFOControl(this);
 	m_systemOrder = {
-		SystemType::PlayerControl,
-		SystemType::InvaderControl,
-		SystemType::BulletControl,
-		SystemType::BunkerControl,
-		SystemType::ShockwaveControl,
 		SystemType::Gravity,
 		SystemType::Spring,
 		SystemType::Movement,
+		SystemType::PlayerControl,
+		SystemType::BulletControl,
+		SystemType::BunkerControl,
+		SystemType::ShockwaveControl,
+		SystemType::UFOControl,
+		SystemType::InvaderControl,
 		SystemType::ShipSway,
 		SystemType::TorqueSpring,
 		SystemType::Rotation,

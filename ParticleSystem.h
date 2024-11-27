@@ -21,10 +21,11 @@ public:
 	void setMaxSpeed(float speed) { m_maxSpeed = speed; }
 	void setParticleSize(float size) { m_particleSize = size; }
 private:
+	unsigned int m_numParticles;
 	std::vector<Particle> m_particles;
 	sf::VertexArray m_vertices;
-	unsigned int m_numParticles;
 	float m_particleSize;
+	float m_timer;
 	float m_duration;
 	float m_minSpeed;
 	float m_maxSpeed;

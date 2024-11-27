@@ -15,7 +15,7 @@ Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	m_leftInvader(-1),
 	m_rightInvader(-1),
 	m_shockwaveIndex(0),
-	m_loadTimer(0),
+	m_loadTimer(1),
 	m_beatDuration(0.5f),
 	m_beatTimer(0),
 	m_beatHigh(false)
@@ -62,6 +62,7 @@ void Sys_InvaderControl::start()
 	m_beatDuration = m_systemManager->getLevelManager()->getLevelBaseSpeed() / m_systemManager->getLevelManager()->getInvaderBaseSpeed();
 	m_beatTimer = 0;
 	m_beatHigh = false;
+	m_loadTimer = m_invaderLoadTime;
 	// play start level sound
 	Message msg((MessageType)ActorMessageType::Sound);
 	msg.m_int = static_cast<int>(SoundType::InvaderSpawn);
@@ -75,9 +76,13 @@ void Sys_InvaderControl::loadInvader(const ActorId& id)
 	const auto& posComp = invader->getComponent<Comp_Position>(ComponentType::Position);
 	const auto& targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
 	const auto& moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
+	auto spriteSheetComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+	spriteSheetComp->resetFrame();
 	targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
 	posComp->setPosition(targetComp->getTarget());
+	posComp->setAngle(0);
 	moveComp->setVelocity(sf::Vector2f(0, 0));
+	moveComp->setAngularVelocity(0);
 	m_systemManager->getActorManager()->enableActor(id);
 }
 
@@ -86,7 +91,7 @@ void Sys_InvaderControl::update(const float& deltaTime)
 	// load invaders or update them
 	if (m_invaderQueue.empty())
 		handleInvaders(deltaTime);
-	else
+	else 
 		loadNextInvader(deltaTime);
 }
 
@@ -107,11 +112,11 @@ bool Sys_InvaderControl::updateBeat(const float& deltaTime)
 
 void Sys_InvaderControl::loadNextInvader(const float& deltaTime)
 {
-	m_loadTimer += deltaTime;
-	if (m_loadTimer < m_invaderLoadTime) return;
+	m_loadTimer -= deltaTime;
+	if (m_loadTimer > 0) return;
 	loadInvader(m_invaderQueue.front());
 	m_invaderQueue.pop();
-	m_loadTimer = 0;
+	m_loadTimer = m_invaderLoadTime;
 	// if all invaders are loaded, select ones to track
 	if (m_invaderQueue.empty())
 		selectTrackedInvaders();
@@ -132,7 +137,7 @@ void Sys_InvaderControl::handleInvaders(const float& deltaTime)
 		const auto& spriteSheetComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 
 		// update the target position
-		updateMoveTarget(deltaTime, id, targetComp, invComp);
+		updateMoveTarget(targetComp, invComp);
 		tryShooting(deltaTime, id, invComp);
 		if (id == m_leftInvader || id == m_rightInvader)
 			checkBounds(deltaTime, id, targetComp, colComp);
@@ -182,10 +187,10 @@ void Sys_InvaderControl::debugOverlay(WindowManager* windowManager)
 {
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	sf::RenderWindow* window = windowManager->getRenderWindow();
-	for (auto& actorId : m_actorIds)
+	for (const auto& actorId : m_actorIds)
 	{
-		auto actor = actorManager->getActor(actorId);
-		auto targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
+		const auto& actor = actorManager->getActor(actorId);
+		const auto& targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 		sf::CircleShape target(2.5f);
 		target.setOrigin(target.getRadius(), target.getRadius());
 		target.setFillColor(sf::Color::Red);
@@ -294,7 +299,7 @@ void Sys_InvaderControl::handleAITargetMovement(const float& deltaTime)
 	m_aiTarget += sf::Vector2f(m_movingRight ? m_aiSpeed : -m_aiSpeed, 0) * deltaTime;
 }
 
-void Sys_InvaderControl::updateMoveTarget(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Invader> invComp)
+void Sys_InvaderControl::updateMoveTarget(std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Invader> invComp)
 {
 	targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
 }

@@ -16,8 +16,10 @@ public:
 	void update();
 	void lateUpdate();
 	void render();
-	void afterEffects();
 	void run();
+
+	void afterEffects();
+	void addRenderLines();
 
 private:
 	sf::Clock m_clock;

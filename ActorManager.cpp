@@ -27,6 +27,7 @@ ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureMan
 	addComponentType<Comp_Mass>(ComponentType::Mass);
 	addComponentType<Comp_ShipSway>(ComponentType::ShipSway);
 	addComponentType< Comp_TorqueSpring>(ComponentType::TorqueSpring);
+	addComponentType<Comp_UFO>(ComponentType::UFO);
 }
 
 ActorManager::~ActorManager()
@@ -255,6 +256,12 @@ unsigned int ActorManager::loadActorProfile(const std::string actorName, const s
 			addComponent(actorId, ComponentType::ShipSway);
 			auto sway = actor->getComponent<Comp_ShipSway>(ComponentType::ShipSway);
 			ss >> *sway;
+		}
+		else if (attr == "UFO")
+		{
+			addComponent(actorId, ComponentType::UFO);
+			auto ufo = actor->getComponent<Comp_UFO>(ComponentType::UFO);
+			ss >> *ufo;
 		}
 		else
 			std::cerr << "Unknown attribute: " << attr << std::endl;
