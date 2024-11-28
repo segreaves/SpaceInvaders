@@ -19,7 +19,10 @@ struct Message
 		m_type(type),
 		m_xy(0, 0),
 		m_sender(-1),
-		m_receiver(-1)
+		m_receiver(-1),
+		m_bool(false),
+		m_int(0),
+		m_float(0)
 	{
 	}
 
@@ -27,11 +30,8 @@ struct Message
 	unsigned int m_sender;
 	unsigned int m_receiver;
 
-	union
-	{
-		XY m_xy;
-		bool m_bool;
-		int m_int;
-		float m_float;
-	};
+	XY m_xy;
+	bool m_bool;
+	int m_int;
+	float m_float;
 };

@@ -66,6 +66,7 @@ void Sys_InvaderControl::start()
 	// play start level sound
 	Message msg((MessageType)ActorMessageType::Sound);
 	msg.m_int = static_cast<int>(SoundType::InvaderSpawn);
+	msg.m_xy = XY(75.f, 1.f);
 	m_systemManager->getMessageHandler()->dispatch(msg);
 }
 
@@ -95,6 +96,11 @@ void Sys_InvaderControl::update(const float& deltaTime)
 		loadNextInvader(deltaTime);
 }
 
+/// <summary>
+/// Play an alternating beat sound based on the height of the invaders on screen.
+/// </summary>
+/// <param name="deltaTime"></param>
+/// <returns></returns>
 bool Sys_InvaderControl::updateBeat(const float& deltaTime)
 {
 	// update beat timer
@@ -102,9 +108,13 @@ bool Sys_InvaderControl::updateBeat(const float& deltaTime)
 	if (m_beatTimer > 0) return false;
 	// reset timer
 	m_beatTimer = m_beatDuration;
+	// get height on screen of invaders
+	const float invaderHeight = (m_aiTarget.y - m_systemManager->getLevelManager()->getScreenCenter().y) / m_systemManager->getLevelManager()->getScreenCenter().y;
 	// play sound
 	Message msg((MessageType)ActorMessageType::Sound);
-	msg.m_int = static_cast<int>(m_beatHigh ? SoundType::BeatHigh : SoundType::BeatLow);
+	msg.m_int = static_cast<int>(SoundType::Beat);
+	const float pitchMultiplier = 1.f + invaderHeight * 0.25f;
+	msg.m_xy = XY(100.f, pitchMultiplier * (m_beatHigh ? 0.33f : 0.3f));
 	m_systemManager->getMessageHandler()->dispatch(msg);
 	m_beatHigh = !m_beatHigh;
 	return true;
@@ -349,6 +359,7 @@ void Sys_InvaderControl::onInvaderDeath(const ActorId& id)
 	msg.m_sender = id;
 	msg.m_receiver = id;
 	msg.m_int = (int)SoundType::InvaderExplode;
+	msg.m_xy = XY(100.f, 1.f);
 	m_systemManager->getMessageHandler()->dispatch(msg);
 	// create shockwave
 	const auto& posComp = m_systemManager->getActorManager()->getActor(id)->getComponent<Comp_Position>(ComponentType::Position);

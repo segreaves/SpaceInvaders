@@ -137,7 +137,7 @@ void State_Game::setSound(bool soundOn)
 void State_Game::setMusic(bool musicOn)
 {
 	m_musicOn = musicOn;
-	m_stateManager->getContext()->m_soundManager->setMusic(m_musicOn);
+	m_stateManager->getContext()->m_soundManager->setMusic(m_musicOn ? 100.f : 0.f);
 	m_musicText.setFillColor(m_musicOn ? APP_COLOR : APP_COLOR_TRANSP);
 }
 

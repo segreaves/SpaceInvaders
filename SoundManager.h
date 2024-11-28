@@ -31,6 +31,7 @@ public:
 	~SoundManager();
 
 	bool playSound(const std::string& name);
+	bool playSound(const std::string& name, const float& volume, const float& pitch);
 	bool playMusic(const std::string& name);
 
 	void setUpSound(sf::Sound* sound, const SoundInfo* props);

@@ -24,14 +24,14 @@ protected:
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
-
 private:
 	void damageBunker(const ActorId& actorId, const ActorId& otherId);
 	bool nonTransparentPixels(unsigned int xStart, unsigned int xEnd, unsigned int yEnd, unsigned int height, sf::Image& image);
 	void turnOffPixels(unsigned int xStart, unsigned int xEnd, unsigned int yStart, unsigned int yEnd, sf::Image& image);
 
-	sf::Texture m_damageTexture;
-	sf::Sprite m_damageSprite;
+	bool m_bunkerDamaged;
+	float m_damageTimer;
+	float m_damageDuration;
 
 	int m_rows, m_cols;
 

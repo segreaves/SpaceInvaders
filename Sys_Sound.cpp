@@ -21,7 +21,6 @@ void Sys_Sound::start()
 void Sys_Sound::setupRequirements()
 {
 	Bitmask req;
-	req.set((unsigned int)ComponentType::Position);
 	req.set((unsigned int)ComponentType::SoundEmitter);
 	m_requirements.emplace_back(req);
 }
@@ -72,20 +71,25 @@ void Sys_Sound::notify(const Message& msg)
 		case SoundType::InvaderShoot:
 			sound = "invader_shoot";
 			break;
-		case SoundType::BeatHigh:
-			sound = "invader_beat_high";
+		case SoundType::Beat:
+			sound = "invader_beat";
 			break;
-		case SoundType::BeatLow:
-			sound = "invader_beat_low";
-			break;
-		case SoundType::BulletExplode:
+		case SoundType::BulletHit:
 			sound = "bullet_hit";
 			break;
 		case SoundType::UFOExplode:
 			sound = "ufo_explode";
 			break;
+		case SoundType::UFOFly:
+			sound = "ufo_fly";
+			break;
+		case SoundType::BunkerHit:
+			sound = "bunker_hit";
+			break;
 	}
-	m_systemManager->getActorManager()->getSoundManager()->playSound(sound);
+	const float& volume = msg.m_xy.x;
+	const float& pitch = msg.m_xy.y;
+	m_systemManager->getActorManager()->getSoundManager()->playSound(sound, volume, pitch);
 }
 
 void Sys_Sound::setSound(bool soundOn)

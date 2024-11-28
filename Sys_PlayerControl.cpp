@@ -153,6 +153,7 @@ void Sys_PlayerControl::onPlayerDestroyed(ActorId id)
 	msg.m_sender = id;
 	msg.m_receiver = id;
 	msg.m_int = (int)SoundType::PlayerExplode;
+	msg.m_xy = XY(100.f, 1.f);
 	m_systemManager->getMessageHandler()->dispatch(msg);
 	// enable player explosion particle system
 	ActorId explosionId = m_systemManager->getLevelManager()->getPlayerExplosionId();

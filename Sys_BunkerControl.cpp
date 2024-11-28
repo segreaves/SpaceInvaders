@@ -1,6 +1,7 @@
 #include "Sys_BunkerControl.h"
 #include "SysManager.h"
 #include "WindowManager.h"
+#include "SoundType.h"
 #include <functional>
 #include <cmath>
 #include <numbers>
@@ -9,16 +10,14 @@ Sys_BunkerControl::Sys_BunkerControl(SysManager* systemManager) :
 	Sys(systemManager),
 	m_rows(0),
 	m_cols(0),
+	m_bunkerDamaged(false),
+	m_damageTimer(0),
+	m_damageDuration(0.05f),
 	m_gen(m_rd()), // seed rng
 	m_unifAngleDist(0, 360), // angle distribution
 	m_unifLengthDist(0, 10) // length distribution
 {
 	onCreate();
-
-	m_damageTexture.loadFromFile(Utils::getWorkingDirectory() + "assets/graphics/crack.png");
-	m_damageSprite.setTexture(m_damageTexture);
-	m_damageSprite.setScale(1.25f, 1.25f);
-	m_damageSprite.setOrigin(m_damageSprite.getLocalBounds().width / 2, m_damageSprite.getLocalBounds().height / 2);
 }
 
 Sys_BunkerControl::~Sys_BunkerControl()
@@ -52,6 +51,10 @@ void Sys_BunkerControl::unsubscribeFromChannels()
 
 void Sys_BunkerControl::update(const float& deltaTime)
 {
+	if (m_damageTimer > 0)
+		m_damageTimer -= deltaTime;
+	else
+		m_bunkerDamaged = false;
 }
 
 void Sys_BunkerControl::handleEvent(const ActorId& actorId, const ActorEventType& eventId)
@@ -141,6 +144,20 @@ void Sys_BunkerControl::damageBunker(const ActorId& actorId, const ActorId& othe
 		msg.m_sender = actorId;
 		msg.m_receiver = otherId;
 		m_systemManager->getMessageHandler()->dispatch(msg);
+
+		// if the bunker has not been damaged, set the damage flag and start the damage timer
+		if (!m_bunkerDamaged)
+		{
+			m_bunkerDamaged = true;
+			m_damageTimer = m_damageDuration;
+			// play bunker damage sound
+			Message soundMsg((MessageType)ActorMessageType::Sound);
+			soundMsg.m_sender = msg.m_receiver;
+			soundMsg.m_receiver = msg.m_receiver;
+			soundMsg.m_int = static_cast<int>(SoundType::BunkerHit);
+			soundMsg.m_xy = XY(100.f, 1.f);
+			m_systemManager->getMessageHandler()->dispatch(soundMsg);
+		}
 	}
 }
 

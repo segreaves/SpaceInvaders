@@ -86,6 +86,7 @@ void Sys_Health::notify(const Message& msg)
 					soundMsg.m_sender = msg.m_receiver;
 					soundMsg.m_receiver = msg.m_receiver; 
 					soundMsg.m_int = static_cast<int>(SoundType::PlayerHit);
+					soundMsg.m_xy = XY(100.f, 1.f);
 					m_systemManager->getMessageHandler()->dispatch(soundMsg);
 				}
 				else
@@ -94,7 +95,7 @@ void Sys_Health::notify(const Message& msg)
 		}
 		else if (other->getTag() == "invader")
 		{
-			m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Invaded);
+			m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
 		}
 		break;
 	}

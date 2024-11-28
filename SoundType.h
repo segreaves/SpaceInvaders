@@ -11,7 +11,6 @@ enum class SoundType
 	UFOFly,
 	UFOExplode,
 	BunkerHit,
-	BulletExplode,
-	BeatHigh,
-	BeatLow
+	BulletHit,
+	Beat
 };

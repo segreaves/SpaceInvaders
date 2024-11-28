@@ -92,6 +92,7 @@ void Sys_BulletControl::handleEvent(const ActorId& actorId, const ActorEventType
 		const auto& actor = m_systemManager->getActorManager()->getActor(actorId);
 		const auto& tag = actor->getTag();
 		msg.m_int = static_cast<int>(tag == "bullet_player" ? SoundType::PlayerShoot : SoundType::InvaderShoot);
+		msg.m_xy = XY(80.f, 1.f);
 		m_systemManager->getMessageHandler()->dispatch(msg);
 		break;
 	}
@@ -149,6 +150,7 @@ void Sys_BulletControl::onBulletDestroyed(ActorId id)
 	Message msg((MessageType)ActorMessageType::Sound);
 	msg.m_sender = id;
 	msg.m_receiver = id;
-	msg.m_int = (int)SoundType::BulletExplode;
+	msg.m_int = (int)SoundType::BulletHit;
+	msg.m_xy = XY(100.f, 1.f);
 	m_systemManager->getMessageHandler()->dispatch(msg);
 }

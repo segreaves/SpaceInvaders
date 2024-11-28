@@ -12,7 +12,9 @@ Sys_UFOControl::Sys_UFOControl(SysManager* systemManager) :
 	m_ufoTimer(0),
 	m_ufoDuration(0),
 	m_startOffset(100, 25),
-	m_ufoEnabled(false)
+	m_ufoEnabled(false),
+	m_ufoSpeed(100),
+	m_soundTimer(0)
 {
 	onCreate();
 }
@@ -127,8 +129,10 @@ void Sys_UFOControl::initializeUFO()
 
 void Sys_UFOControl::handleUFO(const float& deltaTime)
 {
-	const auto& targetComp = m_systemManager->getActorManager()->getActor(m_systemManager->getLevelManager()->getUFOId())->getComponent<Comp_Target>(ComponentType::Target);
-	const auto& colComp = m_systemManager->getActorManager()->getActor(m_systemManager->getLevelManager()->getUFOId())->getComponent<Comp_Collision>(ComponentType::Collision);
+	const auto& ufoId = m_systemManager->getLevelManager()->getUFOId();
+	const auto& ufo = m_systemManager->getActorManager()->getActor(ufoId);
+	const auto& targetComp = ufo->getComponent<Comp_Target>(ComponentType::Target);
+	const auto& colComp = ufo->getComponent<Comp_Collision>(ComponentType::Collision);
 	sf::Vector2f updatedPos = targetComp->getTarget() + sf::Vector2f(m_movingRight ? m_ufoSpeed : -m_ufoSpeed, 0) * deltaTime;
 	targetComp->setTarget(updatedPos);
 	// if UFO is out of bounds, disable it
@@ -137,6 +141,18 @@ void Sys_UFOControl::handleUFO(const float& deltaTime)
 	{
 		m_ufoEnabled = false;
 		m_systemManager->getActorManager()->disableActor(m_systemManager->getLevelManager()->getUFOId());
+	}
+	m_soundTimer -= deltaTime;
+	if (m_soundTimer < 0)
+	{
+		// play UFO fly sound
+		Message msg((MessageType)ActorMessageType::Sound);
+		msg.m_sender = ufoId;
+		msg.m_receiver = ufoId;
+		msg.m_int = (int)SoundType::UFOFly;
+		msg.m_xy = XY(100.f, 1.f);
+		m_systemManager->getMessageHandler()->dispatch(msg);
+		m_soundTimer = m_soundDuration;
 	}
 }
 
@@ -147,6 +163,7 @@ void Sys_UFOControl::onUFODeath(const ActorId& id)
 	msg.m_sender = id;
 	msg.m_receiver = id;
 	msg.m_int = (int)SoundType::UFOExplode;
+	msg.m_xy = XY(100.f, 1.f);
 	m_systemManager->getMessageHandler()->dispatch(msg);
 	// enable UFO explosion particle system
 	ActorId explosionId = m_systemManager->getLevelManager()->getUFOExplosionId();

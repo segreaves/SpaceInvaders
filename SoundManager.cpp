@@ -26,6 +26,22 @@ bool SoundManager::playSound(const std::string& name)
 	return true;
 }
 
+bool SoundManager::playSound(const std::string& name, const float& volume, const float& pitch)
+{
+	// check audio map for sound info and sound
+	const auto& stateSounds = m_audio[m_currentState];
+	const auto& sound = stateSounds.find(name);
+	if (sound == stateSounds.end()) return false;
+	// sound exists, set up and play
+	const auto& soundInfo = sound->second.first;
+	const auto& snd = sound->second.second;
+	snd->setVolume(volume);
+	snd->setPitch(pitch);
+	snd->setRelativeToListener(false);
+	snd->play();
+	return true;
+}
+
 bool SoundManager::playMusic(const std::string& name)
 {
 	// check audio map for music info and music

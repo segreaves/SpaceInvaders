@@ -138,19 +138,11 @@ void Sys_Collision::detectCollisions()
 				{
 					if (detectActorCollision(invaderId, playerId))
 					{
-						// create invaded event
-						m_systemManager->addEvent(playerId, (EventId)ActorEventType::Invaded);
-						break;
-					}
-				}
-			// check collisions against bunkers
-			if (actorGroups->find("bunker") != actorGroups->end())
-				for (auto& bunkerId : actorGroups->at("bunker"))
-				{
-					if (detectActorCollision(invaderId, bunkerId))
-					{
-						// create invaded event - SEND TO PLAYER
-						m_systemManager->addEvent(m_systemManager->getLevelManager()->getPlayerId(), (EventId)ActorEventType::Invaded);
+						// inform player of collision
+						Message msg((MessageType)ActorMessageType::Collision);
+						msg.m_sender = invaderId;
+						msg.m_receiver = playerId;
+						m_systemManager->getMessageHandler()->dispatch(msg);
 						break;
 					}
 				}
@@ -192,6 +184,14 @@ void Sys_Collision::detectCollisions()
 					detectActorCollision(bunkerId, invaderBulletId);
 				}
 			}
+			// check collisions against invaders
+			if (actorGroups->find("invader") != actorGroups->end())
+			{
+				for (auto& invaderId : actorGroups->at("invader"))
+				{
+					detectActorCollision(bunkerId, invaderId);
+				}
+			}
 		}
 	}
 	// check player bullet collisions
@@ -214,24 +214,16 @@ void Sys_Collision::detectCollisions()
 						break;
 					}
 				}
-		}
-	}
-	// check mystery ship collisions
-	if (actorGroups->find("ufo") != actorGroups->end())
-	{
-		for (auto& mysteryId : actorGroups->at("ufo"))
-		{
-			if (!actorManager->getActor(mysteryId)->isEnabled()) continue;
-			// check collisions against player bullets
-			if (actorGroups->find("bullet_player") != actorGroups->end())
-				for (auto& bulletId : actorGroups->at("bullet_player"))
+			// check collisions against UFO
+			if (actorGroups->find("ufo") != actorGroups->end())
+				for (auto& ufoId : actorGroups->at("ufo"))
 				{
-					if (detectActorCollision(mysteryId, bulletId))
+					if (detectActorCollision(playerBulletId, ufoId))
 					{
-						// inform bullet of collision
+						// inform UFO of collision
 						Message msg((MessageType)ActorMessageType::Collision);
-						msg.m_sender = mysteryId;
-						msg.m_receiver = bulletId;
+						msg.m_sender = playerBulletId;
+						msg.m_receiver = ufoId;
 						m_systemManager->getMessageHandler()->dispatch(msg);
 						break;
 					}
