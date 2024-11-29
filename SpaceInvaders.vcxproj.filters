@@ -99,9 +99,6 @@
     <ClCompile Include="State_Intro.cpp">
       <Filter>Source Files\Core\Engine States</Filter>
     </ClCompile>
-    <ClCompile Include="State_Menu.cpp">
-      <Filter>Source Files\Core\Engine States</Filter>
-    </ClCompile>
     <ClCompile Include="State_Game.cpp">
       <Filter>Source Files\Core\Engine States</Filter>
     </ClCompile>
@@ -213,9 +210,6 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="State_Intro.h">
-      <Filter>Header Files\Core\Engine States</Filter>
-    </ClInclude>
-    <ClInclude Include="State_Menu.h">
       <Filter>Header Files\Core\Engine States</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">

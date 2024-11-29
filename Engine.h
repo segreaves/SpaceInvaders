@@ -17,11 +17,11 @@ public:
 	void lateUpdate();
 	void render();
 	void run();
-
+private:
 	void afterEffects();
 	void addRenderLines();
+	sf::VertexArray createRenderLine(const sf::Vector2f& start, const sf::Vector2f& end, float thickness, sf::Color color);
 
-private:
 	sf::Clock m_clock;
 	sf::Time m_elapsed;
 	// shared context used for communication between components
@@ -36,4 +36,10 @@ private:
 	ActorManager m_actorManager;
 	// graphics
 	sf::Texture m_windowTexture;
+	// shaders
+	sf::Shader m_brightnessShader;
+	sf::Shader m_blurShader;
+	sf::RenderTexture m_brightnessTexture;
+	sf::RenderTexture m_blurTexture1;
+	sf::RenderTexture m_blurTexture2;
 };

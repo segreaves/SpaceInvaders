@@ -129,6 +129,7 @@ void Sys_UFOControl::initializeUFO()
 
 void Sys_UFOControl::handleUFO(const float& deltaTime)
 {
+	if (m_actorIds.empty()) return;
 	const auto& ufoId = m_systemManager->getLevelManager()->getUFOId();
 	const auto& ufo = m_systemManager->getActorManager()->getActor(ufoId);
 	const auto& targetComp = ufo->getComponent<Comp_Target>(ComponentType::Target);
@@ -150,7 +151,7 @@ void Sys_UFOControl::handleUFO(const float& deltaTime)
 		msg.m_sender = ufoId;
 		msg.m_receiver = ufoId;
 		msg.m_int = (int)SoundType::UFOFly;
-		msg.m_xy = XY(100.f, 1.f);
+		msg.m_xy = XY(25.f, 1.f);
 		m_systemManager->getMessageHandler()->dispatch(msg);
 		m_soundTimer = m_soundDuration;
 	}

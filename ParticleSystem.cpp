@@ -13,7 +13,8 @@ ParticleSystem::ParticleSystem()
 	, m_emitterPosition(0, 0),
 	m_rng(m_rd()),
 	m_angleDist(0, 360),
-	m_speedDist(0, 1)
+	m_speedDist(0, 1),
+	m_duration(1)
 {
 }
 

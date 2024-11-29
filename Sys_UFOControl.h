@@ -31,7 +31,7 @@ private:
 	float m_ufoTimer;
 	float m_ufoDuration;
 	float m_soundTimer;
-	float m_soundDuration = 0.25f;
+	float m_soundDuration = 0.1f;
 	std::random_device m_rd;
 	std::mt19937 m_gen; // Mersenne Twister engine
 	std::uniform_real_distribution<float> m_unifFloat;

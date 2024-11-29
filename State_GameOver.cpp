@@ -48,11 +48,15 @@ void State_GameOver::onCreate()
 		m_optionsText.getLocalBounds().height / 2.0f
 	);
 	m_optionsText.setPosition(windowManager->getRenderWindow()->getView().getCenter().x, windowManager->getRenderWindow()->getView().getCenter().y + 40);
+	// load game over sound
+	m_stateManager->getContext()->m_soundManager->loadSoundProfile("assets/profiles/soundProfiles/game_over_state.sound");
 }
 
 void State_GameOver::activate()
 {
 	m_stateManager->getContext()->m_controller->m_onSelect.addCallback("GameOver_onSelect", std::bind(&State_GameOver::OnSelect, this));
+	// play  game over sound
+	m_stateManager->getContext()->m_soundManager->playSound("game_over_sound");
 }
 
 void State_GameOver::deactivate()

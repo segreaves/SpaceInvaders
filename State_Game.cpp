@@ -69,6 +69,11 @@ void State_Game::onCreate()
 	m_stateManager->getContext()->m_soundManager->playMusic("game_music");
 	setSound(true);
 	setMusic(false);
+	// set player icon position to upper right of screen
+	m_playerIconPosition = sf::Vector2f(
+		m_view.getCenter().x + m_view.getSize().x / 2 - m_hudPadding.x,
+		m_view.getCenter().y - m_view.getSize().y / 2 + m_hudPadding.y
+	);
 }
 
 void State_Game::activate()
@@ -159,19 +164,24 @@ void State_Game::gameOverScreen()
 	m_levelManager.purge();
 }
 
+/// <summary>
+/// Purges all actors and resets the game state.
+/// </summary>
 void State_Game::newGame()
 {
 	m_newGame = false;
 	m_stateManager->getContext()->m_actorManager->purge();
 	m_levelManager.newGame();
 	m_stateManager->getContext()->m_actorManager->enableActor(m_levelManager.getPlayerId());
+	// set player icon to use in HUD
+	const auto& playerSprite = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+	m_playerIcon = *playerSprite->getSpriteSheet()->getSprite();
 }
 
 void State_Game::updateHUD()
 {
 	m_scoreText.setString("Score:\n" + std::to_string(m_levelManager.getScore()));
 	m_levelText.setString("Level:\n" + std::to_string(m_levelManager.getLevel()));
-	m_livesText.setString("Lives:\n" + std::to_string(m_levelManager.getPlayerLives()));
 	m_killsText.setString("Kills:\n" + std::to_string(m_levelManager.getKills()));
 	m_fpsText.setString("FPS:\n" + std::to_string(m_fps));
 }
@@ -189,12 +199,19 @@ void State_Game::drawHUD()
 	windowManager->getRenderWindow()->setView(m_view);
 	windowManager->getRenderWindow()->draw(m_scoreText);
 	windowManager->getRenderWindow()->draw(m_levelText);
-	windowManager->getRenderWindow()->draw(m_livesText);
 	windowManager->getRenderWindow()->draw(m_killsText);
 	windowManager->getRenderWindow()->draw(m_fpsText);
 	windowManager->getRenderWindow()->draw(m_helpText);
 	windowManager->getRenderWindow()->draw(m_soundText);
 	windowManager->getRenderWindow()->draw(m_musicText);
+	// draw player lives
+	float iconWidth = m_playerIcon.getGlobalBounds().width;
+	for (unsigned int i = 0; i < m_levelManager.getPlayerLives(); ++i)
+	{
+		m_playerIcon.setPosition(m_playerIconPosition.x + i * iconWidth - 3 * iconWidth, m_playerIconPosition.y);
+		windowManager->getRenderWindow()->draw(m_playerIcon);
+	}
+	// draw help panel if enabled
 	if (m_showHelp)
 	{
 		windowManager->getRenderWindow()->draw(m_helpPanel);
@@ -210,12 +227,10 @@ void State_Game::initializeHUD()
 	m_scoreText.setPosition(m_hudPadding.x, 0);
 	initializeHUDText(m_levelText);
 	m_levelText.setPosition(m_hudPadding.x, m_hudPadding.y + m_fontSize);
-	initializeHUDText(m_livesText);
-	m_livesText.setPosition(m_hudPadding.x, 2 * (m_hudPadding.y + m_fontSize));
 	initializeHUDText(m_killsText);
-	m_killsText.setPosition(m_hudPadding.x, 3 * (m_hudPadding.y + m_fontSize));
+	m_killsText.setPosition(m_hudPadding.x, 2 * (m_hudPadding.y + m_fontSize));
 	initializeHUDText(m_fpsText);
-	m_fpsText.setPosition(m_hudPadding.x, 4 * (m_hudPadding.y + m_fontSize));
+	m_fpsText.setPosition(m_hudPadding.x, 3 * (m_hudPadding.y + m_fontSize));
 	initializeHUDText(m_helpText);
 	m_helpText.setPosition(m_hudPadding.x, m_levelManager.getViewSpace().height - m_fontSize);
 	m_helpText.setString("HELP (H)");

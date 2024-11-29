@@ -93,7 +93,10 @@ void Sys_InvaderControl::update(const float& deltaTime)
 	if (m_invaderQueue.empty())
 		handleInvaders(deltaTime);
 	else 
+	{
+		playLoadSound();
 		loadNextInvader(deltaTime);
+	}
 }
 
 /// <summary>
@@ -149,8 +152,10 @@ void Sys_InvaderControl::handleInvaders(const float& deltaTime)
 		// update the target position
 		updateMoveTarget(targetComp, invComp);
 		tryShooting(deltaTime, id, invComp);
+		// check for out-of-bounds
+		checkBounds_V(id, colComp);
 		if (id == m_leftInvader || id == m_rightInvader)
-			checkBounds(deltaTime, id, targetComp, colComp);
+			checkBounds_H(id, targetComp, colComp);
 		if (beat)
 			spriteSheetComp->frameStep();
 	}
@@ -314,7 +319,7 @@ void Sys_InvaderControl::updateMoveTarget(std::shared_ptr<Comp_Target> targetCom
 	targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
 }
 
-void Sys_InvaderControl::checkBounds(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp)
+void Sys_InvaderControl::checkBounds_H(const ActorId& id, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp)
 {
 	sf::FloatRect invaderAABB = colComp->getAABB();
 	bool boundsLeft = targetComp->getTarget().x < m_bounds;
@@ -330,6 +335,15 @@ void Sys_InvaderControl::checkBounds(const float& deltaTime, const ActorId& id, 
 		m_movingRight = boundsLeft ? true : false;
 		m_aiTarget += resolve;
 	}
+}
+
+void Sys_InvaderControl::checkBounds_V(const ActorId& id, std::shared_ptr<Comp_Collision> colComp)
+{
+	sf::FloatRect invaderAABB = colComp->getAABB();
+	bool boundsDown = invaderAABB.top + invaderAABB.height > m_systemManager->getLevelManager()->getViewSpace().getSize().y;
+	// if invaders touch the bottom of the screen, player loses
+	if (boundsDown)
+		m_systemManager->addEvent(m_systemManager->getLevelManager()->getPlayerId(), (EventId)ActorEventType::Invaded);
 }
 
 void Sys_InvaderControl::tryShooting(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Invader> invComp)
@@ -376,4 +390,9 @@ void Sys_InvaderControl::setInvaderSpeed(const float& speed)
 	m_aiSpeed = speed;
 	// decrease beat duration as speed increases
 	m_beatDuration = m_systemManager->getLevelManager()->getLevelBaseSpeed() / m_aiSpeed;
+}
+
+void Sys_InvaderControl::playLoadSound()
+{
+	// play invader load sound at intervals as long as there are invaders to load
 }

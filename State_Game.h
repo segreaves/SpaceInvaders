@@ -57,14 +57,17 @@ private:
 	float m_hudUpdateTimer;
 	const float m_hudUpdateInterval = 0.2f;
 	sf::Vector2f m_hudPadding = { 50.f, 50.f };
+	// HUD text
 	sf::Text m_scoreText;
 	sf::Text m_levelText;
-	sf::Text m_livesText;
 	sf::Text m_killsText;
 	sf::Text m_fpsText;
 	sf::Text m_helpText;
 	sf::Text m_soundText;
 	sf::Text m_musicText;
+	// player lives
+	sf::Sprite m_playerIcon;
+	sf::Vector2f m_playerIconPosition;
 	// help panel
 	bool m_showHelp = false;
 	sf::RectangleShape m_helpPanel;

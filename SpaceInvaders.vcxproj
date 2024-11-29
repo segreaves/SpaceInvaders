@@ -167,7 +167,6 @@
     </ClCompile>
     <ClCompile Include="State_GameOver.cpp" />
     <ClCompile Include="State_Intro.cpp" />
-    <ClCompile Include="State_Menu.cpp" />
     <ClCompile Include="State_Paused.cpp" />
     <ClCompile Include="Sys.cpp" />
     <ClCompile Include="SysManager.cpp" />
@@ -258,7 +257,6 @@
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="State_Game.h" />
     <ClInclude Include="State_Intro.h" />
-    <ClInclude Include="State_Menu.h" />
     <ClInclude Include="Sys.h" />
     <ClInclude Include="SysManager.h" />
     <ClInclude Include="SystemType.h" />

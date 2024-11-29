@@ -12,7 +12,8 @@ struct Context
 		m_controller(nullptr),
 		m_actorManager(nullptr),
 		m_systemManager(nullptr),
-		m_soundManager(nullptr)
+		m_soundManager(nullptr),
+		m_textureManager(nullptr)
 	{
 	}
 
@@ -20,5 +21,6 @@ struct Context
 	Controller* m_controller;
 	ActorManager* m_actorManager;
 	SysManager* m_systemManager;
+	TextureManager* m_textureManager;
 	SoundManager* m_soundManager;
 };
