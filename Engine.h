@@ -19,6 +19,7 @@ public:
 	void run();
 private:
 	void afterEffects();
+	void addBloom();
 	void addRenderLines();
 	sf::VertexArray createRenderLine(const sf::Vector2f& start, const sf::Vector2f& end, float thickness, sf::Color color);
 

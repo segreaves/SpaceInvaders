@@ -59,6 +59,12 @@ void Engine::render()
 
 void Engine::afterEffects()
 {
+	addBloom();
+	addRenderLines();
+}
+
+void Engine::addBloom()
+{
 	sf::RenderWindow& window = *m_windowManager.getRenderWindow();
 	sf::Vector2u windowSize = window.getSize();
 
@@ -94,9 +100,6 @@ void Engine::afterEffects()
 	sf::Sprite bloomSprite(m_blurTexture2.getTexture());
 	sf::RenderStates blendAdd(sf::BlendAdd);
 	window.draw(bloomSprite, blendAdd);
-
-	// Add additional render lines if needed
-	addRenderLines();
 }
 
 void Engine::run()
@@ -114,7 +117,7 @@ void Engine::addRenderLines()
 	// after everything is drawn, draw the render lines
 	sf::RenderWindow* window = m_windowManager.getRenderWindow();
 	sf::Vector2f windowSize = sf::Vector2f(window->getSize());
-	sf::Color color = BGD_COLOR;
+	sf::Color color = sf::Color::Black;
 	color.a = 150;
 	float thickness = 2.f;
 	// horizontal render lines

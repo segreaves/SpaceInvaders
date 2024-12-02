@@ -46,9 +46,10 @@ public:
 	ActorId& getUFOId() { return m_ufo; }
 	int getPlayerLives() const;
 	void setPlayerLives(const unsigned int lives) { m_playerLives = lives; }
-	int getEnemyCount() const { return m_remainingEnemies; }
+	int getInvaderCount() const { return m_remainingInvaders; }
 	void resetInvaderCount();
 	void onInvaderDefeated();
+	void onUFODefeated();
 	void onPlayerDefeated();
 	int getKills() const { return m_kills; }
 	sf::Vector2f getBunkerSpawn(ActorId id);
@@ -81,12 +82,13 @@ private:
 	ActorId m_ufo;
 	ActorId m_playerExplosion;
 	ActorId m_ufoExplosion;
-	unsigned int m_remainingEnemies;
+	unsigned int m_remainingInvaders;
 	unsigned int m_playerLives;
 	unsigned int m_kills;
 	unsigned int m_score;
 	unsigned int m_invaderBasePoints = 1;
 	unsigned int m_invaderPoints = 1;
+	unsigned int m_ufoPoints = 1000;
 	bool m_killStreak = false;
 	const int m_invaderCols = 12;
 	const std::vector<std::string> m_invaderProfiles = { "invader1", "invader2", "invader3", "invader2", "invader1" };

@@ -43,6 +43,7 @@ private:
 	void setWindowOutline();
 	void setupHelpPanel();
 	sf::FloatRect getGameViewSpace();
+	void showNewScore(const unsigned int score);
 
 	LevelManager m_levelManager;
 	sf::View m_gameView;
@@ -52,13 +53,17 @@ private:
 	sf::RectangleShape m_background;
 	bool m_soundOn;
 	bool m_musicOn;
+	bool m_showingNewScore = false;
+	const float m_showNewScoreDuration = 1.f;
+	float m_showNewScoreTimer;
 	// HUD elements
-	unsigned int m_outlineThickness = 3;
+	const float m_outlineThickness = 3;
 	float m_hudUpdateTimer;
 	const float m_hudUpdateInterval = 0.2f;
 	sf::Vector2f m_hudPadding = { 50.f, 50.f };
 	// HUD text
 	sf::Text m_scoreText;
+	sf::Text m_newScoreText;
 	sf::Text m_levelText;
 	sf::Text m_killsText;
 	sf::Text m_fpsText;

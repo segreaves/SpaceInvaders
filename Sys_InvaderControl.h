@@ -42,7 +42,7 @@ private:
 	void tryShooting(const float& deltaTime, const ActorId& id, std::shared_ptr<Comp_Invader> invComp);
 	void onInvaderDeath(const ActorId& id);
 	void setInvaderSpeed(const float& speed);
-	void playLoadSound();
+	void playLoadSound(const float& deltaTime);
 
 	sf::Vector2f m_aiTarget;
 	bool m_movingRight;
@@ -57,10 +57,12 @@ private:
 	const float m_dropDistance = 32.f;
 	const float m_bounds = 20.f;
 	std::queue<ActorId> m_invaderQueue = std::queue<ActorId>();
-	const float m_invaderLoadTime = 0.02f;
+	const float m_invaderLoadDuration = 0.02f;
 	float m_loadTimer;
-	float m_beatDuration;
+	float m_loadSoundTimer;
+	const float m_loadSoundDuration = 0.1f;
 	float m_beatTimer;
+	float m_beatDuration = 0.5f;
 	bool m_beatHigh;
 
 	std::random_device m_rd;

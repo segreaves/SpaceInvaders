@@ -176,6 +176,8 @@ void Sys_UFOControl::onUFODeath(const ActorId& id)
 	particlesComp->getParticleSystem()->setEmitterPosition(explosionPos->getPosition());
 	particlesComp->getParticleSystem()->emitParticles();
 	m_systemManager->getActorManager()->enableActor(explosionId);
+	// add points to score
+	m_systemManager->getLevelManager()->onUFODefeated();
 	// disable UFO
 	m_ufoEnabled = false;
 	m_systemManager->getActorManager()->disableActor(id);

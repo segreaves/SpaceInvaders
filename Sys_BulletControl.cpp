@@ -34,12 +34,14 @@ void Sys_BulletControl::subscribeToChannels()
 {
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Collision, this);
 	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::Shoot, this);
+	m_systemManager->getMessageHandler()->subscribe(ActorMessageType::MissedShot, this);
 }
 
 void Sys_BulletControl::unsubscribeFromChannels()
 {
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Collision, this);
 	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::Shoot, this);
+	m_systemManager->getMessageHandler()->unsubscribe(ActorMessageType::MissedShot, this);
 }
 
 void Sys_BulletControl::update(const float& deltaTime)
@@ -65,7 +67,12 @@ void Sys_BulletControl::update(const float& deltaTime)
 		sf::FloatRect bulletAABB = colComp->getAABB();
 		// check if bullet is out of bounds
 		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_systemManager->getLevelManager()->getViewSpace().getSize().y)
+		{
+			// before de-spawning bullet, handle missed shot
+			handleMissedShot(bullet, id);
+			// de-spawn bullet
 			m_systemManager->addEvent(bullet->getId(), (EventId)ActorEventType::Despawned);
+		}
 #ifdef DEBUG
 		sf::RectangleShape rectTip(sf::Vector2f(4.f, 4.f));
 		rectTip.setPosition(posComp->getPosition());
@@ -115,9 +122,20 @@ void Sys_BulletControl::notify(const Message& msg)
 	switch ((ActorMessageType)msg.m_type)
 	{
 	case ActorMessageType::Collision:
+	{
 		onBulletDestroyed(msg.m_receiver);
+		// if player bullet, handle kill streak
+		if (m_systemManager->getActorManager()->getActor(msg.m_receiver)->getTag() == "bullet_player")
+		{
+			// get colliding actor tag
+			const auto& tag = m_systemManager->getActorManager()->getActor(msg.m_sender)->getTag();
+			if (tag == "bunker" || tag == "bullet_invader")
+				m_systemManager->getLevelManager()->resetKillStreak();
+		}
+		// set bullet de-spawn event
 		m_systemManager->addEvent(msg.m_receiver, (EventId)ActorEventType::Despawned);
 		break;
+	}
 	case ActorMessageType::Shoot:
 	{
 		const auto& bullet = m_systemManager->getActorManager()->getActor(msg.m_receiver);
@@ -141,6 +159,9 @@ void Sys_BulletControl::notify(const Message& msg)
 		bulletComp->resetBulletFrameTime();
 		break;
 	}
+	case ActorMessageType::MissedShot:
+		m_systemManager->getLevelManager()->resetKillStreak();
+		break;
 	}
 }
 
@@ -153,4 +174,15 @@ void Sys_BulletControl::onBulletDestroyed(ActorId id)
 	msg.m_int = (int)SoundType::BulletHit;
 	msg.m_xy = XY(100.f, 1.f);
 	m_systemManager->getMessageHandler()->dispatch(msg);
+}
+
+void Sys_BulletControl::handleMissedShot(const std::shared_ptr<Actor>& bullet, sf::Uint32& id)
+{
+	if (bullet->getTag() == "bullet_player")
+	{
+		Message msg((MessageType)ActorMessageType::MissedShot);
+		msg.m_sender = id;
+		msg.m_receiver = id;
+		m_systemManager->getMessageHandler()->dispatch(msg);
+	}
 }

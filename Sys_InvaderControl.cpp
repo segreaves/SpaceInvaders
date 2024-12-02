@@ -16,7 +16,7 @@ Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	m_rightInvader(-1),
 	m_shockwaveIndex(0),
 	m_loadTimer(1),
-	m_beatDuration(0.5f),
+	m_loadSoundTimer(0),
 	m_beatTimer(0),
 	m_beatHigh(false)
 {
@@ -62,12 +62,13 @@ void Sys_InvaderControl::start()
 	m_beatDuration = m_systemManager->getLevelManager()->getLevelBaseSpeed() / m_systemManager->getLevelManager()->getInvaderBaseSpeed();
 	m_beatTimer = 0;
 	m_beatHigh = false;
-	m_loadTimer = m_invaderLoadTime;
+	m_loadTimer = m_invaderLoadDuration;
+	m_loadSoundTimer = m_loadSoundDuration;
 	// play start level sound
-	Message msg((MessageType)ActorMessageType::Sound);
-	msg.m_int = static_cast<int>(SoundType::InvaderSpawn);
-	msg.m_xy = XY(75.f, 1.f);
-	m_systemManager->getMessageHandler()->dispatch(msg);
+	//Message msg((MessageType)ActorMessageType::Sound);
+	//msg.m_int = static_cast<int>(SoundType::InvaderSpawn);
+	//msg.m_xy = XY(75.f, 1.f);
+	//m_systemManager->getMessageHandler()->dispatch(msg);
 }
 
 void Sys_InvaderControl::loadInvader(const ActorId& id)
@@ -94,7 +95,7 @@ void Sys_InvaderControl::update(const float& deltaTime)
 		handleInvaders(deltaTime);
 	else 
 	{
-		playLoadSound();
+		playLoadSound(deltaTime);
 		loadNextInvader(deltaTime);
 	}
 }
@@ -129,7 +130,7 @@ void Sys_InvaderControl::loadNextInvader(const float& deltaTime)
 	if (m_loadTimer > 0) return;
 	loadInvader(m_invaderQueue.front());
 	m_invaderQueue.pop();
-	m_loadTimer = m_invaderLoadTime;
+	m_loadTimer = m_invaderLoadDuration;
 	// if all invaders are loaded, select ones to track
 	if (m_invaderQueue.empty())
 		selectTrackedInvaders();
@@ -392,7 +393,15 @@ void Sys_InvaderControl::setInvaderSpeed(const float& speed)
 	m_beatDuration = m_systemManager->getLevelManager()->getLevelBaseSpeed() / m_aiSpeed;
 }
 
-void Sys_InvaderControl::playLoadSound()
+void Sys_InvaderControl::playLoadSound(const float& deltaTime)
 {
-	// play invader load sound at intervals as long as there are invaders to load
+	// play invader load sound at intervals
+	m_loadSoundTimer -= deltaTime;
+	if (m_loadSoundTimer > 0) return;
+	// play sound
+	Message msg((MessageType)ActorMessageType::Sound);
+	msg.m_int = static_cast<int>(SoundType::InvaderSpawn);
+	msg.m_xy = XY(75.f, 1.f);
+	m_systemManager->getMessageHandler()->dispatch(msg);
+	m_loadSoundTimer = m_loadSoundDuration;
 }

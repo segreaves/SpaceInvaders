@@ -19,7 +19,7 @@ State_Game::State_Game(StateManager* stateManager) :
 
 void State_Game::update(const float& deltaTime)
 {
-	if (m_levelManager.getEnemyCount() <= 0)
+	if (m_levelManager.getInvaderCount() <= 0)
 		loadNextLevel();
 	m_fps = static_cast<unsigned int>(1.f / deltaTime);
 	// game update
@@ -285,4 +285,11 @@ sf::FloatRect State_Game::getGameViewSpace()
 	sf::Vector2f viewCenter = m_gameView.getCenter();
 	sf::Vector2f viewSize = m_gameView.getSize();
 	return sf::FloatRect(viewCenter - viewSize / 2.f, viewSize);
+}
+
+void State_Game::showNewScore(const unsigned int score)
+{
+	m_showingNewScore = true;
+	m_showNewScoreTimer = m_showNewScoreDuration;
+	m_newScoreText.setString("+" + std::to_string(score));
 }

@@ -10,10 +10,10 @@ LevelManager::LevelManager(ActorManager* actorManager) :
 	m_playerId(-1),
 	m_playerExplosion(-1),
 	m_playerLives(0),
-	m_remainingEnemies(0),
+	m_remainingInvaders(0),
 	m_kills(0),
 	m_score(0),
-	m_invaderPoints(0),
+	m_invaderPoints(m_invaderBasePoints),
 	m_state(LevelState::PlayerAlive)
 {
 }
@@ -129,14 +129,21 @@ int LevelManager::getPlayerLives() const
 
 void LevelManager::resetInvaderCount()
 {
-	m_remainingEnemies = static_cast<int>(m_invaders.size());
+	m_remainingInvaders = static_cast<int>(m_invaders.size());
 }
 
 void LevelManager::onInvaderDefeated()
 {
 	m_kills++;
-	--m_remainingEnemies;
-	m_score += m_killStreak ? ++m_invaderPoints : m_invaderBasePoints;
+	--m_remainingInvaders;
+	m_score += m_invaderPoints++;
+	m_killStreak = true;
+}
+
+void LevelManager::onUFODefeated()
+{
+	m_kills++;
+	m_score += m_ufoPoints;
 	m_killStreak = true;
 }
 
@@ -174,7 +181,7 @@ void LevelManager::newGame()
 void LevelManager::purge()
 {
 	m_playerLives = 0;
-	m_remainingEnemies = 0;
+	m_remainingInvaders = 0;
 	m_kills = 0;
 	m_invaders.clear();
 	m_playerBullets.clear();
