@@ -4,6 +4,7 @@
 #include "Comp_Movement.h"
 #include "Comp_Invader.h"
 #include "LevelManager.h"
+#include "Trigger.h"
 #include "Utils.h"
 
 State_Game::State_Game(StateManager* stateManager) :
@@ -25,12 +26,7 @@ void State_Game::update(const float& deltaTime)
 	// game update
 	m_stateManager->getContext()->m_systemManager->update(deltaTime);
 	// HUD update
-	m_hudUpdateTimer += deltaTime;
-	if (m_hudUpdateTimer >= m_hudUpdateInterval)
-	{
-		updateHUD();
-		m_hudUpdateTimer -= m_hudUpdateInterval;
-	}
+	updateHUD(deltaTime);
 	// if player dead, prepare to switch to Game Over screen
 	switch (m_levelManager.getState())
 	{
@@ -47,8 +43,37 @@ void State_Game::update(const float& deltaTime)
 
 void State_Game::draw()
 {
-	drawGame();
-	drawHUD();
+	// draw game
+	auto* window = m_stateManager->getContext()->m_windowManager->getRenderWindow();
+	window->setView(m_gameView);
+	window->draw(m_background);
+	m_stateManager->getContext()->m_systemManager->draw(m_stateManager->getContext()->m_windowManager);
+	// draw HUD
+	window->setView(m_view);
+	window->draw(m_scoreText);
+	window->draw(m_levelText);
+	window->draw(m_killsText);
+	window->draw(m_fpsText);
+	window->draw(m_helpText);
+	window->draw(m_soundText);
+	window->draw(m_musicText);
+	// show new score if needed
+	if (m_showingNewScore)
+		window->draw(m_newScoreText);
+	// draw player lives
+	float iconWidth = m_playerIcon.getGlobalBounds().width;
+	for (unsigned int i = 0; i < m_levelManager.getPlayerLives(); ++i)
+	{
+		m_playerIcon.setPosition(m_playerIconPosition.x + i * iconWidth - 3 * iconWidth, m_playerIconPosition.y);
+		window->draw(m_playerIcon);
+	}
+	// draw help panel if enabled
+	if (m_showHelp)
+	{
+		window->draw(m_helpPanel);
+		window->draw(m_helpPanelTitle);
+		window->draw(m_helpPanelText);
+	}
 }
 
 void State_Game::onCreate()
@@ -78,12 +103,15 @@ void State_Game::onCreate()
 
 void State_Game::activate()
 {
+	// add callbacks
 	m_stateManager->getContext()->m_controller->m_onPause.addCallback("Game_onPause", std::bind(&StateManager::switchTo, m_stateManager, StateType::Paused));
 	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
 	m_stateManager->getContext()->m_controller->m_onToggleHelp.addCallback("Game_onToggleHelp", std::bind(&State_Game::onToggleHelp, this));
 	m_stateManager->getContext()->m_controller->m_onToggleSound.addCallback("Game_onToggleSound", std::bind(&State_Game::onToggleSound, this));
 	m_stateManager->getContext()->m_controller->m_onToggleMusic.addCallback("Game_onToggleMusic", std::bind(&State_Game::onToggleMusic, this));
+	m_levelManager.m_updateScore.addCallback("Game_onUpdateScore", std::bind(&State_Game::showNewScore, this, std::placeholders::_1));
+	// start new game if one is required
 	if (m_newGame)
 		newGame();
 }
@@ -178,45 +206,35 @@ void State_Game::newGame()
 	m_playerIcon = *playerSprite->getSpriteSheet()->getSprite();
 }
 
-void State_Game::updateHUD()
+void State_Game::updateHUD(const float& deltaTime)
 {
-	m_scoreText.setString("Score:\n" + std::to_string(m_levelManager.getScore()));
-	m_levelText.setString("Level:\n" + std::to_string(m_levelManager.getLevel()));
-	m_killsText.setString("Kills:\n" + std::to_string(m_levelManager.getKills()));
-	m_fpsText.setString("FPS:\n" + std::to_string(m_fps));
-}
-
-void State_Game::drawGame()
-{
-	m_stateManager->getContext()->m_windowManager->getRenderWindow()->setView(m_gameView);
-	m_stateManager->getContext()->m_windowManager->getRenderWindow()->draw(m_background);
-	m_stateManager->getContext()->m_systemManager->draw(m_stateManager->getContext()->m_windowManager);
-}
-
-void State_Game::drawHUD()
-{
-	WindowManager* windowManager = m_stateManager->getContext()->m_windowManager;
-	windowManager->getRenderWindow()->setView(m_view);
-	windowManager->getRenderWindow()->draw(m_scoreText);
-	windowManager->getRenderWindow()->draw(m_levelText);
-	windowManager->getRenderWindow()->draw(m_killsText);
-	windowManager->getRenderWindow()->draw(m_fpsText);
-	windowManager->getRenderWindow()->draw(m_helpText);
-	windowManager->getRenderWindow()->draw(m_soundText);
-	windowManager->getRenderWindow()->draw(m_musicText);
-	// draw player lives
-	float iconWidth = m_playerIcon.getGlobalBounds().width;
-	for (unsigned int i = 0; i < m_levelManager.getPlayerLives(); ++i)
+	m_hudUpdateTimer -= deltaTime;
+	// if enough time has passed, update the score
+	if (m_hudUpdateTimer < 0)
 	{
-		m_playerIcon.setPosition(m_playerIconPosition.x + i * iconWidth - 3 * iconWidth, m_playerIconPosition.y);
-		windowManager->getRenderWindow()->draw(m_playerIcon);
+		m_scoreText.setString("Score:\n" + std::to_string(m_levelManager.getScore()));
+		m_levelText.setString("Level:\n" + std::to_string(m_levelManager.getLevel()));
+		m_killsText.setString("Kills:\n" + std::to_string(m_levelManager.getKills()));
+		m_fpsText.setString("FPS:\n" + std::to_string(m_fps));
+		m_hudUpdateTimer = m_hudUpdateInterval;
 	}
-	// draw help panel if enabled
-	if (m_showHelp)
+	// if new score needs to be shown
+	if (m_showingNewScore)
 	{
-		windowManager->getRenderWindow()->draw(m_helpPanel);
-		windowManager->getRenderWindow()->draw(m_helpPanelTitle);
-		windowManager->getRenderWindow()->draw(m_helpPanelText);
+		m_showNewScoreTimer += deltaTime;
+		if (m_showNewScoreTimer < m_showNewScoreDuration)
+		{
+			const auto pos = sf::Vector2f(m_hudPadding.x + m_fontSize, m_hudPadding.x);
+			const float ratio = m_showNewScoreTimer / m_showNewScoreDuration;
+			m_showScoreAlpha = ratio < 0.5f ? 1.f : 1.f - ratio;
+			sf::Color color = APP_COLOR;
+			color.a = m_showScoreAlpha * 255;
+			m_newScoreText.setFillColor(color);
+			const auto new_pos = pos + sf::Vector2f(0, m_newScoreOffset * ratio);
+			m_newScoreText.setPosition(new_pos);
+		}
+		else
+			m_showingNewScore = false;
 	}
 }
 
@@ -225,6 +243,7 @@ void State_Game::initializeHUD()
 	setWindowOutline();
 	initializeHUDText(m_scoreText);
 	m_scoreText.setPosition(m_hudPadding.x, 0);
+	initializeHUDText(m_newScoreText);
 	initializeHUDText(m_levelText);
 	m_levelText.setPosition(m_hudPadding.x, m_hudPadding.y + m_fontSize);
 	initializeHUDText(m_killsText);
@@ -290,6 +309,6 @@ sf::FloatRect State_Game::getGameViewSpace()
 void State_Game::showNewScore(const unsigned int score)
 {
 	m_showingNewScore = true;
-	m_showNewScoreTimer = m_showNewScoreDuration;
+	m_showNewScoreTimer = 0.f;
 	m_newScoreText.setString("+" + std::to_string(score));
 }

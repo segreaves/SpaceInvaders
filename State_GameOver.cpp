@@ -9,6 +9,12 @@ State_GameOver::State_GameOver(StateManager* stateManager) :
 
 void State_GameOver::update(const float& deltaTime)
 {
+	m_showTextTimer -= deltaTime;
+	if (m_showTextTimer < 0)
+	{
+		m_showText = !m_showText;
+		m_showTextTimer = m_showTextDuration;
+	}
 }
 
 void State_GameOver::draw()
@@ -16,7 +22,8 @@ void State_GameOver::draw()
 	sf::RenderWindow* window = m_stateManager->getContext()->m_windowManager->getRenderWindow();
 	window->draw(m_panel);
 	window->draw(m_gameOverText);
-	window->draw(m_optionsText);
+	if (m_showText)
+		window->draw(m_optionsText);
 }
 
 void State_GameOver::onCreate()
@@ -57,6 +64,8 @@ void State_GameOver::activate()
 	m_stateManager->getContext()->m_controller->m_onSelect.addCallback("GameOver_onSelect", std::bind(&State_GameOver::OnSelect, this));
 	// play  game over sound
 	m_stateManager->getContext()->m_soundManager->playSound("game_over_sound");
+	// initiate text flashing
+	m_showTextTimer = m_showTextDuration;
 }
 
 void State_GameOver::deactivate()

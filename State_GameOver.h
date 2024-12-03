@@ -17,4 +17,7 @@ private:
 	sf::RectangleShape m_panel;
 	sf::Text m_gameOverText;
 	sf::Text m_optionsText;
+	const float m_showTextDuration = 0.5f;
+	float m_showTextTimer;
+	bool m_showText = true;
 };

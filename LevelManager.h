@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Trigger.h"
 #include <unordered_map>
 
 class ActorManager;
@@ -19,6 +20,8 @@ class LevelManager
 public:
 	LevelManager(ActorManager* actorManager);
 	~LevelManager();
+
+	Trigger<unsigned int> m_updateScore;
 
 	sf::Vector2f getPlayerSpawnPoint() const;
 

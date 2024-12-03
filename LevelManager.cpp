@@ -136,7 +136,9 @@ void LevelManager::onInvaderDefeated()
 {
 	m_kills++;
 	--m_remainingInvaders;
-	m_score += m_invaderPoints++;
+	m_score += m_invaderPoints;
+	m_updateScore.dispatch(m_invaderPoints);
+	m_invaderPoints++;
 	m_killStreak = true;
 }
 
@@ -145,6 +147,7 @@ void LevelManager::onUFODefeated()
 	m_kills++;
 	m_score += m_ufoPoints;
 	m_killStreak = true;
+	m_updateScore.dispatch(m_ufoPoints);
 }
 
 void LevelManager::onPlayerDefeated()

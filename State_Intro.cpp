@@ -4,17 +4,27 @@
 #include "Params.h"
 
 State_Intro::State_Intro(StateManager* stateManager) :
-	State(stateManager)
+	State(stateManager),
+	m_showTextTimer(0)
 {
 }
 
-void State_Intro::update(const float& deltaTime) {}
+void State_Intro::update(const float& deltaTime)
+{
+	m_showTextTimer -= deltaTime;
+	if (m_showTextTimer < 0)
+	{
+		m_showText = !m_showText;
+		m_showTextTimer = m_showTextDuration;
+	}
+}
 
 void State_Intro::draw()
 {
 	sf::RenderWindow* window = m_stateManager->getContext()->m_windowManager->getRenderWindow();
 	window->draw(m_titleText);
-	window->draw(m_instructionsText);
+	if (m_showText)
+		window->draw(m_instructionsText);
 }
 
 void State_Intro::onCreate()
@@ -52,6 +62,8 @@ void State_Intro::activate()
 	m_stateManager->getContext()->m_controller->m_onSelect.addCallback("Intro_onContinue", std::bind(&State_Intro::onContinue, this));
 	// play music
 	m_stateManager->getContext()->m_soundManager->playMusic("intro_music");
+	// initiate text flashing
+	m_showTextTimer = m_showTextDuration;
 }
 
 void State_Intro::deactivate()

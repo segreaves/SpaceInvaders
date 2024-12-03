@@ -17,4 +17,7 @@ private:
 	sf::View m_view;
 	sf::Text m_titleText, m_instructionsText;
 	std::string m_continueInput = "Intro_Continue";
+	const float m_showTextDuration = 0.5f;
+	float m_showTextTimer;
+	bool m_showText = true;
 };

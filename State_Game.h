@@ -35,9 +35,7 @@ private:
 	void gameOverScreen();
 	void newGame();
 
-	void updateHUD();
-	void drawGame();
-	void drawHUD();
+	void updateHUD(const float& deltaTime);
 	void initializeHUD();
 	void initializeHUDText(sf::Text& text);
 	void setWindowOutline();
@@ -54,8 +52,10 @@ private:
 	bool m_soundOn;
 	bool m_musicOn;
 	bool m_showingNewScore = false;
-	const float m_showNewScoreDuration = 1.f;
+	const float m_showNewScoreDuration = 0.25f;
 	float m_showNewScoreTimer;
+	const float m_newScoreOffset = -20.f;
+	float m_showScoreAlpha;
 	// HUD elements
 	const float m_outlineThickness = 3;
 	float m_hudUpdateTimer;
