@@ -1,6 +1,0 @@
-Position rotation_disabled
-SpriteSheet single_memory bunker_sprite Medium
-Collision 90 70
-Bunker
-Grid 3
-SoundEmitter bunker_emitter

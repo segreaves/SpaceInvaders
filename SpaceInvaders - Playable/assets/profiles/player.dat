@@ -1,9 +1,0 @@
-Position rotation_disabled
-SpriteSheet shared_memory player_sprite Medium
-Movement 65 0
-MoveTarget
-Control 1000000 4500000
-Collision 40 48
-Health 3
-Player
-SoundEmitter player_emitter

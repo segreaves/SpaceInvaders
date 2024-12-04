@@ -1,5 +1,0 @@
-# type|name|volume|pitch
-sound invader_shoot 95 1
-sound invader_explode 50 1
-sound invader_beat 100 0.33
-sound invader_spawn 75 1
