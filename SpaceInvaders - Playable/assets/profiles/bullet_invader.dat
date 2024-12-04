@@ -1,0 +1,7 @@
+Position rotation_disabled
+SpriteSheet shared_memory bullet_invader_sprite Bottom
+Movement 0 0
+Control 750 1000
+Collision 6 32 Bottom
+Bullet invader 200 0.05 1
+SoundEmitter invader_emitter

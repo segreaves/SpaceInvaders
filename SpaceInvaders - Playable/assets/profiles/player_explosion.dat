@@ -1,0 +1,3 @@
+Position
+# numParticles particleSize duration minSpeed
+Particles 500 3 3 1 100

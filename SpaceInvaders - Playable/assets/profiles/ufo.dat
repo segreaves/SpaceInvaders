@@ -1,0 +1,11 @@
+Position
+SpriteSheet shared_memory ufo_sprite Medium
+Movement 2 0.075
+MoveTarget
+Collision 84 36
+UFO 1000
+SoundEmitter ufo_emitter
+Mass 100
+Spring 35 1 0.5
+TorqueSpring 100 0.1
+ShipSway 2

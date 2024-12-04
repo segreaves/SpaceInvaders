@@ -1,0 +1,10 @@
+player_sprite assets/graphics/player.png
+invader1_sprite assets/graphics/invader_a.png
+invader2_sprite assets/graphics/invader_b.png
+invader3_sprite assets/graphics/invader_c.png
+bullet_player_sprite assets/graphics/player_bullet.png
+bullet_invader_sprite assets/graphics/invader_bullet.png
+bunker_sprite assets/graphics/bunker.png
+ufo_sprite assets/graphics/UFO.png
+shockwave_sprite assets/graphics/shockwave.png
+ufo_sprite assets/graphics/mystery_ship.png
