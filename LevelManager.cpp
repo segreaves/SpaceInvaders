@@ -39,8 +39,8 @@ void LevelManager::createPlayer()
 void LevelManager::createInvaders()
 {
 	const auto offset = (m_viewSpace.width - m_invaderSeparation.x * m_invaderCols) / 2.f;
+	const float initialDrop = 50.f;// leave some room on top of screen
 	const sf::Vector2f screenCenter = getScreenCenter();
-	int initialDrop = 2;// leave some room on top of screen
 	for (auto i = 0; i < m_invaderProfiles.size(); i++)
 	{
 		for (auto j = 0; j < m_invaderCols; j++)
@@ -49,7 +49,7 @@ void LevelManager::createInvaders()
 			m_invaders.emplace_back(invaderId);
 			const auto spawnPos = sf::Vector2f(
 				j * m_invaderSeparation.x + offset,
-				(i + initialDrop) * m_invaderSeparation.y);
+				i * m_invaderSeparation.y + initialDrop);
 			auto invaderComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Invader>(ComponentType::Invader);
 			invaderComp->setSpawnOffset(spawnPos - screenCenter);
 			auto colComp = m_actorManager->getActor(invaderId)->getComponent<Comp_Collision>(ComponentType::Collision);

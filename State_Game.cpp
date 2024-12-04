@@ -144,8 +144,8 @@ void State_Game::loadNextLevel()
 void State_Game::onPlayerMove(sf::Vector2f xy)
 {
 	unsigned int playerId = m_levelManager.getPlayerId();
-	auto actor = m_stateManager->getContext()->m_actorManager->getActor(playerId);
-	auto targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
+	const auto& actor = m_stateManager->getContext()->m_actorManager->getActor(playerId);
+	const auto& targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 	targetComp->setTarget(targetComp->getTarget() + xy);
 }
 

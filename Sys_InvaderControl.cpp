@@ -64,11 +64,6 @@ void Sys_InvaderControl::start()
 	m_beatHigh = false;
 	m_loadTimer = m_invaderLoadDuration;
 	m_loadSoundTimer = m_loadSoundDuration;
-	// play start level sound
-	//Message msg((MessageType)ActorMessageType::Sound);
-	//msg.m_int = static_cast<int>(SoundType::InvaderSpawn);
-	//msg.m_xy = XY(75.f, 1.f);
-	//m_systemManager->getMessageHandler()->dispatch(msg);
 }
 
 void Sys_InvaderControl::loadInvader(const ActorId& id)
@@ -192,7 +187,7 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 		msg.m_receiver = bulletId;
 		m_systemManager->getMessageHandler()->dispatch(msg);
 		// knock-back
-		float knockback = 50000;
+		float knockback = 100000;
 		moveComp->accelerate(sf::Vector2f(0, -knockback * 1));
 		break;
 	}

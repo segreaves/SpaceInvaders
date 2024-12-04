@@ -52,9 +52,11 @@ public:
 		m_frictionCoefficient = frictionCoefficient;
 	}
 
-	void applyBaseFriction(const sf::Vector2f& velocity)
+	void applyBaseFriction(const float& deltaTime)
 	{
-		m_velocity -= m_frictionCoefficient * velocity;
+		//m_velocity.x *= std::pow(1.f - m_frictionCoefficient, deltaTime);
+		//m_velocity.y *= std::pow(1.f - m_frictionCoefficient, deltaTime);
+		m_velocity -= m_frictionCoefficient * m_velocity * deltaTime;
 	}
 
 	void applyAngularDampening(const float& angularVelocity)

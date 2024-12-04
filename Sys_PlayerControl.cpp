@@ -55,22 +55,22 @@ void Sys_PlayerControl::update(const float& deltaTime)
 	LevelManager* levelManager = m_systemManager->getLevelManager();
 	for (auto& id : m_actorIds)
 	{
-		auto player = m_systemManager->getActorManager()->getActor(id);
+		const auto& player = m_systemManager->getActorManager()->getActor(id);
 		// clamp the player target to the view space
-		auto targetComp = player->getComponent<Comp_Target>(ComponentType::Target);
-		float lowerBound = levelManager->getViewSpace().getPosition().x;
-		float upperBound = levelManager->getViewSpace().getPosition().x + levelManager->getViewSpace().getSize().x;
+		const auto& targetComp = player->getComponent<Comp_Target>(ComponentType::Target);
+		const float lowerBound = levelManager->getViewSpace().getPosition().x;
+		const float upperBound = levelManager->getViewSpace().getPosition().x + levelManager->getViewSpace().getSize().x;
 		targetComp->setTarget(sf::Vector2f(targetComp->getTarget().x < lowerBound ? lowerBound : (targetComp->getTarget().x > upperBound ? upperBound : targetComp->getTarget().x), targetComp->getTarget().y));
 		
-		auto controlComp = player->getComponent<Comp_Control>(ComponentType::Control);
-		auto posComp = player->getComponent<Comp_Position>(ComponentType::Position);
-		auto moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
+		const auto& controlComp = player->getComponent<Comp_Control>(ComponentType::Control);
+		const auto& posComp = player->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
 		sf::Vector2f direction = targetComp->getTarget() - posComp->getPosition();
 		controlComp->setMovementInput(direction);
-		moveComp->accelerate(controlComp->getMovementInput() * controlComp->getMaxAcceleration());
+		moveComp->accelerate(controlComp->getMovementInput() * controlComp->getMaxAcceleration() * deltaTime);
 
 		// check if player is out of bounds
-		auto colComp = player->getComponent<Comp_Collision>(ComponentType::Collision);
+		const auto& colComp = player->getComponent<Comp_Collision>(ComponentType::Collision);
 		sf::FloatRect playerAABB = colComp->getAABB();
 
 		float resolve = 0;
@@ -108,7 +108,7 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 		msg.m_receiver = bulletId;
 		m_systemManager->getMessageHandler()->dispatch(msg);
 		// knock-back
-		float knockback = 250000;
+		float knockback = 1000000;
 		const auto& moveComp = actorManager->getActor(actorId)->getComponent<Comp_Movement>(ComponentType::Movement);
 		moveComp->accelerate(sf::Vector2f(0, -knockback * -1));
 		break;

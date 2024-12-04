@@ -103,7 +103,7 @@ sf::Vector2f Sys_Spring::calculateSpringForce(const sf::Vector2f& anchor, const 
 	// stretch of the spring
 	float stretch = currentLength - length;
 	// calculate force
-	sf::Vector2f force = -strength * stretch * stretch * dir;
+	sf::Vector2f force = -strength * stretch * dir;
 	// apply damping force
 	force -= dampingCoeff * vel;
 	return force;
