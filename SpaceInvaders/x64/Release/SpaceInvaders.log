@@ -1,4 +1,6 @@
-﻿  LevelManager.cpp
+﻿  State_Game.cpp
+C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(67,29): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(233,31): warning C4244: '=': conversion from 'float' to 'sf::Uint8', possible loss of data
   Generating code
   0 of 5962 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
