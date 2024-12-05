@@ -23,6 +23,8 @@ Use the mouse to move the ship and left-mouse button to fire. The 'H' key provid
 - "SFX- The Ultimate 2017 16 bit Mini pack" by phoenix1291 (https://opengameart.org/content/sfx-the-ultimate-2017-16-bit-mini-pack)
 - "Misc Lasers: by Muncheybobo (https://opengameart.org/content/retro-shooter-sound-effects)
 - "space_ships" by setaiso (https://opengameart.org/content/space-ships-sounds-and-bg-music)
+### Font:
+- "Game Over" by Pedro M. Pastor (https://www.dafont.com/pedro-munoz-pastor.d2122)
 
 ![image](https://github.com/user-attachments/assets/a5d202a3-d8f0-49a0-a41a-f393b90d1f65)
 Thank you to Pezzza's Work (https://www.youtube.com/@PezzzasWork) for sharing invaluable advice and for inspiring this project through his own 'Invaders From Space' project. This project draws heavily from his approach in this project.
