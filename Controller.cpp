@@ -10,9 +10,12 @@ Controller::Controller() :
 
 void Controller::update()
 {
-	// set mouse to center of screen
-	sf::RenderWindow* window = m_windowManager->getRenderWindow();
-	sf::Mouse::setPosition(sf::Vector2i(window->getSize().x / 2, window->getSize().y / 2), *window);
+	if (m_captureMouse)
+	{
+		// set mouse to center of screen
+		sf::RenderWindow* window = m_windowManager->getRenderWindow();
+		sf::Mouse::setPosition(sf::Vector2i(window->getSize().x / 2, window->getSize().y / 2), *window);
+	}
 }
 
 void Controller::handleEvent(sf::Event event)
@@ -24,7 +27,11 @@ void Controller::handleEvent(sf::Event event)
 		else if (event.key.code == sf::Keyboard::Escape)
 			m_onEscape.dispatch();
 		else if (event.key.code == sf::Keyboard::P)
+		{
+			// release the mouse on paused state
+			m_captureMouse = !m_captureMouse;
 			m_onPause.dispatch();
+		}
 		else if (event.key.code == sf::Keyboard::H)
 			m_onToggleHelp.dispatch();
 		else if (event.key.code == sf::Keyboard::S)
