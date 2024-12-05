@@ -21,7 +21,7 @@ Use the mouse to move the ship and left-mouse button to fire. The 'H' key provid
 ## Acknowledgements
 ### Music:
 - Intro music: introwavybgm by Monster Logix Studio (https://opengameart.org/content/retro-space-bgm)
-- Game music: Grey_Sector_v0_86 by FoxSynergy (https://opengameart.org/content/retro-space-bgm)
+- Game music: Grey_Sector_v0_86 by FoxSynergy (https://opengameart.org/content/grey-sector-8-bit)
 ### Sounds:
 - "SFX- The Ultimate 2017 16 bit Mini pack" by phoenix1291 (https://opengameart.org/content/sfx-the-ultimate-2017-16-bit-mini-pack)
 - "Misc Lasers: by Muncheybobo (https://opengameart.org/content/retro-shooter-sound-effects)
