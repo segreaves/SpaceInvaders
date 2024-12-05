@@ -6,9 +6,10 @@ Welcome to Space Invaders, a classic arcade-style game in the visual-style of ol
 ## Features
 ![image](https://github.com/user-attachments/assets/ea3d5e55-9df1-4e8e-a3d6-8dafbf797e41)
 
-Classic Gameplay: Waves of alien invaders to battle with a responsive player ship.
+Gameplay: Waves of alien invaders to battle with a responsive player ship.
 Efficient Rendering: Smooth 2D graphics using SFML.
 Architectural Design: Modular and scalable codebase leveraging industry-standard patterns.
+Retro art-style: Pixel-art look with the capabilities of modern hardware.
 
 ## How to play
 ![image](https://github.com/user-attachments/assets/72d08b47-153a-4e43-b797-26d79b38843c)
