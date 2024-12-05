@@ -30,7 +30,7 @@ Use the mouse to move the ship and left-mouse button to fire. The 'H' key provid
 Thank you to Pezzza's Work (https://www.youtube.com/@PezzzasWork) for sharing invaluable advice and for inspiring this project through his own 'Invaders From Space' project. This project draws heavily from his approach in this project.
 
 ![image](https://github.com/user-attachments/assets/819186db-8b41-4b13-adb6-653af70133c9)
-A lot of the knowledge implemented in this project comes from the 'SFML Game Development By Example' book by Raimondas Pupius, highly recommended to understand the huge advantages of things like the Entity-Component-System pattern, and others.
+A lot of the ideas implemented in this project comes from the 'SFML Game Development By Example' book by Raimondas Pupius, highly recommended to understand the huge advantages of things like the Entity-Component-System pattern, and others.
 
 ## Architecture
 ![image](https://github.com/user-attachments/assets/33db61b2-b909-4701-816a-c5b26bd38b9a)
