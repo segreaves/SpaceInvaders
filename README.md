@@ -16,12 +16,22 @@ Go to the "SpaceInvaders - Playable" folder. The contents of this folder can be 
 Use the mouse to move the ship and left-mouse button to fire. The 'H' key provides details on options available.
 
 ## Acknowledgements
+### Music:
+- Intro music: introwavybgm by Monster Logix Studio (https://opengameart.org/content/retro-space-bgm)
+- Game music: Grey_Sector_v0_86 by FoxSynergy (https://opengameart.org/content/retro-space-bgm)
+### Sounds:
+- "SFX- The Ultimate 2017 16 bit Mini pack" by phoenix1291 (https://opengameart.org/content/sfx-the-ultimate-2017-16-bit-mini-pack)
+- "Misc Lasers: by Muncheybobo (https://opengameart.org/content/retro-shooter-sound-effects)
+- "space_ships" by setaiso (https://opengameart.org/content/space-ships-sounds-and-bg-music)
+
 ![image](https://github.com/user-attachments/assets/a5d202a3-d8f0-49a0-a41a-f393b90d1f65)
 Thank you to Pezzza's Work (https://www.youtube.com/@PezzzasWork) for sharing invaluable advice and for inspiring this project through his own 'Invaders From Space' project. This project draws heavily from his approach in this project.
+
+![image](https://github.com/user-attachments/assets/819186db-8b41-4b13-adb6-653af70133c9)
 A lot of the knowledge implemented in this project comes from the 'SFML Game Development By Example' book by Raimondas Pupius, highly recommended to understand the huge advantages of things like the Entity-Component-System pattern, and others.
 
 ## Architecture
-![image](https://github.com/user-attachments/assets/819186db-8b41-4b13-adb6-653af70133c9)
+![image](https://github.com/user-attachments/assets/33db61b2-b909-4701-816a-c5b26bd38b9a)
 This project employs several modern software design patterns to ensure maintainability and scalability:
 
 ### Entity-Component-System (ECS)
@@ -55,7 +65,5 @@ Used to instantiate game entities like enemies and bullets, as well as game stat
 
 ### Command
 The Controller class uses the Command pattern to map user input events to specific actions or commands. Each input event (e.g., key press, mouse movement) triggers a corresponding Trigger object, which then executes the associated callback function.
-
-![image](https://github.com/user-attachments/assets/33db61b2-b909-4701-816a-c5b26bd38b9a)
 
 ![image](https://github.com/user-attachments/assets/6f229755-bdb8-457a-b57a-42687be96a47)
