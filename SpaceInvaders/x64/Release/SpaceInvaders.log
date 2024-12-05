@@ -1,9 +1,7 @@
-﻿  State_Game.cpp
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(68,29): warning C4018: '<': signed/unsigned mismatch
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(234,31): warning C4244: '=': conversion from 'float' to 'sf::Uint8', possible loss of data
+﻿  Sys_UFOControl.cpp
   Generating code
-  1 of 5962 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  3 of 5962 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    10 functions had inline decision re-evaluated but remain unchanged
+    28 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   SpaceInvaders.vcxproj -> C:\Users\simur\Documents\C++ Projects\SpaceInvaders\x64\Release\SpaceInvaders.exe

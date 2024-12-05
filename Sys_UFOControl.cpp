@@ -146,6 +146,9 @@ void Sys_UFOControl::handleUFO(const float& deltaTime)
 	m_soundTimer -= deltaTime;
 	if (m_soundTimer < 0)
 	{
+		// step animation frame
+		const auto& spriteComp = ufo->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
+		spriteComp->frameStep();
 		// play UFO fly sound
 		Message msg((MessageType)ActorMessageType::Sound);
 		msg.m_sender = ufoId;
