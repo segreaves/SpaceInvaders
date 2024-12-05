@@ -5,12 +5,14 @@ Welcome to Space Invaders, a classic arcade-style game in the visual-style of ol
 
 ## Features
 ![image](https://github.com/user-attachments/assets/ea3d5e55-9df1-4e8e-a3d6-8dafbf797e41)
+
 Classic Gameplay: Waves of alien invaders to battle with a responsive player ship.
 Efficient Rendering: Smooth 2D graphics using SFML.
 Architectural Design: Modular and scalable codebase leveraging industry-standard patterns.
 
 ## How to play
 ![image](https://github.com/user-attachments/assets/72d08b47-153a-4e43-b797-26d79b38843c)
+
 Go to the "SpaceInvaders - Playable" folder. The contents of this folder can be downloaded and are all that is required to play the game. Make sure the .dll files and the "assets" folder are in the same location as the SpaceInvaders.exe file.
 ### Controls
 Use the mouse to move the ship and left-mouse button to fire. The 'H' key provides details on options available.
@@ -27,13 +29,16 @@ Use the mouse to move the ship and left-mouse button to fire. The 'H' key provid
 - "Game Over" by Pedro M. Pastor (https://www.dafont.com/pedro-munoz-pastor.d2122)
 
 ![image](https://github.com/user-attachments/assets/a5d202a3-d8f0-49a0-a41a-f393b90d1f65)
+
 Thank you to Pezzza's Work (https://www.youtube.com/@PezzzasWork) for sharing invaluable advice and for inspiring this project through his own 'Invaders From Space' project. This project draws heavily from his approach in this project.
 
 ![image](https://github.com/user-attachments/assets/819186db-8b41-4b13-adb6-653af70133c9)
+
 A lot of the ideas implemented in this project comes from the 'SFML Game Development By Example' book by Raimondas Pupius, highly recommended to understand the huge advantages of things like the Entity-Component-System pattern, and others.
 
 ## Architecture
 ![image](https://github.com/user-attachments/assets/33db61b2-b909-4701-816a-c5b26bd38b9a)
+
 This project employs several modern software design patterns to ensure maintainability and scalability:
 
 ### Entity-Component-System (ECS)
