@@ -1,8 +1,8 @@
-﻿  Engine.cpp
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\Engine.cpp(124,67): warning C4244: '+=': conversion from 'float' to 'unsigned int', possible loss of data
+﻿  Controller.cpp
+  State_Paused.cpp
   Generating code
   2 of 5962 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    11 functions had inline decision re-evaluated but remain unchanged
+    29 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   SpaceInvaders.vcxproj -> C:\Users\simur\Documents\C++ Projects\SpaceInvaders\x64\Release\SpaceInvaders.exe
