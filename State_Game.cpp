@@ -14,7 +14,8 @@ State_Game::State_Game(StateManager* stateManager) :
 	m_newGame(true),
 	m_fps(0),
 	m_soundOn(true),
-	m_musicOn(false)
+	m_musicOn(true),
+	m_showNewScoreTimer(0)
 {
 }
 
@@ -95,7 +96,7 @@ void State_Game::onCreate()
 	// play  music
 	m_stateManager->getContext()->m_soundManager->playMusic("game_music");
 	setSound(true);
-	setMusic(false);
+	setMusic(true);
 	// set player icon position to upper right of screen
 	m_playerIconPosition = sf::Vector2f(
 		m_view.getCenter().x + m_view.getSize().x / 2 - m_hudPadding.x,
