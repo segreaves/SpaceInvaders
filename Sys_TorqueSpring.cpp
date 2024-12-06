@@ -49,7 +49,7 @@ void Sys_TorqueSpring::update(const float& deltaTime)
 		const float angularVelocity = moveComp->getAngularVelocity();
 		float torque = -stiffness * angle;
 		torque += -damping * angularVelocity;
-		moveComp->addTorque(torque);
+		moveComp->addTorque(torque * deltaTime);
 	}
 }
 

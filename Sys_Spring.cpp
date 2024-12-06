@@ -54,7 +54,7 @@ void Sys_Spring::update(const float& deltaTime)
 		// compute the spring vector
 		const sf::Vector2f springForce = calculateSpringForce(springComp->getAnchor(), springComp->getAttach(), moveComp->getVelocity(), springComp->getStrength(), springComp->getLength(), springComp->getDampingCoeff());
 		// apply the spring force to the actor
-		moveComp->accelerate(springForce);
+		moveComp->accelerate(springForce * deltaTime);
 	}
 }
 

@@ -1,34 +1,7 @@
-﻿  Controller.cpp
-  Engine.cpp
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\Engine.cpp(124,67): warning C4244: '+=': conversion from 'float' to 'unsigned int', possible loss of data
-  LevelManager.cpp
-  SpaceInvaders.cpp
-  StateManager.cpp
-  State_Game.cpp
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(68,29): warning C4018: '<': signed/unsigned mismatch
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(234,31): warning C4244: '=': conversion from 'float' to 'sf::Uint8', possible loss of data
-  State_GameOver.cpp
-  State_Intro.cpp
-  State_Paused.cpp
-  SysManager.cpp
-  Sys_BulletControl.cpp
-  Sys_BunkerControl.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\numbers(11): warning STL4038: The contents of <numbers> are available only with C++20 or later.
-  Sys_Collision.cpp
-  Sys_Gravity.cpp
-  Sys_InvaderControl.cpp
-  Sys_PlayerControl.cpp
-  Sys_Renderer.cpp
-  Sys_ShipSway.cpp
-  Sys_ShockwaveControl.cpp
-  Sys_Sound.cpp
-  Compiling...
-  Sys_Spring.cpp
-  Sys_UFOControl.cpp
-  WindowManager.cpp
+﻿  Sys_TorqueSpring.cpp
   Generating code
-  2 of 5962 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  1 of 5962 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    11 functions had inline decision re-evaluated but remain unchanged
+    10 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   SpaceInvaders.vcxproj -> C:\Users\simur\Documents\C++ Projects\SpaceInvaders\x64\Release\SpaceInvaders.exe
