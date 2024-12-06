@@ -11,11 +11,7 @@ Controller::Controller() :
 void Controller::update()
 {
 	if (m_captureMouse)
-	{
-		// set mouse to center of screen
-		sf::RenderWindow* window = m_windowManager->getRenderWindow();
-		sf::Mouse::setPosition(sf::Vector2i(window->getSize().x / 2, window->getSize().y / 2), *window);
-	}
+		centerMouse();
 }
 
 void Controller::handleEvent(sf::Event event, const float& deltaTime)
@@ -64,4 +60,10 @@ bool Controller::setFocus(const bool& focus)
 {
 	m_hasFocus = focus;
 	return m_hasFocus;
+}
+
+void Controller::centerMouse()
+{
+	sf::RenderWindow* window = m_windowManager->getRenderWindow();
+	sf::Mouse::setPosition(sf::Vector2i(window->getSize().x / 2, window->getSize().y / 2), *window);
 }

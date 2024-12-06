@@ -117,6 +117,8 @@ void State_Game::activate()
 	// start new game if one is required
 	if (m_newGame)
 		newGame();
+	// capture mouse
+	m_stateManager->getContext()->m_controller->centerMouse();
 }
 
 void State_Game::deactivate()

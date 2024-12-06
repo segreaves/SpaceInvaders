@@ -16,6 +16,7 @@ public:
 
 	void setWindowManager(WindowManager* windowManager);
 	bool setFocus(const bool& focus);
+	void centerMouse();
 
 	Trigger<void> m_onEscape;
 	Trigger<void> m_onShoot;
