@@ -18,7 +18,7 @@ void Controller::update()
 	}
 }
 
-void Controller::handleEvent(sf::Event event)
+void Controller::handleEvent(sf::Event event, const float& deltaTime)
 {
 	if (event.type == sf::Event::KeyPressed)
 	{
@@ -43,7 +43,7 @@ void Controller::handleEvent(sf::Event event)
 	}
 	else if (event.type == sf::Event::MouseMoved)
 	{
-		float moveAmount = event.mouseMove.x - m_screenCenter.x;
+		float moveAmount = (event.mouseMove.x - m_screenCenter.x) * deltaTime;
 		m_onMove.dispatch(m_mouseSensitivity * sf::Vector2f(moveAmount, 0));
 	}
 	else if (event.type == sf::Event::MouseButtonPressed)

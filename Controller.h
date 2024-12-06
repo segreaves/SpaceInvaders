@@ -12,7 +12,7 @@ public:
 	Controller();
 
 	void update();
-	void handleEvent(sf::Event event);
+	void handleEvent(sf::Event event, const float& deltaTime);
 
 	void setWindowManager(WindowManager* windowManager);
 	bool setFocus(const bool& focus);
@@ -30,7 +30,7 @@ private:
 	bool m_hasFocus;
 	bool m_captureMouse = true;
 	WindowManager* m_windowManager;
-	const float m_mouseSensitivity = 1;
+	const float m_mouseSensitivity = 1000;
 	sf::Vector2f m_movementInput;
 	sf::Vector2f m_screenCenter;
 };

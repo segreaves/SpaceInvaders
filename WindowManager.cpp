@@ -30,7 +30,7 @@ void WindowManager::update(float deltaTime)
 		else if (event.type == sf::Event::LostFocus)
 			m_isFocused = m_controller.setFocus(false);
 		else
-			m_controller.handleEvent(event);
+			m_controller.handleEvent(event, deltaTime);
 	}
 	m_controller.update();
 }
