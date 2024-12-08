@@ -15,7 +15,8 @@ State_Game::State_Game(StateManager* stateManager) :
 	m_fps(0),
 	m_soundOn(true),
 	m_musicOn(true),
-	m_showNewScoreTimer(0)
+	m_showNewScoreTimer(0),
+	m_showScoreAlpha(0)
 {
 }
 
@@ -24,6 +25,8 @@ void State_Game::update(const float& deltaTime)
 	if (m_levelManager.getInvaderCount() <= 0)
 		loadNextLevel();
 	m_fps = static_cast<unsigned int>(1.f / deltaTime);
+	// handle player movement input
+	handlePlayerPosition();
 	// game update
 	m_stateManager->getContext()->m_systemManager->update(deltaTime);
 	// HUD update
@@ -96,7 +99,7 @@ void State_Game::onCreate()
 	// play  music
 	m_stateManager->getContext()->m_soundManager->playMusic("game_music");
 	setSound(true);
-	setMusic(true);
+	setMusic(false);
 	// set player icon position to upper right of screen
 	m_playerIconPosition = sf::Vector2f(
 		m_view.getCenter().x + m_view.getSize().x / 2 - m_hudPadding.x,
@@ -117,8 +120,6 @@ void State_Game::activate()
 	// start new game if one is required
 	if (m_newGame)
 		newGame();
-	// capture mouse
-	m_stateManager->getContext()->m_controller->centerMouse();
 }
 
 void State_Game::deactivate()
@@ -152,6 +153,29 @@ void State_Game::onPlayerMove(sf::Vector2f xy)
 	const auto& actor = m_stateManager->getContext()->m_actorManager->getActor(playerId);
 	const auto& targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 	targetComp->setTarget(targetComp->getTarget() + xy);
+}
+
+void State_Game::handlePlayerPosition()
+{
+	// get render window
+	const auto& window = *m_stateManager->getContext()->m_windowManager->getRenderWindow();
+	// get mouse position relative to window
+	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+	// clamp mouse position to view space
+	if (mousePos.x < 0) mousePos.x = 0;
+	if (mousePos.x > window.getSize().x) mousePos.x = window.getSize().x;
+	sf::Mouse::setPosition(mousePos, window);
+	// calculate mouse position relative to window
+	const auto& mousePosInWindow = mousePos.x / static_cast<float>(window.getSize().x);
+	// calculate player position relative to view space
+	const auto& playerPosInView = m_levelManager.getViewSpace().getPosition().x + m_levelManager.getViewSpace().getSize().x * mousePosInWindow;
+	// set player target to its position
+	unsigned int playerId = m_levelManager.getPlayerId();
+	// get player target component
+	const auto& actor = m_stateManager->getContext()->m_actorManager->getActor(playerId);
+	const auto& targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
+	// set player target position
+	targetComp->setTarget(sf::Vector2f(playerPosInView, targetComp->getTarget().y));
 }
 
 void State_Game::onPlayerShoot()

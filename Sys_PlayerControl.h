@@ -27,4 +27,5 @@ private:
 	unsigned int m_playerBulletIndex;
 	sf::Text m_bulletCountText;
 	sf::Font m_font;
+	const float m_knockback = 250000;
 };

@@ -74,12 +74,17 @@ void Sys_InvaderControl::loadInvader(const ActorId& id)
 	const auto& targetComp = invader->getComponent<Comp_Target>(ComponentType::Target);
 	const auto& moveComp = invader->getComponent<Comp_Movement>(ComponentType::Movement);
 	auto spriteSheetComp = invader->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-	spriteSheetComp->resetFrame();
 	targetComp->setTarget(m_aiTarget + invComp->getSpawnOffset());
+	// set all invader components to initial conditions
+	spriteSheetComp->resetFrame();
+	spriteSheetComp->getSpriteSheet()->setSpriteRotation(0);
 	posComp->setPosition(targetComp->getTarget());
 	posComp->setAngle(0);
-	moveComp->setVelocity(sf::Vector2f(0, 0));
+	moveComp->setVelocity(0, 0);
 	moveComp->setAngularVelocity(0);
+	moveComp->setSpeedChange(0, 0);
+	moveComp->setPrevVelocity(0, 0);
+	moveComp->updateSpeedChange();
 	m_systemManager->getActorManager()->enableActor(id);
 }
 
@@ -187,8 +192,7 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 		msg.m_receiver = bulletId;
 		m_systemManager->getMessageHandler()->dispatch(msg);
 		// knock-back
-		float knockback = 100000;
-		moveComp->accelerate(sf::Vector2f(0, -knockback * 1));
+		moveComp->accelerate(sf::Vector2f(0, -m_knockback * 1));
 		break;
 	}
 	}

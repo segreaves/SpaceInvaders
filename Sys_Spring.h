@@ -20,5 +20,5 @@ protected:
 
 	void notify(const Message& msg);
 private:
-	sf::Vector2f calculateSpringForce(const sf::Vector2f& anchor, const sf::Vector2f& pos, const sf::Vector2f& vel, const float& strength, const float& length, const float& dampingCoeff);
+	sf::Vector2f calculateSpringForce(const sf::Vector2f& anchor, const sf::Vector2f& pos, const sf::Vector2f& vel, const float& strength, const float& length);
 };

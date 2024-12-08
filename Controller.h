@@ -11,7 +11,6 @@ class Controller
 public:
 	Controller();
 
-	void update();
 	void handleEvent(sf::Event event, const float& deltaTime);
 
 	void setWindowManager(WindowManager* windowManager);

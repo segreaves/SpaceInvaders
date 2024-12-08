@@ -16,8 +16,8 @@ private:
         ss >> m_stiffness >> m_damping;
     }
 
-    float m_currentAngle;
-    float m_stiffness;
-    float m_damping;
-    float m_angularVelocity;
+    float m_currentAngle = 0.f;
+    float m_stiffness = 0.f;
+    float m_damping = 0.f;
+    float m_angularVelocity = 0.f;
 };

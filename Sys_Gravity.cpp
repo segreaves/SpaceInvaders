@@ -42,7 +42,7 @@ void Sys_Gravity::update(const float& deltaTime)
 		auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
 
 		sf::Vector2f gravityForce = massComp->getMass() * M_GRAVITY * M_DOWN;
-		moveComp->accelerate(gravityForce);
+		moveComp->accelerate(gravityForce * deltaTime);
 	}
 }
 

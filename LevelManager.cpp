@@ -39,7 +39,7 @@ void LevelManager::createPlayer()
 void LevelManager::createInvaders()
 {
 	const auto offset = (m_viewSpace.width - m_invaderSeparation.x * m_invaderCols) / 2.f;
-	const float initialDrop = 50.f;// leave some room on top of screen
+	const float initialDrop = 75.f;// leave some room on top of screen
 	const sf::Vector2f screenCenter = getScreenCenter();
 	for (auto i = 0; i < m_invaderProfiles.size(); i++)
 	{

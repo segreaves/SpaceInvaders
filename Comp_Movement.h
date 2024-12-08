@@ -19,12 +19,16 @@ public:
 	}
 
 	sf::Vector2f getPrevVelocity() { return m_prevVelocity; }
+	void setPrevVelocity(const sf::Vector2f& prevVelocity) { m_prevVelocity = prevVelocity; }
+	void setPrevVelocity(const float& x, const float& y) { m_prevVelocity = sf::Vector2f(x, y); }
 	void updateSpeedChange()
 	{
 		m_speedChange = m_velocity - m_prevVelocity;
 		m_prevVelocity = m_velocity;
 	}
 	sf::Vector2f getSpeedChange() { return m_speedChange; }
+	void setSpeedChange(const sf::Vector2f& speedChange) { m_speedChange = speedChange; }
+	void setSpeedChange(const float& x, const float& y) { m_speedChange = sf::Vector2f(x, y); }
 
 	const sf::Vector2f& getAcceleration() const { return m_acceleration; }
 	void setAcceleration(const sf::Vector2f& acceleration)
@@ -52,10 +56,9 @@ public:
 		m_frictionCoefficient = frictionCoefficient;
 	}
 
-	void applyBaseFriction(const float& deltaTime)
+	void applyFriction(const float& deltaTime)
 	{
-		//m_velocity.x *= std::pow(1.f - m_frictionCoefficient, deltaTime);
-		//m_velocity.y *= std::pow(1.f - m_frictionCoefficient, deltaTime);
+		if (m_frictionCoefficient == 0) return;
 		m_velocity -= m_frictionCoefficient * m_velocity * deltaTime;
 	}
 
@@ -91,10 +94,10 @@ private:
 
 	float m_frictionCoefficient = 0.f;
 	float m_angularFrictionCoefficient = 0.f;
-	sf::Vector2f m_velocity;
-	sf::Vector2f m_prevVelocity;
-	sf::Vector2f m_acceleration = sf::Vector2f(0, 0);
-	sf::Vector2f m_speedChange = sf::Vector2f(0, 0);
+	sf::Vector2f m_velocity = sf::Vector2f(0.f, 0.f);
+	sf::Vector2f m_prevVelocity = sf::Vector2f(0.f, 0.f);
+	sf::Vector2f m_acceleration = sf::Vector2f(0.f, 0.f);
+	sf::Vector2f m_speedChange = sf::Vector2f(0.f, 0.f);
 	float m_angularVelocity;
 	float m_torque;
 	bool m_collidingOnX = false;

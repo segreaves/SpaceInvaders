@@ -1,11 +1,11 @@
 Position
 SpriteSheet shared_memory invader3_sprite Medium
-Movement 5 0.075
+Movement 0.1 0.075
 MoveTarget
 Collision 40 40
 Invader
 SoundEmitter invader_emitter
 Mass 100
-Spring 100000 1 0.5
-TorqueSpring 100000 0.1
-ShipSway 5
+Spring 15000 10 200000
+TorqueSpring 100000 0.5
+ShipSway 100000

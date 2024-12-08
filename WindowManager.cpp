@@ -32,7 +32,6 @@ void WindowManager::update(float deltaTime)
 		else
 			m_controller.handleEvent(event, deltaTime);
 	}
-	m_controller.update();
 }
 
 void WindowManager::clear()
@@ -88,6 +87,7 @@ void WindowManager::createWindow()
 {
 	sf::VideoMode videoMode(m_windowSize.x, m_windowSize.y);
 	m_window.create(videoMode, m_windowTitle, m_isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
+	m_window.setFramerateLimit(m_framerate);
 }
 
 void WindowManager::closeWindow()

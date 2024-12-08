@@ -52,7 +52,9 @@ void Sys_Spring::update(const float& deltaTime)
 		springComp->setAnchor(targetComp->getTarget());
 
 		// compute the spring vector
-		const sf::Vector2f springForce = calculateSpringForce(springComp->getAnchor(), springComp->getAttach(), moveComp->getVelocity(), springComp->getStrength(), springComp->getLength(), springComp->getDampingCoeff());
+		sf::Vector2f springForce = calculateSpringForce(springComp->getAnchor(), springComp->getAttach(), moveComp->getVelocity(), springComp->getStrength(), springComp->getLength());
+		// apply damping force
+		springForce -= springComp->getDampingCoeff() * moveComp->getVelocity() * deltaTime;
 		// apply the spring force to the actor
 		moveComp->accelerate(springForce * deltaTime);
 	}
@@ -91,7 +93,7 @@ void Sys_Spring::notify(const Message& msg)
 {
 }
 
-sf::Vector2f Sys_Spring::calculateSpringForce(const sf::Vector2f& anchor, const sf::Vector2f& pos, const sf::Vector2f& vel, const float& strength, const float& length, const float& dampingCoeff)
+sf::Vector2f Sys_Spring::calculateSpringForce(const sf::Vector2f& anchor, const sf::Vector2f& pos, const sf::Vector2f& vel, const float& strength, const float& length)
 {
 	if (pos == anchor) return sf::Vector2f(0, 0);
 	// compute the spring vector
@@ -104,7 +106,5 @@ sf::Vector2f Sys_Spring::calculateSpringForce(const sf::Vector2f& anchor, const 
 	float stretch = currentLength - length;
 	// calculate force
 	sf::Vector2f force = -strength * stretch * dir;
-	// apply damping force
-	force -= dampingCoeff * vel;
 	return force;
 }

@@ -11,5 +11,5 @@ private:
 	{
 		ss >> m_swayCoefficient;
 	}
-	float m_swayCoefficient;
+	float m_swayCoefficient = 0.f;
 };

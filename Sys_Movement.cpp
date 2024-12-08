@@ -41,13 +41,20 @@ void Sys_Movement::update(const float& deltaTime)
 		const auto& actor = m_systemManager->getActorManager()->getActor(id);
 		const auto& posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 		const auto& moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+		
+		sf::Vector2f acceleration = moveComp->getAcceleration();
+		// get friction as opposite to acceleration
+		const auto friction = moveComp->getFrictionCoefficient() * moveComp->getVelocity();
+		acceleration.x = std::abs(acceleration.x) > std::abs(friction.x) ? acceleration.x - friction.x : 0;
+		acceleration.y = std::abs(acceleration.y) > std::abs(friction.y) ? acceleration.y - friction.y : 0;
+
+		acceleration.x = moveComp->getAcceleration().x * !moveComp->getCollidingOnX();
+		acceleration.y = moveComp->getAcceleration().y * !moveComp->getCollidingOnY();
+
 		// handle movement
-		sf::Vector2f acceleration = sf::Vector2f(
-			moveComp->getAcceleration().x * !moveComp->getCollidingOnX(),
-			moveComp->getAcceleration().y * !moveComp->getCollidingOnY());
 		moveComp->addVelocity(acceleration * deltaTime);
 		moveComp->resetCollisionFlags();
-		moveComp->applyBaseFriction(deltaTime);
+		//moveComp->applyFriction(deltaTime);
 		posComp->move(moveComp->getVelocity() * deltaTime);
 		moveComp->setAcceleration(sf::Vector2f(0, 0));
 		moveComp->updateSpeedChange();

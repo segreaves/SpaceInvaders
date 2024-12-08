@@ -6,13 +6,12 @@ class Comp_Position : public Comp
 {
 public:
 	sf::Vector2f getPosition() { return m_position; }
-	
-	void setPosition(const float& x, const float& y) { m_position = sf::Vector2f(x, y); }
 
 	float getAngle() { return m_angle; }
 	void setAngle(const float& angle) { m_angle = angle; }
 
 	void setPosition(sf::Vector2f pos) { m_position = pos; }
+	void setPosition(const float& x, const float& y) { m_position = sf::Vector2f(x, y); }
 
 	void move(const float& x, const float& y)
 	{

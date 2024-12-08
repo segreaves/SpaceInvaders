@@ -26,6 +26,7 @@ private:
 
 	void loadNextLevel();
 	void onPlayerMove(sf::Vector2f xy);
+	void handlePlayerPosition();
 	void onPlayerShoot();
 	void onToggleHelp();
 	void setSound(bool soundOn);

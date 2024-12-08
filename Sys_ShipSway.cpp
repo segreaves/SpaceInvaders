@@ -39,12 +39,12 @@ void Sys_ShipSway::update(const float& deltaTime)
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	for (auto& id : m_actorIds)
 	{
-		auto actor = actorManager->getActor(id);
-		auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
-		auto swayComp = actor->getComponent<Comp_ShipSway>(ComponentType::ShipSway);
-		float speedChange = moveComp->getSpeedChange().x / deltaTime;
+		const auto& actor = actorManager->getActor(id);
+		const auto& moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+		const auto& swayComp = actor->getComponent<Comp_ShipSway>(ComponentType::ShipSway);
+		const float speedChange = moveComp->getSpeedChange().x;
 		const float torque = speedChange * swayComp->getSwayCoefficient();
-		moveComp->addTorque(torque);
+		moveComp->addTorque(torque * deltaTime);
 	}
 }
 

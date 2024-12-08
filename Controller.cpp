@@ -8,12 +8,6 @@ Controller::Controller() :
 {
 }
 
-void Controller::update()
-{
-	if (m_captureMouse)
-		centerMouse();
-}
-
 void Controller::handleEvent(sf::Event event, const float& deltaTime)
 {
 	if (event.type == sf::Event::KeyPressed)
@@ -40,7 +34,9 @@ void Controller::handleEvent(sf::Event event, const float& deltaTime)
 	else if (event.type == sf::Event::MouseMoved)
 	{
 		float moveAmount = (event.mouseMove.x - m_screenCenter.x) * deltaTime;
-		m_onMove.dispatch(m_mouseSensitivity * sf::Vector2f(moveAmount, 0));
+		//m_onMove.dispatch(m_mouseSensitivity * sf::Vector2f(moveAmount, 0));
+		//if (m_captureMouse)
+			//centerMouse();
 	}
 	else if (event.type == sf::Event::MouseButtonPressed)
 	{

@@ -26,12 +26,12 @@ protected:
 
 	void update(const float& deltaTime);
 	bool updateBeat(const float& deltaTime);
-	void loadNextInvader(const float& deltaTime);
 	void handleEvent(const ActorId& actorId, const ActorEventType& eventId);
 	void debugOverlay(WindowManager* windowManager);
 
 	void notify(const Message& msg);
 private:
+	void loadNextInvader(const float& deltaTime);
 	void handleInvaders(const float& deltaTime);
 	void selectTrackedInvaders();
 	void instantiateShockwave(sf::Vector2f position);
@@ -64,6 +64,7 @@ private:
 	float m_beatTimer;
 	float m_beatDuration = 0.5f;
 	bool m_beatHigh;
+	const float m_knockback = 20000;
 
 	std::random_device m_rd;
 	std::mt19937 m_gen; // Mersenne Twister engine

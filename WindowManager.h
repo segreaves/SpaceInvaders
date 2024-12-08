@@ -32,4 +32,5 @@ private:
 	bool m_isFullscreen;
 	bool m_isOpen;
 	Controller m_controller;
+	const unsigned int m_framerate = 200;
 };

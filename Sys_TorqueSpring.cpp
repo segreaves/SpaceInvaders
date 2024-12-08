@@ -39,16 +39,16 @@ void Sys_TorqueSpring::update(const float& deltaTime)
 	ActorManager* actorManager = m_systemManager->getActorManager();
 	for (auto& id : m_actorIds)
 	{
-		auto actor = actorManager->getActor(id);
-		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
-		auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
-		auto torqueSpringComp = actor->getComponent<Comp_TorqueSpring>(ComponentType::TorqueSpring);
-		const float stiffness = torqueSpringComp->getStiffness();
-		const float damping = torqueSpringComp->getDamping();
-		const float angle = posComp->getAngle();
-		const float angularVelocity = moveComp->getAngularVelocity();
+		const auto& actor = actorManager->getActor(id);
+		const auto& posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
+		const auto& moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
+		const auto& torqueSpringComp = actor->getComponent<Comp_TorqueSpring>(ComponentType::TorqueSpring);
+		const auto& stiffness = torqueSpringComp->getStiffness();
+		const auto& damping = torqueSpringComp->getDamping();
+		const auto& angle = posComp->getAngle();
+		const auto& angularVelocity = moveComp->getAngularVelocity();
 		float torque = -stiffness * angle;
-		torque += -damping * angularVelocity;
+		torque -= damping * angularVelocity;
 		moveComp->addTorque(torque * deltaTime);
 	}
 }
