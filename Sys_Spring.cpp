@@ -56,7 +56,7 @@ void Sys_Spring::update(const float& deltaTime)
 		// apply damping force
 		springForce -= springComp->getDampingCoeff() * moveComp->getVelocity() * deltaTime;
 		// apply the spring force to the actor
-		moveComp->accelerate(springForce * deltaTime);
+		moveComp->accelerate(springForce);
 	}
 }
 

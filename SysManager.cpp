@@ -39,8 +39,7 @@ SysManager::SysManager() :
 		SystemType::Collision,
 		SystemType::Sound,
 		SystemType::Health,
-		SystemType::LevelState,
-		SystemType::Renderer
+		SystemType::LevelState
 	};
 }
 
@@ -51,15 +50,29 @@ SysManager::~SysManager()
 
 void SysManager::start()
 {
+	m_accumulator = 0;
 	for (auto& [type, sys] : m_systems)
 		sys->start();
 }
 
+void SysManager::fixedUpdate(const float& stepTime)
+{
+	for (auto& type : m_systemOrder)
+		m_systems[type]->update(stepTime);
+}
+
 void SysManager::update(const float& deltaTime)
 {
+	m_accumulator += deltaTime;
 	handleEvents();
-	for (auto& type : m_systemOrder)
-		m_systems[type]->update(deltaTime);
+	// run fixed update
+	while (m_accumulator > m_stepTime)
+	{
+		fixedUpdate(m_stepTime);
+		m_accumulator -= m_stepTime;
+	}
+	// run render update
+	m_systems[SystemType::Renderer]->update(deltaTime);
 }
 
 void SysManager::draw(WindowManager* windowManager)

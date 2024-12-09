@@ -39,6 +39,7 @@ public:
 	~SysManager();
 
 	void start();
+	void fixedUpdate(const float& stepTime);
 	void update(const float& deltaTime);
 	void draw(WindowManager* windowManager);
 	void handleEvents();
@@ -69,4 +70,6 @@ private:
 	MessageHandler m_messageHandler;
 	LevelManager* m_levelManager;
 	std::vector<SystemType> m_systemOrder;
+	float m_accumulator = 0.f;
+	const float m_stepTime = 1.f / 120.f;
 };

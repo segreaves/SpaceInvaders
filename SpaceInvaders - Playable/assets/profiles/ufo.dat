@@ -6,6 +6,6 @@ Collision 84 36
 UFO 1000
 SoundEmitter ufo_emitter
 Mass 100
-Spring 15000 1 200000
+Spring 100 10 1000
 TorqueSpring 100 0.1
 ShipSway 2

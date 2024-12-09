@@ -6,6 +6,6 @@ Collision 42 42
 Invader
 SoundEmitter invader_emitter
 Mass 100
-Spring 15000 10 200000
-TorqueSpring 100000 0.1
+Spring 100 10 1000
+TorqueSpring 100000 10000
 ShipSway 100000
