@@ -7,5 +7,5 @@ UFO 1000
 SoundEmitter ufo_emitter
 Mass 100
 Spring 100 10 1000
-TorqueSpring 100 0.1
-ShipSway 2
+TorqueSpring 10 7
+ShipSway 100
