@@ -1,43 +1,10 @@
-﻿  Actor.cpp
-  ActorManager.cpp
-  Engine.cpp
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\Engine.cpp(124,67): warning C4244: '+=': conversion from 'float' to 'unsigned int', possible loss of data
-  LevelManager.cpp
-  ParticleSystem.cpp
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\ParticleSystem.cpp(8,18): warning C4244: 'initializing': conversion from 'unsigned int' to 'float', possible loss of data
-  SpaceInvaders.cpp
-  StateManager.cpp
-  State_Game.cpp
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(69,29): warning C4018: '<': signed/unsigned mismatch
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(164,17): warning C4018: '>': signed/unsigned mismatch
-C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(258,31): warning C4244: '=': conversion from 'float' to 'sf::Uint8', possible loss of data
-  State_GameOver.cpp
-  State_Intro.cpp
-  State_Paused.cpp
-  Sys.cpp
-  SysManager.cpp
-  Sys_BulletControl.cpp
-  Sys_BunkerControl.cpp
-  Sys_Collision.cpp
-  Sys_Gravity.cpp
-  Sys_Health.cpp
-  Sys_InvaderControl.cpp
-  Sys_LevelState.cpp
-  Compiling...
-  Sys_Movement.cpp
-  Sys_PlayerControl.cpp
-  Sys_Renderer.cpp
-  Sys_Rotation.cpp
-  Sys_ShipSway.cpp
-  Sys_ShockwaveControl.cpp
-  Sys_Sound.cpp
-  Sys_Spring.cpp
-  Sys_TorqueSpring.cpp
-  Sys_UFOControl.cpp
-  WindowManager.cpp
+﻿  State_Game.cpp
+C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(71,29): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(166,17): warning C4018: '>': signed/unsigned mismatch
+C:\Users\simur\Documents\C++ Projects\SpaceInvaders\State_Game.cpp(260,31): warning C4244: '=': conversion from 'float' to 'sf::Uint8', possible loss of data
   Generating code
-  41 of 6072 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
+  1 of 6072 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    232 functions had inline decision re-evaluated but remain unchanged
+    10 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   SpaceInvaders.vcxproj -> C:\Users\simur\Documents\C++ Projects\SpaceInvaders\x64\Release\SpaceInvaders.exe

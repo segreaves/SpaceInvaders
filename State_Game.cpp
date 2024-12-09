@@ -57,7 +57,9 @@ void State_Game::draw()
 	window->draw(m_scoreText);
 	window->draw(m_levelText);
 	window->draw(m_killsText);
+#ifdef DEBUG
 	window->draw(m_fpsText);
+#endif
 	window->draw(m_helpText);
 	window->draw(m_soundText);
 	window->draw(m_musicText);

@@ -64,10 +64,10 @@ void SysManager::fixedUpdate(const float& stepTime)
 void SysManager::update(const float& deltaTime)
 {
 	m_accumulator += deltaTime;
-	handleEvents();
 	// run fixed update
 	while (m_accumulator > m_stepTime)
 	{
+		handleEvents();
 		fixedUpdate(m_stepTime);
 		m_accumulator -= m_stepTime;
 	}
