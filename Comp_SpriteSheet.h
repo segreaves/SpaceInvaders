@@ -4,6 +4,10 @@
 #include "Utils.h"
 #include "SpriteSheet.h"
 
+/// <summary>
+/// Holds all the sprite data of an actor (not directly, but pointing to the
+/// data in the texture manager system).
+/// </summary>
 class Comp_SpriteSheet : public Comp, public IDrawable
 {
 public:

@@ -1,6 +1,9 @@
 #pragma once
 #include "State.h"
 
+/// <summary>
+/// Plays intro music and shows the game title.
+/// </summary>
 class State_Intro : public State
 {
 public:

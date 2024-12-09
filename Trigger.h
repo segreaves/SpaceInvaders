@@ -3,6 +3,11 @@
 #include <functional>
 #include <string>
 
+/// <summary>
+/// Class that implements the observer pattern. Used when a single event needs
+/// to be dispatched to multiple listeners.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 template<typename T = void>
 class Trigger
 {

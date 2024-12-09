@@ -3,6 +3,9 @@
 
 class LevelManager;
 
+/// <summary>
+/// Handles the player's health and taking damage.
+/// </summary>
 class Sys_Health : public Sys
 {
 public:

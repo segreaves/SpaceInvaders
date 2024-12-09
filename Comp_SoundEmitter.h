@@ -4,6 +4,9 @@
 #include <SFML/Audio.hpp>
 #include "SoundManager.h"
 
+/// <summary>
+/// Identifies an actor as one that can produce sounds.
+/// </summary>
 class Comp_SoundEmitter : public Comp
 {
 public:

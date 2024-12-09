@@ -1,6 +1,9 @@
 #pragma once
 #include "Comp.h"
 
+/// <summary>
+/// Records a shockwave's radius, force, and duration.
+/// </summary>
 class Comp_Shockwave : public Comp
 {
 public:

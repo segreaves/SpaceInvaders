@@ -4,6 +4,9 @@
 class SysManager;
 class SoundManager;
 
+/// <summary>
+/// Calls sounds when actors with sound components request them.
+/// </summary>
 class Sys_Sound : public Sys
 {
 	public:

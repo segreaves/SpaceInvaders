@@ -3,6 +3,9 @@
 
 class SysManager;
 
+/// <summary>
+/// Same as the movement system but for rotation.
+/// </summary>
 class Sys_Rotation : public Sys
 {
 public:

@@ -3,6 +3,9 @@
 
 class SysManager;
 
+/// <summary>
+/// Simulates the behavior of a torque spring.
+/// </summary>
 class Sys_TorqueSpring : public Sys
 {
 public:

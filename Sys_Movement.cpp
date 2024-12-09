@@ -54,7 +54,6 @@ void Sys_Movement::update(const float& deltaTime)
 		// handle movement
 		moveComp->addVelocity(acceleration * deltaTime);
 		moveComp->resetCollisionFlags();
-		//moveComp->applyFriction(deltaTime);
 		posComp->move(moveComp->getVelocity() * deltaTime);
 		moveComp->setAcceleration(sf::Vector2f(0, 0));
 		moveComp->updateSpeedChange();

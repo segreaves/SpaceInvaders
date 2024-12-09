@@ -1,6 +1,10 @@
 #pragma once
 #include "State.h"
 
+/// <summary>
+/// Similar to the paused state, but with a game over message showing instructions
+/// and options.
+/// </summary>
 class State_GameOver : public State
 {
 public:

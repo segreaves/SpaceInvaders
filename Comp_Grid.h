@@ -2,6 +2,9 @@
 #include "Comp.h"
 #include "Grid.h"
 
+/// <summary>
+/// Creates a grid of cells for collision detection.
+/// </summary>
 class Comp_Grid : public Comp
 {
 public:

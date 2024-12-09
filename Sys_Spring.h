@@ -3,6 +3,9 @@
 
 class SysManager;
 
+/// <summary>
+/// Simulates the behavior of a spring.
+/// </summary>
 class Sys_Spring : public Sys
 {
 public:

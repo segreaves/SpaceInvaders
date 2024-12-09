@@ -41,9 +41,9 @@ void Sys_Rotation::update(const float& deltaTime)
 		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 		auto moveComp = actor->getComponent<Comp_Movement>(ComponentType::Movement);
 		// handle rotation
-		const float torque = moveComp->getTorque() * deltaTime;
-		moveComp->addAngularVelocity(torque);
-		moveComp->applyAngularDampening(moveComp->getAngularVelocity());
+		const float torque = moveComp->getTorque();
+		moveComp->addAngularVelocity(torque * deltaTime);
+		moveComp->applyAngularDampening(moveComp->getAngularVelocity() * deltaTime);
 		posComp->rotate(moveComp->getAngularVelocity() * deltaTime);
 		moveComp->setTorque(0.f);
 	}

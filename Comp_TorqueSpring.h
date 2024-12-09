@@ -1,6 +1,10 @@
 #pragma once
 #include "Comp.h"
 
+/// <summary>
+/// Holds the torque spring data of an actor (used to stabilize the actor after the
+/// torque is applied by the ShipSway system).
+/// </summary>
 class Comp_TorqueSpring : public Comp
 {
 public:

@@ -3,6 +3,10 @@
 
 class SysManager;
 
+/// <summary>
+/// Handles all movement in the game. Applies acceleration, velocity, friction,
+/// and damping.
+/// </summary>
 class Sys_Movement : public Sys
 {
 public:

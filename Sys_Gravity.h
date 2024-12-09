@@ -3,6 +3,9 @@
 
 class SysManager;
 
+/// <summary>
+/// Applies gravity to actors with mass.
+/// </summary>
 class Sys_Gravity : public Sys
 {
 public:

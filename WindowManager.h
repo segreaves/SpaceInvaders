@@ -2,6 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "Controller.h"
 
+/// <summary>
+/// Holds all data and logic related to the render window.
+/// </summary>
 class WindowManager
 {
 public:
@@ -32,5 +35,5 @@ private:
 	bool m_isFullscreen;
 	bool m_isOpen;
 	Controller m_controller;
-	const unsigned int m_framerate = 60;
+	const unsigned int m_framerate = 90;
 };

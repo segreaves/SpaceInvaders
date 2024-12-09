@@ -2,6 +2,9 @@
 #include "ResourceManager.h"
 #include <SFML/Audio/SoundBuffer.hpp>
 
+/// <summary>
+/// Loads sounds and provides pointers to them when requested.
+/// </summary>
 class AudioManager : public ResourceManager<AudioManager, sf::SoundBuffer>
 {
 public:

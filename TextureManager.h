@@ -2,6 +2,9 @@
 #include "ResourceManager.h"
 #include <SFML/Graphics/Texture.hpp>
 
+/// <summary>
+/// Loads textures and provides pointers to them when requested.
+/// </summary>
 class TextureManager : public ResourceManager<TextureManager, sf::Texture>
 {
 public:

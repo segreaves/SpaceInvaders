@@ -1,6 +1,9 @@
 #pragma once
 #include "Comp.h"
 
+/// <summary>
+/// Records the health of an actor.
+/// </summary>
 class Comp_Health : public Comp
 {
 public:

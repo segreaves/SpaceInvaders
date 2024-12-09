@@ -1,6 +1,10 @@
 #pragma once
 #include "Comp.h"
 
+/// <summary>
+/// Bullet component. Contains bullet speed, frame duration,
+/// direction it should fly toward, and tag.
+/// </summary>
 class Comp_Bullet : public Comp
 {
 public:

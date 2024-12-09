@@ -8,7 +8,7 @@ class LevelManager;
 
 /// <summary>
 /// Handle invader behavior such as movement direction and shooting.
-/// Selects outter-most invaders to track and check for out-of-bounds.
+/// Selects outer-most invaders to track and check for out-of-bounds.
 /// </summary>
 class Sys_InvaderControl : public Sys
 {

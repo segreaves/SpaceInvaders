@@ -3,6 +3,9 @@
 
 class StateManager;
 
+/// <summary>
+/// Pauses the game and darkens the screen.
+/// </summary>
 class State_Paused : public State
 {
 public:

@@ -3,6 +3,9 @@
 #include "Particle.h"
 #include <random>
 
+/// <summary>
+/// Manages the behavior of particles.
+/// </summary>
 class ParticleSystem
 {
 public:

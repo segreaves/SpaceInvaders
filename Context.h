@@ -5,6 +5,9 @@
 #include "SysManager.h"
 #include "LevelManager.h"
 
+/// <summary>
+/// Allows systems in the game to communicate in a controlled manner.
+/// </summary>
 struct Context
 {
 	Context() :

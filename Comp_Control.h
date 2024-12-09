@@ -11,18 +11,10 @@ class Comp_Control : public Comp
 public:
 	void setMovementInput(const sf::Vector2f& movementInput)
 	{
-		m_movementInput = m_movementDirection = movementInput;
-		float magnitude = static_cast<float>(sqrt(m_movementDirection.x * m_movementDirection.x + m_movementDirection.y * m_movementDirection.y));
-		if (magnitude > 1)
-		{
-			m_movementDirection.x /= magnitude;
-			m_movementDirection.y /= magnitude;
-		}
+		m_movementInput = movementInput;
 	}
 
 	const sf::Vector2f& getMovementInput() const { return m_movementInput; }
-
-	const sf::Vector2f& getMovementDirection() const { return m_movementDirection; }
 
 	void setMaxAcceleration(const float& maxAcceleration)
 	{
@@ -44,7 +36,6 @@ private:
 	}
 
 	sf::Vector2f m_movementInput;
-	sf::Vector2f m_movementDirection;
 	float m_maxAcceleration;
 	float m_maxSpeed;
 };

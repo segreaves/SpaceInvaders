@@ -1,6 +1,9 @@
 #pragma once
 #include "Comp.h"
 
+/// <summary>
+/// Allows the Sys_Gravity system to apply gravity to an actor based on its mass.
+/// </summary>
 class Comp_Mass : public Comp
 {
 public:

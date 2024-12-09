@@ -15,6 +15,10 @@ struct Ray
     sf::Vector2f m_dir;
 };
 
+/// <summary>
+/// Creates a grid of cells. This class is used in the bunker system to determine
+/// damage done by bullets.
+/// </summary>
 class Grid
 {
 public:

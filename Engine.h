@@ -8,6 +8,9 @@
 #include "AudioManager.h"
 #include "SoundManager.h"
 
+/// <summary>
+/// Runs the game loop.
+/// </summary>
 class Engine
 {
 public:

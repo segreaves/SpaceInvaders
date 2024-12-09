@@ -2,10 +2,15 @@
 #include "ComponentType.h"
 #include <sstream>
 
+/// <summary>
+/// Base class for all components. Only requires a load method to be implemented.
+/// </summary>
 class Comp
 {
 public:
-	virtual ~Comp() {}
+	virtual ~Comp()
+	{
+	}
 
 	friend std::stringstream& operator >>(std::stringstream& ss, Comp& comp)
 	{

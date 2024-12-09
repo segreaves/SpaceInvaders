@@ -2,6 +2,9 @@
 #include "Comp.h"
 #include <SFML/System/Vector2.hpp>
 
+/// <summary>
+/// Holds invader data such as spawn offset and time to shoot.
+/// </summary>
 class Comp_Invader : public Comp
 {
 public:

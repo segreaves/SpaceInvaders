@@ -2,6 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "Comp.h"
 
+/// <summary>
+/// Allows an actor to be given a position in the game world.
+/// </summary>
 class Comp_Position : public Comp
 {
 public:

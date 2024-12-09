@@ -3,6 +3,9 @@
 
 class SysManager;
 
+/// <summary>
+/// Controls the behavior of the UFO actor.
+/// </summary>
 class Sys_UFOControl : public Sys
 {
 public:

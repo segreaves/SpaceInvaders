@@ -4,6 +4,9 @@
 class SysManager;
 class WindowManager;
 
+/// <summary>
+/// Renders all drawable actors in the game.
+/// </summary>
 class Sys_Renderer : public Sys
 {
 	friend class SysManager;

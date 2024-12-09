@@ -5,6 +5,9 @@
 #include <vector>
 #include <unordered_map>
 
+/// <summary>
+/// Manages the creation, removal, and switching of states.
+/// </summary>
 class StateManager
 {
 public:

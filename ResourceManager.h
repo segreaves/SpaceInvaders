@@ -6,6 +6,11 @@
 #include <sstream>
 #include <fstream>
 
+/// <summary>
+/// Base class for the texture and sound managers.
+/// </summary>
+/// <typeparam name="Derived"></typeparam>
+/// <typeparam name="T"></typeparam>
 template<class Derived, class T>
 class ResourceManager
 {

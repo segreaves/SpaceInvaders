@@ -44,7 +44,7 @@ void Sys_ShipSway::update(const float& deltaTime)
 		const auto& swayComp = actor->getComponent<Comp_ShipSway>(ComponentType::ShipSway);
 		const float speedChange = moveComp->getSpeedChange().x;
 		const float torque = speedChange * swayComp->getSwayCoefficient();
-		moveComp->addTorque(torque * deltaTime);
+		moveComp->addTorque(torque);
 	}
 }
 

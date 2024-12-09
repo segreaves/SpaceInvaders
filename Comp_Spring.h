@@ -1,6 +1,9 @@
 #pragma once
 #include "Comp.h"
 
+/// <summary>
+/// Records the spring properties of an actor.
+/// </summary>
 class Comp_Spring : public Comp
 {
 public:

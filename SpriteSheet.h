@@ -4,6 +4,10 @@
 #include "TextureManager.h"
 #include "OriginType.h"
 
+/// <summary>
+/// Holds a pointer to the objects sprite. Can be used to animate sprites through the
+/// cropSprite() and frameStep() methods.
+/// </summary>
 class SpriteSheet
 {
 public:

@@ -3,6 +3,10 @@
 #include "IDrawable.h"
 #include "ParticleSystem.h"
 
+/// <summary>
+/// Allows the creation of a particle system actor. Used for the player
+/// and UFO explosions.
+/// </summary>
 class Comp_Particles : public Comp, public IDrawable
 {
 public:

@@ -3,6 +3,9 @@
 #include "Comp.h"
 #include "OriginType.h"
 
+/// <summary>
+/// Collision component. Defines the bounding box of an actor, and its origin.
+/// </summary>
 class Comp_Collision : public Comp
 {
 public:

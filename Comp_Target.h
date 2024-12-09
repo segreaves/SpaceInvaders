@@ -2,6 +2,9 @@
 #include <SFML/System/Vector2.hpp>
 #include "Comp.h"
 
+/// <summary>
+/// Defines the desired target position of an actor.
+/// </summary>
 class Comp_Target : public Comp
 {
 public:

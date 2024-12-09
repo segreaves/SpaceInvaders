@@ -3,6 +3,10 @@
 
 class LevelManager;
 
+/// <summary>
+/// Manages the state of the game. For example, when the player dies,
+/// it tells the LevelManager to reset the game.
+/// </summary>
 class Sys_LevelState : public Sys
 {
 public:

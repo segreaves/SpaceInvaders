@@ -3,6 +3,9 @@
 #include "Comp.h"
 #include <cmath>
 
+/// <summary>
+/// Records an actors movement speed and acceleration.
+/// </summary>
 class Comp_Movement : public Comp
 {
 public:
@@ -54,12 +57,6 @@ public:
 	void setFrictionCoefficient(const float& frictionCoefficient)
 	{
 		m_frictionCoefficient = frictionCoefficient;
-	}
-
-	void applyFriction(const float& deltaTime)
-	{
-		if (m_frictionCoefficient == 0) return;
-		m_velocity -= m_frictionCoefficient * m_velocity * deltaTime;
 	}
 
 	void applyAngularDampening(const float& angularVelocity)

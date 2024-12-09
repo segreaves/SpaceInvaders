@@ -1,6 +1,10 @@
 #pragma once
 #include "Comp.h"
 
+/// <summary>
+/// Records the actors sway coefficient. Used by the Sys_ShipSway system to
+/// simulate ship sway.
+/// </summary>
 class Comp_ShipSway : public Comp
 {
 public:

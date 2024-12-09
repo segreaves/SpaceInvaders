@@ -1,6 +1,10 @@
 #pragma once
 #include "Sys.h"
 
+/// <summary>
+/// Controls the creation and duration of shockwaves from invader explosions as well
+/// as the shockwave effect on actors.
+/// </summary>
 class Sys_ShockwaveControl : public Sys
 {
 public:

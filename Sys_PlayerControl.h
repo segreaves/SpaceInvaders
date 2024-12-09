@@ -5,6 +5,10 @@
 class SysManager;
 class LevelManager;
 
+/// <summary>
+/// This system handles most of the game logic related to the player in terms of
+/// movement direction, shooting, death.
+/// </summary>
 class Sys_PlayerControl : public Sys
 {
 public:

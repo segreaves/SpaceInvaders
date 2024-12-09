@@ -1,6 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+/// <summary>
+/// Particle class for the particle system. Holds the position and velocity of a particle.
+/// </summary>
 class Particle
 {
 public:

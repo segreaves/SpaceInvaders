@@ -4,6 +4,9 @@
 
 class StateManager;
 
+/// <summary>
+/// Base class for all states.
+/// </summary>
 class State
 {
 	friend class StateManager;
