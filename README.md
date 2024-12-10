@@ -1,5 +1,5 @@
 # Space Invaders
-Welcome to Space Invaders, a classic arcade-style game in the visual-style of old Apple II computers developed entirely in C++ with the SFML library. This project was an opportunity to learn about low-level game development with C++17 while implementing fundamental programming concepts and design patterns.
+Welcome to Space Invaders, a classic arcade-style game in the visual-style of old Apple II computers. Developed entirely in C++ with the SFML library, this project was an opportunity to learn about low-level game development with C++20 while implementing fundamental programming concepts and design patterns.
 
 ![image](https://github.com/user-attachments/assets/55e64e6a-205a-42b3-b3e7-a6d5cabdb3c3)
 
