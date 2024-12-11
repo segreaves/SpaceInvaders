@@ -17,6 +17,8 @@ Retro art-style: Pixel-art look with the capabilities of modern hardware.
 Go to the "SpaceInvaders - Playable" folder. The contents of this folder can be downloaded and are all that is required to play the game. Make sure the .dll files and the "assets" folder are in the same location as the SpaceInvaders.exe file.
 ### Controls
 Use the mouse to move the ship and left-mouse button to fire. The 'H' key provides details on options available.
+### Points
+First invader destroyed puts 1 point, subsequent invaders destroyed yield the previous points +1 (so the second one will be worth 2 points, third will be worth 3 points). Missing or hitting a bunker resets these additive points to 1. Destroying the UFO ship adds +1000 to this cumulative tally.
 
 ## Acknowledgements
 ### Music:
