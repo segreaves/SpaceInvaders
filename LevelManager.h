@@ -89,8 +89,7 @@ private:
 	unsigned int m_playerLives;
 	unsigned int m_kills;
 	unsigned int m_score;
-	unsigned int m_invaderBasePoints = 1;
-	unsigned int m_invaderPoints = 1;
+	unsigned int m_points;
 	unsigned int m_ufoPoints = 1000;
 	bool m_killStreak = false;
 	const int m_invaderCols = 12;

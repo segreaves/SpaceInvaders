@@ -8,12 +8,14 @@ LevelManager::LevelManager(ActorManager* actorManager) :
 	m_actorManager(actorManager),
 	m_level(0),
 	m_playerId(-1),
+	m_ufo(-1),
 	m_playerExplosion(-1),
+	m_ufoExplosion(-1),
 	m_playerLives(0),
 	m_remainingInvaders(0),
 	m_kills(0),
 	m_score(0),
-	m_invaderPoints(m_invaderBasePoints),
+	m_points(0),
 	m_state(LevelState::PlayerAlive)
 {
 }
@@ -136,18 +138,18 @@ void LevelManager::onInvaderDefeated()
 {
 	m_kills++;
 	--m_remainingInvaders;
-	m_score += m_invaderPoints;
-	m_updateScore.dispatch(m_invaderPoints);
-	m_invaderPoints++;
+	m_score += ++m_points;
+	m_updateScore.dispatch(m_points);
 	m_killStreak = true;
 }
 
 void LevelManager::onUFODefeated()
 {
 	m_kills++;
-	m_score += m_ufoPoints;
+	m_points += m_ufoPoints;
+	m_score += m_points;
 	m_killStreak = true;
-	m_updateScore.dispatch(m_ufoPoints);
+	m_updateScore.dispatch(m_points);
 }
 
 void LevelManager::onPlayerDefeated()
@@ -163,7 +165,7 @@ sf::Vector2f LevelManager::getBunkerSpawn(ActorId id)
 
 void LevelManager::resetKillStreak()
 {
-	m_invaderPoints = m_invaderBasePoints;
+	m_points = 0;
 	m_killStreak = false;
 }
 

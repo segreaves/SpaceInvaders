@@ -129,7 +129,7 @@ void Sys_BulletControl::notify(const Message& msg)
 		{
 			// get colliding actor tag
 			const auto& tag = m_systemManager->getActorManager()->getActor(msg.m_sender)->getTag();
-			if (tag == "bunker" || tag == "bullet_invader")
+			if (tag == "bunker")
 				m_systemManager->getLevelManager()->resetKillStreak();
 		}
 		// set bullet de-spawn event
