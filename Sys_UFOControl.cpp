@@ -14,7 +14,8 @@ Sys_UFOControl::Sys_UFOControl(SysManager* systemManager) :
 	m_startOffset(100, 25),
 	m_ufoEnabled(false),
 	m_ufoSpeed(100),
-	m_soundTimer(0)
+	m_soundTimer(0),
+	m_frameTimer(0)
 {
 	onCreate();
 }
@@ -60,10 +61,7 @@ void Sys_UFOControl::update(const float& deltaTime)
 		if (m_ufoTimer > 0)
 			m_ufoTimer -= deltaTime;
 		else
-		{
 			initializeUFO();
-			initializeTimer();
-		}
 	}
 }
 
@@ -142,13 +140,19 @@ void Sys_UFOControl::handleUFO(const float& deltaTime)
 	{
 		m_ufoEnabled = false;
 		m_systemManager->getActorManager()->disableActor(m_systemManager->getLevelManager()->getUFOId());
+		initializeTimer();
 	}
-	m_soundTimer -= deltaTime;
-	if (m_soundTimer < 0)
+	m_frameTimer -= deltaTime;
+	if (m_frameTimer < 0)
 	{
 		// step animation frame
 		const auto& spriteComp = ufo->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
 		spriteComp->frameStep();
+		m_frameTimer = m_frameDuration;
+	}
+	m_soundTimer -= deltaTime;
+	if (m_soundTimer < 0)
+	{
 		// play UFO fly sound
 		Message msg((MessageType)ActorMessageType::Sound);
 		msg.m_sender = ufoId;
@@ -184,4 +188,5 @@ void Sys_UFOControl::onUFODeath(const ActorId& id)
 	// disable UFO
 	m_ufoEnabled = false;
 	m_systemManager->getActorManager()->disableActor(id);
+	initializeTimer();
 }
