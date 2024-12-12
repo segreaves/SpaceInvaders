@@ -163,12 +163,12 @@ void State_Game::handlePlayerPosition()
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 	// clamp mouse position to view space
 	if (mousePos.x < 0) mousePos.x = 0;
-	if (mousePos.x > window.getSize().x) mousePos.x = window.getSize().x;
+	else if (mousePos.x > window.getSize().x) mousePos.x = window.getSize().x;
 	sf::Mouse::setPosition(mousePos, window);
 	// calculate mouse position relative to window
 	const auto& mousePosInWindow = mousePos.x / static_cast<float>(window.getSize().x);
 	// calculate player position relative to view space
-	const auto& playerPosInView = m_levelManager.getViewSpace().getPosition().x + m_levelManager.getViewSpace().getSize().x * mousePosInWindow;
+	const auto& playerPosInView = m_levelManager.getViewSpace().getPosition().x + m_controlMargin + (m_levelManager.getViewSpace().getSize().x - 2 * m_controlMargin) * mousePosInWindow;
 	// set player target to its position
 	unsigned int playerId = m_levelManager.getPlayerId();
 	// get player target component
@@ -229,6 +229,7 @@ void State_Game::newGame()
 	m_newGame = false;
 	m_stateManager->getContext()->m_actorManager->purge();
 	m_levelManager.newGame();
+	m_controlMargin = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Collision>(ComponentType::Collision)->getAABB().width / 2.f;
 	m_stateManager->getContext()->m_actorManager->enableActor(m_levelManager.getPlayerId());
 	// set player icon to use in HUD
 	const auto& playerSprite = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);

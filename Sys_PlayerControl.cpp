@@ -63,15 +63,6 @@ void Sys_PlayerControl::update(const float& deltaTime)
 		// set the player location to the mouse position (target)
 		posComp->setPosition(targetComp->getTarget().x, posComp->getPosition().y);
 
-		//sf::Vector2f direction = targetComp->getTarget() - posComp->getPosition();
-
-		// set the movement input
-		const auto& controlComp = player->getComponent<Comp_Control>(ComponentType::Control);
-		const auto& moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
-		//controlComp->setMovementInput(direction);
-		// accelerate the player
-		//moveComp->accelerate(controlComp->getMovementInput() * controlComp->getMaxAcceleration() * deltaTime);
-
 		// check if player is out of bounds
 		const auto& colComp = player->getComponent<Comp_Collision>(ComponentType::Collision);
 		sf::FloatRect playerAABB = colComp->getAABB();
@@ -84,6 +75,7 @@ void Sys_PlayerControl::update(const float& deltaTime)
 		if (resolve != 0)
 		{
 			posComp->move(resolve, 0);
+			const auto& moveComp = player->getComponent<Comp_Movement>(ComponentType::Movement);
 			moveComp->setAcceleration(0, moveComp->getAcceleration().y);
 			moveComp->setVelocity(0, moveComp->getVelocity().y);
 			moveComp->setCollidingOnX(true);

@@ -31,13 +31,6 @@ void Controller::handleEvent(sf::Event event, const float& deltaTime)
 		else if (event.key.code == sf::Keyboard::F5)
 			m_onToggleFullscreen.dispatch();
 	}
-	else if (event.type == sf::Event::MouseMoved)
-	{
-		float moveAmount = (event.mouseMove.x - m_screenCenter.x) * deltaTime;
-		//m_onMove.dispatch(m_mouseSensitivity * sf::Vector2f(moveAmount, 0));
-		//if (m_captureMouse)
-			//centerMouse();
-	}
 	else if (event.type == sf::Event::MouseButtonPressed)
 	{
 		if (event.mouseButton.button == sf::Mouse::Left)

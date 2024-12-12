@@ -74,6 +74,8 @@ private:
 	// player lives
 	sf::Sprite m_playerIcon;
 	sf::Vector2f m_playerIconPosition;
+	// player bounds
+	float m_controlMargin;
 	// help panel
 	bool m_showHelp = false;
 	sf::RectangleShape m_helpPanel;
