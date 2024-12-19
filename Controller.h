@@ -25,7 +25,6 @@ public:
 	Trigger<void> m_onToggleHelp;
 	Trigger<void> m_onToggleSound;
 	Trigger<void> m_onToggleMusic;
-	Trigger<sf::Vector2f> m_onMove;
 private:
 	bool m_hasFocus;
 	bool m_captureMouse = true;

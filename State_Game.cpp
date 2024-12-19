@@ -111,7 +111,6 @@ void State_Game::activate()
 {
 	// add callbacks
 	m_stateManager->getContext()->m_controller->m_onPause.addCallback("Game_onPause", std::bind(&StateManager::switchTo, m_stateManager, StateType::Paused));
-	m_stateManager->getContext()->m_controller->m_onMove.addCallback("Game_onMove", std::bind(&State_Game::onPlayerMove, this, std::placeholders::_1));
 	m_stateManager->getContext()->m_controller->m_onShoot.addCallback("Game_onShoot", std::bind(&State_Game::onPlayerShoot, this));
 	m_stateManager->getContext()->m_controller->m_onToggleHelp.addCallback("Game_onToggleHelp", std::bind(&State_Game::onToggleHelp, this));
 	m_stateManager->getContext()->m_controller->m_onToggleSound.addCallback("Game_onToggleSound", std::bind(&State_Game::onToggleSound, this));
@@ -125,7 +124,6 @@ void State_Game::activate()
 void State_Game::deactivate()
 {
 	m_stateManager->getContext()->m_controller->m_onPause.removeCallback("Game_onPause");
-	m_stateManager->getContext()->m_controller->m_onMove.removeCallback("Game_onMove");
 	m_stateManager->getContext()->m_controller->m_onShoot.removeCallback("Game_onShoot");
 	m_stateManager->getContext()->m_controller->m_onToggleHelp.removeCallback("Game_onToggleHelp");
 	m_stateManager->getContext()->m_controller->m_onToggleSound.removeCallback("Game_onToggleSound");
@@ -145,14 +143,6 @@ void State_Game::loadNextLevel()
 	invaderSys->queueInvaders(m_levelManager.getInvaderIds());
 	// start (or re-start) all systems
 	m_stateManager->getContext()->m_systemManager->start();
-}
-
-void State_Game::onPlayerMove(sf::Vector2f xy)
-{
-	unsigned int playerId = m_levelManager.getPlayerId();
-	const auto& actor = m_stateManager->getContext()->m_actorManager->getActor(playerId);
-	const auto& targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
-	targetComp->setTarget(targetComp->getTarget() + xy);
 }
 
 void State_Game::handlePlayerPosition()
@@ -175,7 +165,7 @@ void State_Game::handlePlayerPosition()
 	const auto& actor = m_stateManager->getContext()->m_actorManager->getActor(playerId);
 	const auto& targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 	// set player target position
-	targetComp->setTarget(sf::Vector2f(playerPosInView, targetComp->getTarget().y));
+	targetComp->setTarget(sf::Vector2f(playerPosInView, m_levelManager.getPlayerSpawnPoint().y));
 }
 
 void State_Game::onPlayerShoot()
