@@ -20,7 +20,7 @@ Sys_Renderer::~Sys_Renderer()
 void Sys_Renderer::start()
 {
 	const auto& view = m_systemManager->getLevelManager()->getViewSpace();
-	m_damageOverlay.setSize(sf::Vector2f(view.getSize()));
+	m_damageOverlay.setSize(sf::Vector2f(view.size));
 }
 
 void Sys_Renderer::update(const float& deltaTime)
@@ -58,7 +58,7 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 	{
 		auto actor = m_systemManager->getActorManager()->getActor(id);
 		auto spriteSheetComp = actor->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-		if (spriteSheetComp && spriteSheetComp->isEnabled() && windowManager->getCurrentViewSpace().intersects(spriteSheetComp->getDrawableBounds()))
+		if (spriteSheetComp && spriteSheetComp->isEnabled() && windowManager->getCurrentViewSpace().findIntersection(spriteSheetComp->getDrawableBounds()))
 			draw(windowManager, std::static_pointer_cast<IDrawable>(spriteSheetComp));
 		auto particlesComp = actor->getComponent<Comp_Particles>(ComponentType::Particles);
 		if (particlesComp && particlesComp->getParticleSystem()->isEnabled())
@@ -66,7 +66,7 @@ void Sys_Renderer::draw(WindowManager* windowManager)
 	}
 	if (m_showDamageOverlay)
 	{
-		m_damageCurrColor.a = static_cast<sf::Uint8>(255 * (m_damageOverlayTimer / m_damageOverlayDuration));
+		m_damageCurrColor.a = static_cast<uint8_t>(255 * (m_damageOverlayTimer / m_damageOverlayDuration));
 		m_damageOverlay.setFillColor(m_damageCurrColor);
 		windowManager->getRenderWindow()->draw(m_damageOverlay);
 	}
@@ -83,12 +83,17 @@ void Sys_Renderer::notify(const Message& msg)
 	switch ((ActorMessageType)msg.m_type)
 	{
 	case ActorMessageType::Damage:
-	{
-		m_showDamageOverlay = true;
-		m_damageOverlayTimer = m_damageOverlayDuration;
-		m_damageCurrColor = APP_COLOR;
+		{
+			m_showDamageOverlay = true;
+			m_damageOverlayTimer = m_damageOverlayDuration;
+			m_damageCurrColor = APP_COLOR;
+			break;
+		}
+	case ActorMessageType::Collision:
+	case ActorMessageType::MissedShot:
+	case ActorMessageType::Shoot:
+	case ActorMessageType::Sound:
 		break;
-	}
 	}
 }
 

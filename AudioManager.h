@@ -8,13 +8,13 @@
 class AudioManager : public ResourceManager<AudioManager, sf::SoundBuffer>
 {
 public:
-	AudioManager() : ResourceManager("assets/profiles/audio.dat")
+	AudioManager() : ResourceManager("profiles/audio.dat")
 	{
 	}
 	sf::SoundBuffer* load(const std::string& path)
 	{
 		sf::SoundBuffer* sound = new sf::SoundBuffer();
-		if (!sound->loadFromFile(Utils::getWorkingDirectory() + path))
+		if (!sound->loadFromFile(Utils::getAssetsDirectory() + path))
 		{
 			delete sound;
 			sound = nullptr;

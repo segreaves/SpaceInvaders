@@ -62,8 +62,8 @@ void Sys_Collision::debugOverlay(WindowManager* windowManager)
 	{
 		auto actor = m_systemManager->getActorManager()->getActor(actorId);
 		auto colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
-		sf::RectangleShape shape(sf::Vector2f(colComp->getAABB().width, colComp->getAABB().height));
-		shape.setPosition(colComp->getAABB().left, colComp->getAABB().top);
+		sf::RectangleShape shape(sf::Vector2f(colComp->getAABB().size.x(), colComp->getAABB().size.y()));
+		shape.setPosition(colComp->getAABB().position.x(), colComp->getAABB().position.y());
 		sf::Color color = sf::Color::Yellow;
 		color.a = 50;
 		shape.setFillColor(color);
@@ -246,12 +246,23 @@ bool Sys_Collision::detectActorCollision(const ActorId& actorId, const ActorId& 
 
 	const auto& actorCollider = m_systemManager->getActorManager()->getActor(actorId)->getComponent<Comp_Collision>(ComponentType::Collision);
 	const auto& otherCollider = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Collision>(ComponentType::Collision);
-	sf::FloatRect intersect;
-	if (actorCollider->getAABB().intersects(otherCollider->getAABB(), intersect))
+
+	sf::FloatRect rect1 = actorCollider->getAABB();
+	sf::FloatRect rect2 = otherCollider->getAABB();
+
+	// Manual intersection check using SFML 3.0 methods
+	float interLeft   = std::max(rect1.position.x, rect2.position.x);
+	float interTop    = std::max(rect1.position.y, rect2.position.y);
+	float interRight  = std::min(rect1.position.x + rect1.size.x, rect2.position.x + rect2.size.x);
+	float interBottom = std::min(rect1.position.y + rect1.size.y, rect2.position.y + rect2.size.y);
+
+	if ((interLeft < interRight) && (interTop < interBottom))
 	{
 #ifdef DEBUG
-		sf::RectangleShape rectIntersect(sf::Vector2f(intersect.width, intersect.height));
-		rectIntersect.setPosition(sf::Vector2f(intersect.left, intersect.top));
+		// Intersection already calculated
+		sf::FloatRect intersect(interLeft, interTop, interRight - interLeft, interBottom - interTop);
+		sf::RectangleShape rectIntersect(sf::Vector2f(intersect.size.x, intersect.size.y));
+		rectIntersect.setPosition(sf::Vector2f(intersect.position.x, intersect.position.y));
 		sf::Color color = sf::Color::Red;
 		color.a = 150;
 		rectIntersect.setFillColor(color);
@@ -261,7 +272,7 @@ bool Sys_Collision::detectActorCollision(const ActorId& actorId, const ActorId& 
 		msg.m_sender = otherId;
 		msg.m_receiver = actorId;
 		m_systemManager->getMessageHandler()->dispatch(msg);
-		return true;
+		return true; // Return true since they intersect
 	}
 	else
 		return false;

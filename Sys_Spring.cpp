@@ -46,7 +46,7 @@ void Sys_Spring::update(const float& deltaTime)
 		const auto& targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 
 		// save the previous attach->anchor vector
-		const sf::Vector2f prevOffset = springComp->getAnchor() - springComp->getAttach();
+		// const sf::Vector2f prevOffset = springComp->getAnchor() - springComp->getAttach();
 		// set the spring attach and anchor
 		springComp->setAttach(posComp->getPosition());
 		springComp->setAnchor(targetComp->getTarget());
@@ -75,7 +75,7 @@ void Sys_Spring::debugOverlay(WindowManager* windowManager)
 		// draw small circle at the attach point
 		sf::CircleShape circle(2);
 		circle.setFillColor(sf::Color::Yellow);
-		circle.setOrigin(circle.getRadius(), circle.getRadius());
+		circle.setOrigin({circle.getRadius(), circle.getRadius()});
 		circle.setPosition(springComp->getAttach());
 		windowManager->getRenderWindow()->draw(circle);
 
@@ -85,7 +85,7 @@ void Sys_Spring::debugOverlay(WindowManager* windowManager)
 			sf::Vertex(springComp->getAnchor(), sf::Color::Yellow),
 			sf::Vertex(springComp->getAttach(), sf::Color::Yellow)
 		};
-		windowManager->getRenderWindow()->draw(line, 2, sf::Lines);
+		windowManager->getRenderWindow()->draw(line, 2, sf::PrimitiveType::Lines);
 	}
 }
 

@@ -27,7 +27,7 @@ public:
 
 	sf::FloatRect getViewSpace() const { return m_viewSpace; }
 	void setViewSpace(sf::FloatRect viewSpace) { m_viewSpace = viewSpace; }
-	sf::Vector2f getScreenCenter() { return sf::Vector2f(m_viewSpace.left + m_viewSpace.width / 2.f, m_viewSpace.top + m_viewSpace.height / 2.f); }
+	sf::Vector2f getScreenCenter() { return sf::Vector2f(m_viewSpace.position.x + m_viewSpace.size.x / 2.f, m_viewSpace.position.y + m_viewSpace.size.y / 2.f); }
 	void createPlayer();
 	void createInvaders();
 	void createPlayerBullets();

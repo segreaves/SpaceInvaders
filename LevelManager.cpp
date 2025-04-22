@@ -5,18 +5,18 @@
 #include <sstream>
 
 LevelManager::LevelManager(ActorManager* actorManager) :
-	m_actorManager(actorManager),
 	m_level(0),
+	m_state(LevelState::PlayerAlive),
+	m_actorManager(actorManager),
 	m_playerId(-1),
 	m_ufo(-1),
 	m_playerExplosion(-1),
 	m_ufoExplosion(-1),
-	m_playerLives(0),
 	m_remainingInvaders(0),
+	m_playerLives(0),
 	m_kills(0),
 	m_score(0),
-	m_points(0),
-	m_state(LevelState::PlayerAlive)
+	m_points(0)
 {
 }
 
@@ -26,7 +26,7 @@ LevelManager::~LevelManager()
 
 sf::Vector2f LevelManager::getPlayerSpawnPoint() const
 {
-	return sf::Vector2f(m_viewSpace.left + m_viewSpace.width / 2.f, m_viewSpace.top + m_viewSpace.height * 0.925f);
+	return sf::Vector2f(m_viewSpace.position.x + m_viewSpace.size.x / 2.f, m_viewSpace.position.y + m_viewSpace.size.y * 0.925f);
 }
 
 void LevelManager::createPlayer()
@@ -40,10 +40,10 @@ void LevelManager::createPlayer()
 
 void LevelManager::createInvaders()
 {
-	const auto offset = (m_viewSpace.width - m_invaderSeparation.x * m_invaderCols) / 2.f;
+	const auto offset = (m_viewSpace.size.x - m_invaderSeparation.x * m_invaderCols) / 2.f;
 	const float initialDrop = 75.f;// leave some room on top of screen
 	const sf::Vector2f screenCenter = getScreenCenter();
-	for (auto i = 0; i < m_invaderProfiles.size(); i++)
+	for (std::size_t  i = 0; i < m_invaderProfiles.size(); i++)
 	{
 		for (auto j = 0; j < m_invaderCols; j++)
 		{
@@ -74,12 +74,12 @@ void LevelManager::createInvaderBullets()
 
 void LevelManager::createBunkers()
 {
-	const auto offset = (m_viewSpace.width - m_bunkerSeparation * (m_nBunkers - 1)) / 2.f;
+	const auto offset = (m_viewSpace.size.x - m_bunkerSeparation * (m_nBunkers - 1)) / 2.f;
 	for (auto i = 0; i < m_nBunkers; i++)
 	{
 		const auto bunkerId = m_actorManager->loadActorProfile("bunker", "bunker");
 		m_bunkers.emplace_back(bunkerId);
-		m_bunkerSpawn.emplace(bunkerId, sf::Vector2f(i * m_bunkerSeparation + offset, m_viewSpace.height - m_bunkerSpawnHeight));
+		m_bunkerSpawn.emplace(bunkerId, sf::Vector2f(i * m_bunkerSeparation + offset, m_viewSpace.size.y - m_bunkerSpawnHeight));
 		// get collider and adjust to sprite
 		auto colComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Collision>(ComponentType::Collision);
 		auto sprite = m_actorManager->getActor(bunkerId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
@@ -90,8 +90,8 @@ void LevelManager::createBunkers()
 		// fit bunker grids to sprite
 		auto gridComp = m_actorManager->getActor(bunkerId)->getComponent<Comp_Grid>(ComponentType::Grid);
 		// get position of the sprite's top left corner
-		sf::Vector2f gridPos(posComp->getPosition().x + sprite->getDrawableBounds().left, posComp->getPosition().y + sprite->getDrawableBounds().top);
-		gridComp->create(sprite->getDrawableBounds().width, sprite->getDrawableBounds().height, gridPos);
+		sf::Vector2f gridPos(posComp->getPosition().x + sprite->getDrawableBounds().position.x, posComp->getPosition().y + sprite->getDrawableBounds().position.y);
+		gridComp->create(sprite->getDrawableBounds().size.x, sprite->getDrawableBounds().size.y, gridPos);
 	}
 }
 
@@ -102,7 +102,7 @@ void LevelManager::createUFO()
 
 void LevelManager::createShockwaves()
 {
-	for (auto i = 0; i < m_invaders.size(); i++)
+	for (std::size_t i = 0; i < m_invaders.size(); i++)
 	{
 		const auto shockwaveId = m_actorManager->loadActorProfile("shockwave", "shockwave");
 		m_shockwaves.emplace_back(shockwaveId);

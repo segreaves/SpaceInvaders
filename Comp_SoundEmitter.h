@@ -13,7 +13,7 @@ public:
 	void create(SoundManager* soundManager)
 	{
 		if (!soundManager) return;
-		soundManager->loadSoundProfile("assets/profiles/soundProfiles/" + m_fileName + ".sound");
+		soundManager->loadSoundProfile("profiles/soundProfiles/" + m_fileName + ".sound");
 	}
 private:
 	void load(std::stringstream& ss) override

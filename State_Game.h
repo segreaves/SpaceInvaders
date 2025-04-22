@@ -71,7 +71,7 @@ private:
 	sf::Text m_soundText;
 	sf::Text m_musicText;
 	// player lives
-	sf::Sprite m_playerIcon;
+	sf::Sprite* m_playerIcon;
 	sf::Vector2f m_playerIconPosition;
 	// player bounds
 	float m_controlMargin;

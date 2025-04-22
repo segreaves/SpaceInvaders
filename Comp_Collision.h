@@ -20,35 +20,38 @@ public:
 		switch (m_origin)
 		{
 		case OriginType::Medium:
-			m_AABB.left = pos.x - m_AABB.width / 2.f;
-			m_AABB.top = pos.y - m_AABB.height / 2.f;
+			m_AABB.position.x = pos.x - m_AABB.size.x / 2.f;
+			m_AABB.position.y = pos.y - m_AABB.size.y / 2.f;
 			break;
 		case OriginType::Bottom:
-			m_AABB.left = pos.x - m_AABB.width / 2.f;
-			m_AABB.top = pos.y - m_AABB.height;
+			m_AABB.position.x = pos.x - m_AABB.size.x / 2.f;
+			m_AABB.position.y = pos.y - m_AABB.size.y;
 			break;
 		case OriginType::Top:
-			m_AABB.left = pos.x - m_AABB.width / 2.f;
-			m_AABB.top = pos.y;
+			m_AABB.position.x = pos.x - m_AABB.size.x / 2.f;
+			m_AABB.position.y = pos.y;
 			break;
 		}
 	}
 
 	void setAABB(const sf::Vector2f& size)
 	{
-		m_AABB.width = size.x;
-		m_AABB.height = size.y;
+		m_AABB.size.x = size.x;
+		m_AABB.size.y = size.y;
 	}
 
 	const sf::FloatRect& getAABB() const
 	{
 		return m_AABB;
 	}
-private:
+	private:
 	void load(std::stringstream& ss) override
 	{
 		std::string origin;
-		ss >> m_AABB.width >> m_AABB.height  >> origin;
+		float width, height;
+		ss >> width >> height >> origin;
+		m_AABB.size.x = width;
+		m_AABB.size.y = height;
 		if (origin == "Top")
 			m_origin = OriginType::Top;
 		else if (origin == "Bottom")

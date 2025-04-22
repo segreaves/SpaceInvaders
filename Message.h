@@ -17,9 +17,9 @@ struct Message
 {
 	Message(MessageType type) :
 		m_type(type),
-		m_xy(0, 0),
 		m_sender(-1),
 		m_receiver(-1),
+		m_xy(0, 0),
 		m_bool(false),
 		m_int(0),
 		m_float(0)

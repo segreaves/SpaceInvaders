@@ -1,9 +1,9 @@
 #include "Actor.h"
 
 Actor::Actor(const unsigned int id, const std::string tag) :
+	m_enabled(false),
 	m_id(id),
 	m_tag(tag),
-	m_enabled(false),
 	m_componentBitmask(0)
 {
 	// reserve space for components to avoid reallocation

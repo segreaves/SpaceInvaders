@@ -28,7 +28,7 @@ protected:
 	void notify(const Message& msg);
 private:
 	void onBulletDestroyed(ActorId id);
-	void handleMissedShot(const std::shared_ptr<Actor>& bullet, sf::Uint32& id);
+	void handleMissedShot(const std::shared_ptr<Actor>& bullet, unsigned int& id);
 
 	std::vector<sf::RectangleShape> m_bulletTips;
 };

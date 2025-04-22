@@ -25,7 +25,7 @@ public:
 		if (m_spriteSheet) return;
 		m_spriteSheet = new SpriteSheet(textureManager, m_sharedMemory);
 		m_spriteSheet->setSpriteOrigin(m_origin);
-		if (m_spriteSheet->loadSheet("assets/profiles/" + m_sheetName + ".sheet"))
+		if (m_spriteSheet->loadSheet("profiles/" + m_sheetName + ".sheet"))
 		{
 			m_spriteSheet->setSpriteColor(getDefaultColor());
 			m_spriteSheet->setSmooth(false);
@@ -52,7 +52,7 @@ public:
 		m_spriteSheet->setSpriteRotation(rotation);
 	}
 
-	void draw(sf::RenderWindow* window)
+	void draw(sf::RenderWindow* window) override
 	{
 		if (!m_spriteSheet || !m_enabled) return;
 		m_spriteSheet->draw(window);

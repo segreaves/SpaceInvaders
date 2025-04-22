@@ -10,13 +10,24 @@
 State_Game::State_Game(StateManager* stateManager) :
 	State(stateManager),
 	m_levelManager(stateManager->getContext()->m_actorManager),
-	m_hudUpdateTimer(0),
 	m_newGame(true),
 	m_fps(0),
 	m_soundOn(true),
 	m_musicOn(true),
 	m_showNewScoreTimer(0),
-	m_showScoreAlpha(0)
+	m_showScoreAlpha(0),
+	m_hudUpdateTimer(0),
+	m_scoreText(m_font),
+	m_newScoreText(m_font),
+	m_levelText(m_font),
+	m_killsText(m_font),
+	m_fpsText(m_font),
+	m_helpText(m_font),
+	m_soundText(m_font),
+	m_musicText(m_font),
+	m_playerIcon(nullptr),
+	m_helpPanelTitle(m_font), 
+	m_helpPanelText(m_font)
 {
 }
 
@@ -67,11 +78,11 @@ void State_Game::draw()
 	if (m_showingNewScore)
 		window->draw(m_newScoreText);
 	// draw player lives
-	float iconWidth = m_playerIcon.getGlobalBounds().width;
-	for (unsigned int i = 0; i < m_levelManager.getPlayerLives(); ++i)
+	float iconWidth = m_playerIcon->getGlobalBounds().size.x;
+	for ( int i = 0; i < m_levelManager.getPlayerLives(); ++i)
 	{
-		m_playerIcon.setPosition(m_playerIconPosition.x + i * iconWidth - 3 * iconWidth, m_playerIconPosition.y);
-		window->draw(m_playerIcon);
+		m_playerIcon->setPosition({m_playerIconPosition.x + i * iconWidth - 3 * iconWidth, m_playerIconPosition.y});
+		window->draw(*m_playerIcon);
 	}
 	// draw help panel if enabled
 	if (m_showHelp)
@@ -85,17 +96,17 @@ void State_Game::draw()
 void State_Game::onCreate()
 {
 	sf::Vector2u windowSize = m_stateManager->getContext()->m_windowManager->getRenderWindow()->getSize();
-	m_view.setSize(static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
-	m_view.setCenter(static_cast<float>(windowSize.x) / 2, static_cast<float>(windowSize.y) / 2);
-	m_view.setViewport(sf::FloatRect(0, 0, 1, 1));
-	m_gameView.setViewport(sf::FloatRect(0.15f, 0, 0.7f, 1));
+	m_view.setSize({static_cast<float>(windowSize.x), static_cast<float>(windowSize.y)});
+	m_view.setCenter({static_cast<float>(windowSize.x) / 2, static_cast<float>(windowSize.y) / 2});
+	m_view.setViewport(sf::FloatRect({0, 0}, {1, 1}));
+	m_gameView.setViewport(sf::FloatRect({0.15f, 0}, {0.7f, 1}));
 
 	m_stateManager->getContext()->m_systemManager->setLevelManager(&m_levelManager);
 	m_levelManager.setViewSpace(getGameViewSpace());
 	initializeHUD();
 	setupHelpPanel();
 	// load music
-	m_stateManager->getContext()->m_soundManager->loadSoundProfile("assets/profiles/soundProfiles/game_state.sound");
+	m_stateManager->getContext()->m_soundManager->loadSoundProfile("profiles/soundProfiles/game_state.sound");
 	// play  music
 	m_stateManager->getContext()->m_soundManager->playMusic("game_music");
 	setSound(true);
@@ -153,12 +164,13 @@ void State_Game::handlePlayerPosition()
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 	// clamp mouse position to view space
 	if (mousePos.x < 0) mousePos.x = 0;
-	else if (mousePos.x > window.getSize().x) mousePos.x = window.getSize().x;
+	else if (mousePos.x > static_cast<int>(window.getSize().x)) 
+		mousePos.x = window.getSize().x;
 	sf::Mouse::setPosition(mousePos, window);
 	// calculate mouse position relative to window
 	const auto& mousePosInWindow = mousePos.x / static_cast<float>(window.getSize().x);
 	// calculate player position relative to view space
-	const auto& playerPosInView = m_levelManager.getViewSpace().getPosition().x + m_controlMargin + (m_levelManager.getViewSpace().getSize().x - 2 * m_controlMargin) * mousePosInWindow;
+	const auto& playerPosInView = m_levelManager.getViewSpace().position.x + m_controlMargin + (m_levelManager.getViewSpace().size.x - 2 * m_controlMargin) * mousePosInWindow;
 	// set player target to its position
 	unsigned int playerId = m_levelManager.getPlayerId();
 	// get player target component
@@ -189,7 +201,7 @@ void State_Game::setSound(bool soundOn)
 void State_Game::setMusic(bool musicOn)
 {
 	m_musicOn = musicOn;
-	m_stateManager->getContext()->m_soundManager->setMusic(m_musicOn ? 100.f : 0.f);
+	m_stateManager->getContext()->m_soundManager->setMusic(m_musicOn);
 	m_musicText.setFillColor(m_musicOn ? APP_COLOR : APP_COLOR_TRANSP);
 }
 
@@ -219,11 +231,11 @@ void State_Game::newGame()
 	m_newGame = false;
 	m_stateManager->getContext()->m_actorManager->purge();
 	m_levelManager.newGame();
-	m_controlMargin = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Collision>(ComponentType::Collision)->getAABB().width / 2.f;
+	m_controlMargin = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_Collision>(ComponentType::Collision)->getAABB().size.x / 2.f;
 	m_stateManager->getContext()->m_actorManager->enableActor(m_levelManager.getPlayerId());
 	// set player icon to use in HUD
 	const auto& playerSprite = m_stateManager->getContext()->m_actorManager->getActor(m_levelManager.getPlayerId())->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet);
-	m_playerIcon = *playerSprite->getSpriteSheet()->getSprite();
+	m_playerIcon = new sf::Sprite(*playerSprite->getSpriteSheet()->getSprite());
 }
 
 void State_Game::updateHUD(const float& deltaTime)
@@ -262,23 +274,23 @@ void State_Game::initializeHUD()
 {
 	setWindowOutline();
 	initializeHUDText(m_scoreText);
-	m_scoreText.setPosition(m_hudPadding.x, 0);
+	m_scoreText.setPosition({m_hudPadding.x, 0});
 	initializeHUDText(m_newScoreText);
 	initializeHUDText(m_levelText);
-	m_levelText.setPosition(m_hudPadding.x, m_hudPadding.y + m_fontSize);
+	m_levelText.setPosition({m_hudPadding.x, m_hudPadding.y + m_fontSize});
 	initializeHUDText(m_killsText);
-	m_killsText.setPosition(m_hudPadding.x, 2 * (m_hudPadding.y + m_fontSize));
+	m_killsText.setPosition({m_hudPadding.x, 2 * (m_hudPadding.y + m_fontSize)});
 	initializeHUDText(m_fpsText);
-	m_fpsText.setPosition(m_hudPadding.x, 3 * (m_hudPadding.y + m_fontSize));
+	m_fpsText.setPosition({m_hudPadding.x, 3 * (m_hudPadding.y + m_fontSize)});
 	initializeHUDText(m_helpText);
-	m_helpText.setPosition(m_hudPadding.x, m_levelManager.getViewSpace().height - m_fontSize);
+	m_helpText.setPosition({m_hudPadding.x, m_levelManager.getViewSpace().size.y - m_fontSize});
 	m_helpText.setString("HELP (H)");
 	initializeHUDText(m_soundText);
 	m_soundText.setString("SOUND (S)");
-	m_soundText.setPosition(m_view.getSize().x - m_hudPadding.x - 200, m_levelManager.getViewSpace().height - 2 * m_fontSize);
+	m_soundText.setPosition({m_view.getSize().x - m_hudPadding.x - 200, m_levelManager.getViewSpace().size.y - 2 * m_fontSize});
 	initializeHUDText(m_musicText);
 	m_musicText.setString("MUSIC (M)");
-	m_musicText.setPosition(m_view.getSize().x - m_hudPadding.x - 200, m_levelManager.getViewSpace().height - m_fontSize);
+	m_musicText.setPosition({m_view.getSize().x - m_hudPadding.x - 200, m_levelManager.getViewSpace().size.y - m_fontSize});
 }
 
 void State_Game::initializeHUDText(sf::Text& text)
@@ -308,15 +320,15 @@ void State_Game::setupHelpPanel()
 	m_helpPanelTitle.setFont(m_font);
 	m_helpPanelTitle.setCharacterSize(m_fontSize + 20);
 	m_helpPanelTitle.setString("HELP");
-	m_helpPanelTitle.setOrigin(m_helpPanelTitle.getLocalBounds().width / 2.f, m_helpPanelTitle.getLocalBounds().height / 2.f);
+	m_helpPanelTitle.setOrigin({m_helpPanelTitle.getLocalBounds().size.x / 2.f, m_helpPanelTitle.getLocalBounds().size.y / 2.f});
 	m_helpPanelTitle.setFillColor(APP_COLOR);
-	m_helpPanelTitle.setPosition(m_helpPanel.getPosition().x, m_helpPanel.getPosition().y - m_helpPanel.getSize().y / 2.f);
+	m_helpPanelTitle.setPosition({m_helpPanel.getPosition().x, m_helpPanel.getPosition().y - m_helpPanel.getSize().y / 2.f});
 	m_helpPanelText.setFont(m_font);
 	m_helpPanelText.setCharacterSize(m_fontSize);
 	m_helpPanelText.setString("Move (Mouse)\nShoot (Mouse L)\nPause (P)\nHelp (H)\nMusic (M)\nSound (S)");
 	m_helpPanelText.setFillColor(APP_COLOR);
-	m_helpPanelText.setOrigin(m_helpPanelText.getLocalBounds().width / 2.f, m_helpPanelText.getLocalBounds().height / 2.f);
-	m_helpPanelText.setPosition(m_helpPanel.getPosition().x, m_helpPanel.getPosition().y);
+	m_helpPanelText.setOrigin({m_helpPanelText.getLocalBounds().size.x / 2.f, m_helpPanelText.getLocalBounds().size.y / 2.f});
+	m_helpPanelText.setPosition({m_helpPanel.getPosition().x, m_helpPanel.getPosition().y});
 }
 
 sf::FloatRect State_Game::getGameViewSpace()

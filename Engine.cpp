@@ -4,8 +4,14 @@
 Engine::Engine() :
 	m_windowManager("Space Invaders", sf::Vector2u(1920, 1080)),
 	m_stateManager(&m_context),
+	m_systemManager(),
+	m_textureManager(),
+	m_audioManager(),
 	m_soundManager(&m_audioManager),
-	m_actorManager(&m_systemManager, &m_textureManager, &m_soundManager)
+	m_actorManager(&m_systemManager, &m_textureManager, &m_soundManager),
+	m_brightnessTexture(),
+	m_blurTexture1(),
+	m_blurTexture2()
 {
 	m_clock.restart();
 
@@ -23,17 +29,23 @@ Engine::Engine() :
 	// set cursor invisible
 	m_windowManager.getRenderWindow()->setMouseCursorVisible(false);
 	// create texture to draw to
-	m_windowTexture.create(m_windowManager.getRenderWindow()->getSize().x, m_windowManager.getRenderWindow()->getSize().y);
+	m_windowTexture = sf::Texture(sf::Vector2u(m_windowManager.getRenderWindow()->getSize().x, m_windowManager.getRenderWindow()->getSize().y),false);
 	// load shaders
-	if (!m_brightnessShader.loadFromFile(Utils::getWorkingDirectory() + "assets/shaders/brightness.frag", sf::Shader::Fragment))
+	if (!m_brightnessShader.loadFromFile(Utils::getAssetsDirectory() + "shaders/brightness.frag", sf::Shader::Type::Fragment))
 		std::cerr << "Error: Engine() Failed to load brightness shader" << std::endl;
-	if (!m_blurShader.loadFromFile(Utils::getWorkingDirectory() + "assets/shaders/blur.frag", sf::Shader::Fragment))
+	if (!m_blurShader.loadFromFile(Utils::getAssetsDirectory() + "shaders/blur.frag", sf::Shader::Type::Fragment))
 		std::cerr << "Error: Engine() Failed to load blur shader" << std::endl;
 	sf::Vector2u windowSize = m_windowManager.getRenderWindow()->getSize();
-	m_brightnessTexture.create(windowSize.x, windowSize.y);
-	m_blurTexture1.create(windowSize.x, windowSize.y);
-	m_blurTexture2.create(windowSize.x, windowSize.y);
+	bool error;
+	m_brightnessShader.setUniform("brightness", 1.f);
+	error = m_brightnessTexture.resize({windowSize.x, windowSize.y});
 	m_blurShader.setUniform("textureSize", sf::Vector2f(windowSize));
+	error = m_blurTexture1.resize({windowSize.x, windowSize.y});
+	error = m_blurTexture2.resize({windowSize.x, windowSize.y});
+	m_blurShader.setUniform("textureSize", sf::Vector2f(windowSize));
+
+	if (!error)
+		std::cerr << "Error: Engine() Failed to set uniform brightness" << std::endl;
 }
 
 void Engine::update()
@@ -66,7 +78,6 @@ void Engine::afterEffects()
 void Engine::addBloom()
 {
 	sf::RenderWindow& window = *m_windowManager.getRenderWindow();
-	sf::Vector2u windowSize = window.getSize();
 
 	// Update the render texture with the current window content
 	m_windowTexture.update(window);
@@ -116,7 +127,6 @@ void Engine::addRenderLines()
 {
 	// after everything is drawn, draw the render lines
 	sf::RenderWindow* window = m_windowManager.getRenderWindow();
-	sf::Vector2f windowSize = sf::Vector2f(window->getSize());
 	sf::Color color = sf::Color::Black;
 	color.a = 150;
 	float thickness = 2.f;
@@ -132,7 +142,7 @@ void Engine::addRenderLines()
 
 sf::VertexArray Engine::createRenderLine(const sf::Vector2f& start, const sf::Vector2f& end, float thickness, sf::Color color)
 {
-	sf::VertexArray vertices(sf::Quads, 4);
+	sf::VertexArray vertices(sf::PrimitiveType::Triangles, 4);
 	vertices[0].position = start;
 	vertices[1].position = end;
 	vertices[2].position = end + sf::Vector2f(0, thickness);

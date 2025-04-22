@@ -10,8 +10,9 @@ public:
 	Comp_Shockwave() :
 		m_radius(0),
 		m_force(0),
-		m_time(0),
-		m_lifeTime(0)
+		m_lifeTime(0),
+		m_time(0)
+
 	{
 	}
 

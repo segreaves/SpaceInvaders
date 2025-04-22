@@ -29,7 +29,7 @@ private:
 	void onPlayerDestroyed(ActorId id);
 
 	unsigned int m_playerBulletIndex;
-	sf::Text m_bulletCountText;
 	sf::Font m_font;
+	sf::Text m_bulletCountText;
 	const float m_knockback = 250000;
 };

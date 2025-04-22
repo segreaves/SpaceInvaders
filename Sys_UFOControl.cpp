@@ -3,19 +3,20 @@
 #include "WindowManager.h"
 #include "SoundType.h"
 
-Sys_UFOControl::Sys_UFOControl(SysManager* systemManager) :
+	Sys_UFOControl::Sys_UFOControl(SysManager* systemManager) :
 	Sys(systemManager),
+	m_ufoEnabled(false),
+	m_startOffset(100, 25),
+	m_ufoSpeed(100),
 	m_movingRight(false),
-	m_gen(m_rd()),
-	m_unifFloat(10.f, 30.f),
-	m_unifInt(0, 1),
 	m_ufoTimer(0),
 	m_ufoDuration(0),
-	m_startOffset(100, 25),
-	m_ufoEnabled(false),
-	m_ufoSpeed(100),
 	m_soundTimer(0),
-	m_frameTimer(0)
+	m_frameTimer(0),
+	m_rd(),
+	m_gen(m_rd()),
+	m_unifFloat(10.f, 30.f),
+	m_unifInt(0, 1)
 {
 	onCreate();
 }
@@ -73,6 +74,12 @@ void Sys_UFOControl::handleEvent(const ActorId& actorId, const ActorEventType& e
 	case ActorEventType::Despawned:
 		onUFODeath(actorId);
 		break;
+	case ActorEventType::Invaded:
+		break;
+	case ActorEventType::Shoot:
+		break;
+	case ActorEventType::Spawned:
+		break;
 	}
 }
 
@@ -82,7 +89,7 @@ void Sys_UFOControl::debugOverlay(WindowManager* windowManager)
 	const auto& actor = actorManager->getActor(m_systemManager->getLevelManager()->getUFOId());
 	const auto& targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 	sf::CircleShape target(2.5f);
-	target.setOrigin(target.getRadius(), target.getRadius());
+	target.setOrigin({target.getRadius(), target.getRadius()});
 	target.setFillColor(sf::Color::Red);
 	target.setPosition(targetComp->getTarget());
 	windowManager->getRenderWindow()->draw(target);
@@ -103,7 +110,12 @@ void Sys_UFOControl::notify(const Message& msg)
 		}
 		break;
 	}
-	}
+	case ActorMessageType::Damage:
+	case ActorMessageType::MissedShot:
+	case ActorMessageType::Shoot:
+	case ActorMessageType::Sound:
+		break;
+	}	
 }
 
 void Sys_UFOControl::initializeTimer()
@@ -120,7 +132,7 @@ void Sys_UFOControl::initializeUFO()
 	auto ufo = m_systemManager->getActorManager()->getActor(ufoId);
 	const auto& posComp = ufo->getComponent<Comp_Position>(ComponentType::Position);
 	const auto& targetComp = ufo->getComponent<Comp_Target>(ComponentType::Target);
-	targetComp->setTarget(m_movingRight ? sf::Vector2f(-m_startOffset.x, m_startOffset.y) : sf::Vector2f(m_systemManager->getLevelManager()->getViewSpace().getSize().x + m_startOffset.x, m_startOffset.y));
+	targetComp->setTarget(m_movingRight ? sf::Vector2f(-m_startOffset.x, m_startOffset.y) : sf::Vector2f(m_systemManager->getLevelManager()->getViewSpace().size.x + m_startOffset.x, m_startOffset.y));
 	posComp->setPosition(targetComp->getTarget() + sf::Vector2f(0, 50));
 	m_ufoEnabled = true;
 }
@@ -135,8 +147,8 @@ void Sys_UFOControl::handleUFO(const float& deltaTime)
 	sf::Vector2f updatedPos = targetComp->getTarget() + sf::Vector2f(m_movingRight ? m_ufoSpeed : -m_ufoSpeed, 0) * deltaTime;
 	targetComp->setTarget(updatedPos);
 	// if UFO is out of bounds, disable it
-	if (m_movingRight && updatedPos.x > m_systemManager->getLevelManager()->getViewSpace().getSize().x + colComp->getAABB().width / 2.f ||
-		!m_movingRight && updatedPos.x < -colComp->getAABB().width / 2.f)
+	if ((m_movingRight && updatedPos.x > m_systemManager->getLevelManager()->getViewSpace().size.x + colComp->getAABB().size.x / 2.f) ||
+		(!m_movingRight && updatedPos.x < -colComp->getAABB().size.x / 2.f))
 	{
 		m_ufoEnabled = false;
 		m_systemManager->getActorManager()->disableActor(m_systemManager->getLevelManager()->getUFOId());

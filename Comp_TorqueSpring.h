@@ -23,5 +23,4 @@ private:
     float m_currentAngle = 0.f;
     float m_stiffness = 0.f;
     float m_damping = 0.f;
-    float m_angularVelocity = 0.f;
 };

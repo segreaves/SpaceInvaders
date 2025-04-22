@@ -14,7 +14,7 @@ Grid::Grid(float cellSize, int rows, int cols, float posX, float posY) :
 
 sf::FloatRect Grid::getCellRect(const int& col, const int& row) const
 {
-    return sf::FloatRect(m_posX + col * m_cellSize, m_posY + row * m_cellSize, m_cellSize, m_cellSize);
+    return sf::FloatRect({m_posX + col * m_cellSize, m_posY + row * m_cellSize}, {m_cellSize, m_cellSize});
 }
 
 bool Grid::isCellValid(const int& col, const int& row) const

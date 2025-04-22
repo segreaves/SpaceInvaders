@@ -8,10 +8,17 @@
 
 Sys_PlayerControl::Sys_PlayerControl(SysManager* systemManager) :
 	Sys(systemManager),
-	m_playerBulletIndex(0)
+	m_playerBulletIndex(0),
+	m_font(),
+	m_bulletCountText(m_font)
 {
 	onCreate();
-	m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
+	bool isLoaded = m_font.openFromFile(Utils::getAssetsDirectory() + "fonts/game_over.ttf");
+
+	if (!isLoaded) {
+		// Handle the error, e.g., log an error message or throw an exception
+		std::cerr << "Failed to load font from file." << std::endl;
+	}
 }
 
 Sys_PlayerControl::~Sys_PlayerControl()
@@ -68,10 +75,10 @@ void Sys_PlayerControl::update(const float& deltaTime)
 		sf::FloatRect playerAABB = colComp->getAABB();
 
 		float resolve = 0;
-		if (playerAABB.left < 0)
-			resolve = -playerAABB.left;
-		else if (playerAABB.left + playerAABB.width > levelManager->getViewSpace().getSize().x)
-			resolve = -(playerAABB.left + playerAABB.width - levelManager->getViewSpace().getSize().x);
+		if (playerAABB.position.x < 0)
+			resolve = -playerAABB.position.x;
+		else if (playerAABB.position.x + playerAABB.size.x > levelManager->getViewSpace().size.x)
+			resolve = -(playerAABB.position.x + playerAABB.size.x - levelManager->getViewSpace().size.x);
 		if (resolve != 0)
 		{
 			posComp->move(resolve, 0);
@@ -88,6 +95,12 @@ void Sys_PlayerControl::handleEvent(const ActorId& actorId, const ActorEventType
 	if (!hasActor(actorId)) return;
 	switch (eventId)
 	{
+	case ActorEventType::Spawned:
+		// No action needed for Spawned event
+		break;
+	case ActorEventType::Invaded:
+		// No action needed for Invaded event
+		break;
 	case ActorEventType::Shoot:
 	{
 		const int bulletId = m_systemManager->getLevelManager()->getPlayerBulletIds()[m_playerBulletIndex];
@@ -120,7 +133,7 @@ void Sys_PlayerControl::debugOverlay(WindowManager* windowManager)
 		auto actor = actorManager->getActor(actorId);
 		auto targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 		sf::CircleShape target(2.5f);
-		target.setOrigin(target.getRadius(), target.getRadius());
+		target.setOrigin({target.getRadius(), target.getRadius()});
 		target.setFillColor(sf::Color::Red);
 		target.setPosition(targetComp->getTarget());
 		window->draw(target);
@@ -129,7 +142,7 @@ void Sys_PlayerControl::debugOverlay(WindowManager* windowManager)
 	m_bulletCountText.setFont(m_font);
 	m_bulletCountText.setCharacterSize(70);
 	m_bulletCountText.setFillColor(sf::Color::White);
-	m_bulletCountText.setPosition(10, 10);
+	m_bulletCountText.setPosition({10, 10});
 	m_bulletCountText.setString("Bullets: " + std::to_string(m_playerBulletIndex));
 	window->draw(m_bulletCountText);
 }

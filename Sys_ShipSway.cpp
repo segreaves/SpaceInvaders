@@ -68,7 +68,7 @@ void Sys_ShipSway::debugOverlay(WindowManager* windowManager)
 			sf::Vertex(pos, sf::Color::Blue),
 			sf::Vertex(end, sf::Color::Blue)
 		};
-		windowManager->getRenderWindow()->draw(line, 2, sf::Lines);
+		windowManager->getRenderWindow()->draw(line, 2, sf::PrimitiveType::Lines);
 	}
 }
 

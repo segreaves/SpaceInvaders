@@ -16,7 +16,7 @@ public:
 		m_particleSystem.setEmitterPosition(position);
 	}
 
-	void draw(sf::RenderWindow* window)
+	void draw(sf::RenderWindow* window) override
 	{
 		m_particleSystem.draw(window);
 	}

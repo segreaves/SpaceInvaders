@@ -62,6 +62,11 @@ void Sys_ShockwaveControl::handleEvent(const ActorId& actorId, const ActorEventT
 		case ActorEventType::Despawned:
 			m_systemManager->getActorManager()->disableActor(actorId);
 			break;
+		case ActorEventType::Spawned:
+		case ActorEventType::Invaded:
+		case ActorEventType::Shoot:
+			// No specific handling needed for these events currently
+			break;
 	}
 }
 
@@ -106,5 +111,11 @@ void Sys_ShockwaveControl::notify(const Message& msg)
 			otherMoveComp->accelerate(force * direction / distance);
 			break;
 		}
+		case ActorMessageType::Damage:
+		case ActorMessageType::Shoot:
+		case ActorMessageType::MissedShot:
+		case ActorMessageType::Sound:
+			// No handling needed for these message types currently
+			break;
 	}
 }

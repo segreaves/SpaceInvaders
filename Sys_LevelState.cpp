@@ -57,6 +57,10 @@ void Sys_LevelState::handleEvent(const ActorId& actorId, const ActorEventType& e
 			m_playerDestroyed = true;
 			m_deathTimer = m_gameOverWaitTime;
 			break;
+		case ActorEventType::Spawned:
+			break;
+		case ActorEventType::Shoot:
+			break;
 	}
 }
 

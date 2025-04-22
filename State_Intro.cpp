@@ -5,6 +5,8 @@
 
 State_Intro::State_Intro(StateManager* stateManager) :
 	State(stateManager),
+	m_titleText(m_font),
+	m_instructionsText(m_font),
 	m_showTextTimer(0)
 {
 }
@@ -36,9 +38,9 @@ void State_Intro::onCreate()
 	m_titleText.setCharacterSize(350);
 	m_titleText.setFillColor(APP_COLOR);
 	sf::FloatRect titleBounds = m_titleText.getLocalBounds();
-	m_titleText.setOrigin(
-		titleBounds.width / 2.f,
-		titleBounds.top + titleBounds.height / 2.f
+	m_titleText.setOrigin({
+		titleBounds.size.x / 2.f,
+		titleBounds.position.y + titleBounds.size.y / 2.f}
 	);
 	m_titleText.setPosition(windowManager->getRenderWindow()->getView().getCenter());
 	// set up instructions text
@@ -46,15 +48,15 @@ void State_Intro::onCreate()
 	m_instructionsText.setString({ "Start (SPACE)" });
 	m_instructionsText.setCharacterSize(m_fontSize);
 	sf::FloatRect instBounds = m_instructionsText.getLocalBounds();
-	m_instructionsText.setOrigin(
-		instBounds.width / 2.f,
-		instBounds.height / 2.f
+	m_instructionsText.setOrigin({
+		instBounds.size.x / 2.f,
+		instBounds.size.y / 2.f}
 	);
-	m_instructionsText.setPosition(windowManager->getRenderWindow()->getView().getCenter().x, m_titleText.getPosition().y + 40);
+	m_instructionsText.setPosition({windowManager->getRenderWindow()->getView().getCenter().x, m_titleText.getPosition().y + 40});
 
 	m_transparent = true;
 	// load music
-	m_stateManager->getContext()->m_soundManager->loadSoundProfile("assets/profiles/soundProfiles/intro_state.sound");
+	m_stateManager->getContext()->m_soundManager->loadSoundProfile("profiles/soundProfiles/intro_state.sound");
 }
 
 void State_Intro::activate()

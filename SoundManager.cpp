@@ -33,7 +33,6 @@ bool SoundManager::playSound(const std::string& name, const float& volume, const
 	const auto& sound = stateSounds.find(name);
 	if (sound == stateSounds.end()) return false;
 	// sound exists, set up and play
-	const auto& soundInfo = sound->second.first;
 	const auto& snd = sound->second.second;
 	snd->setVolume(volume);
 	snd->setPitch(pitch);
@@ -70,7 +69,7 @@ void SoundManager::setUpMusic(sf::Music* music, const SoundInfo* props)
 void SoundManager::loadSoundProfile(const std::string& filePath)
 {
 	std::ifstream file;
-	std::string fullPath = Utils::getWorkingDirectory() + filePath;
+	std::string fullPath = Utils::getAssetsDirectory() + filePath;
 	file.open(fullPath);
 	if (!file.is_open())
 	{
@@ -106,12 +105,12 @@ void SoundManager::loadSoundProfile(const std::string& filePath)
 			std::string musicPath = m_audioManager->getPath(name);
 			if (musicPath == "") return;
 			auto music = new sf::Music();
-			if (!music->openFromFile(Utils::getWorkingDirectory() + musicPath))
+			if (!music->openFromFile(Utils::getAssetsDirectory() + musicPath))
 			{
 				std::cerr << "SoundManager::loadSoundProfile() failed to load music from file: " << name << std::endl;
 				return;
 			}
-			music->setLoop(true);
+			music->setLooping(true);
 			m_music[m_currentState].first = soundInfo;
 			m_music[m_currentState].second = music;
 		}
@@ -183,14 +182,14 @@ void SoundManager::pauseAll(const StateType& state)
 	auto& soundMap = m_audio[state];
 	for (auto& [str, soundData] : soundMap)
 	{
-		if (soundData.second->getStatus() == sf::Sound::Playing)
+		if (soundData.second->getStatus() == sf::SoundSource::Status::Playing)
 			soundData.second->pause();
 	}
 	// pause music
 	auto music = m_music.find(state);
 	if (music == m_music.end()) return;
 	if (!music->second.second) return;
-	if (music->second.second->getStatus() == sf::Sound::Playing)
+	if (music->second.second->getStatus() == sf::SoundSource::Status::Playing)
 		music->second.second->pause();
 }
 
@@ -200,13 +199,13 @@ void SoundManager::unpauseAll(const StateType& state)
 	auto& soundMap = m_audio[state];
 	for (auto& [str, soundData] : soundMap)
 	{
-		if (soundData.second->getStatus() == sf::Sound::Paused)
+		if (soundData.second->getStatus() == sf::SoundSource::Status::Paused)
 			soundData.second->play();
 	}
 	// unpause music
 	auto music = m_music.find(state);
 	if (music == m_music.end()) return;
 	if (!music->second.second) return;
-	if (music->second.second->getStatus() == sf::Sound::Paused)
+	if (music->second.second->getStatus() == sf::SoundSource::Status::Paused)
 		music->second.second->play();
 }

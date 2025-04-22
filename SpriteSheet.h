@@ -24,7 +24,7 @@ public:
 	const sf::Texture* getTexture() const;
 	const sf::Vector2u& getSpriteSize() const;
 	const sf::Vector2f& getSpriteScale() const;
-	const sf::Vector2f& getSpritePosition() const;
+	sf::Vector2f getSpritePosition() const;
 	void setSpriteSize(const sf::Vector2u& size);
 	void setSpritePosition(const sf::Vector2f& position);
 	void setSpriteRotation(const float& rotation);
@@ -46,7 +46,7 @@ private:
 	OriginType m_origin;
 	sf::Texture* m_texture;
 	std::string m_textureId;
-	sf::Sprite m_sprite;
+	sf::Sprite* m_sprite;
 	sf::Vector2u m_spriteSize;
 	sf::Vector2f m_spriteScale;
 	sf::Vector2f m_sheetPadding;

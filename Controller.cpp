@@ -3,37 +3,37 @@
 #include <iostream>
 
 Controller::Controller() :
-	m_windowManager(nullptr),
-	m_hasFocus(true)
+	m_hasFocus(true),
+	m_windowManager(nullptr)
 {
 }
 
 void Controller::handleEvent(sf::Event event, const float& deltaTime)
-{
-	if (event.type == sf::Event::KeyPressed)
+{ 
+	if (event.is<sf::Event::KeyPressed>())
 	{
-		if (event.key.code == sf::Keyboard::Space)
+		if (event.getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Space)
 			m_onSelect.dispatch();
-		else if (event.key.code == sf::Keyboard::Escape)
+		else if (event.getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Escape)
 			m_onEscape.dispatch();
-		else if (event.key.code == sf::Keyboard::P)
+		else if (event.getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::P)
 		{
 			// release the mouse on paused state
 			m_captureMouse = !m_captureMouse;
 			m_onPause.dispatch();
 		}
-		else if (event.key.code == sf::Keyboard::H)
+		else if (event.getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::H)
 			m_onToggleHelp.dispatch();
-		else if (event.key.code == sf::Keyboard::S)
+		else if (event.getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::S)
 			m_onToggleSound.dispatch();
-		else if (event.key.code == sf::Keyboard::M)
+		else if (event.getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::M)
 			m_onToggleMusic.dispatch();
-		else if (event.key.code == sf::Keyboard::F5)
+		else if (event.getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::F5)
 			m_onToggleFullscreen.dispatch();
 	}
-	else if (event.type == sf::Event::MouseButtonPressed)
+	else if (event.is<sf::Event::MouseButtonPressed>())
 	{
-		if (event.mouseButton.button == sf::Mouse::Left)
+		if (event.getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left)
 			m_onShoot.dispatch();
 	}
 }

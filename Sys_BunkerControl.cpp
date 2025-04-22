@@ -5,14 +5,14 @@
 #include <functional>
 #include <cmath>
 #include <numbers>
+#include <SFML/Graphics.hpp>
 
-Sys_BunkerControl::Sys_BunkerControl(SysManager* systemManager) :
+	Sys_BunkerControl::Sys_BunkerControl(SysManager* systemManager) :
 	Sys(systemManager),
-	m_rows(0),
-	m_cols(0),
 	m_bunkerDamaged(false),
 	m_damageTimer(0),
 	m_damageDuration(0.05f),
+	m_rd(),
 	m_gen(m_rd()), // seed rng
 	m_unifAngleDist(0, 360), // angle distribution
 	m_unifLengthDist(0, 10) // length distribution
@@ -73,6 +73,11 @@ void Sys_BunkerControl::notify(const Message& msg)
 	case ActorMessageType::Collision:
 		damageBunker(msg.m_receiver, msg.m_sender);
 		break;
+	case ActorMessageType::Damage:
+    case ActorMessageType::Shoot:
+	case ActorMessageType::MissedShot:
+	case ActorMessageType::Sound:
+		break;
 	}
 }
 
@@ -86,20 +91,22 @@ void Sys_BunkerControl::damageBunker(const ActorId& actorId, const ActorId& othe
 	sf::Image image = texture->copyToImage();
 	sf::Sprite* bunkerSprite = const_cast<sf::Sprite*>(spriteSheet->getSprite());
 
-	sf::FloatRect intersect;
+	std::optional<sf::FloatRect>  intersectOpt;
 	sf::FloatRect spriteGlobalRect = bunkerSprite->getGlobalBounds();
 	// get the intersection of the other actor's collider and the bunker sprite
-	if (!spriteGlobalRect.intersects(collider, intersect)) return;
-	
+	intersectOpt = spriteGlobalRect.findIntersection(collider);
+	if (!intersectOpt.has_value()) return;
+
+	sf::FloatRect intersect = intersectOpt.value();
 	sf::FloatRect localIntersect = spriteSheet->globalRectToPixelRect(intersect);
 
 	// convert the local coordinates to pixel coordinates
 	sf::Vector2i start = sf::Vector2i(
-		static_cast<int>(localIntersect.left),
-		static_cast<int>(localIntersect.top));
+		static_cast<int>(localIntersect.position.x),
+		static_cast<int>(localIntersect.position.y));
 	sf::Vector2i end = sf::Vector2i(
-		static_cast<int>(std::ceil(localIntersect.left + localIntersect.width)),
-		static_cast<int>(std::ceil(localIntersect.top + localIntersect.height)));
+		static_cast<int>(std::ceil(localIntersect.position.x + localIntersect.size.x)),
+		static_cast<int>(std::ceil(localIntersect.position.y + localIntersect.size.y)));
 
 	// check for collision against non-transparent pixels. If true, instantiate damage
 	if (nonTransparentPixels(start.x, end.x, start.y, end.y, image))
@@ -109,7 +116,7 @@ void Sys_BunkerControl::damageBunker(const ActorId& actorId, const ActorId& othe
 
 		// position at which to initiate explosion
 		sf::Vector2f rayOrigin = m_systemManager->getActorManager()->getActor(otherId)->getComponent<Comp_Position>(ComponentType::Position)->getPosition();
-		const unsigned int rayNum = 20;
+		const int rayNum = 20;
 		for (int i = 0; i < rayNum; i++)
 		{
 			// create a ray in a random direction
@@ -128,11 +135,11 @@ void Sys_BunkerControl::damageBunker(const ActorId& actorId, const ActorId& othe
 				sf::FloatRect cellRect = gridComp->getGrid()->getCellRect(cell.x, cell.y);
 				sf::FloatRect cellLocalIntersect = spriteSheet->globalRectToPixelRect(cellRect);
 				sf::Vector2i cellStart = sf::Vector2i(
-					static_cast<int>(cellLocalIntersect.left),
-					static_cast<int>(cellLocalIntersect.top));
+					static_cast<int>(cellLocalIntersect.position.x),
+					static_cast<int>(cellLocalIntersect.position.y));
 				sf::Vector2i cellEnd = sf::Vector2i(
-					static_cast<unsigned int>(std::ceil(cellLocalIntersect.left + cellLocalIntersect.width)),
-					static_cast<unsigned int>(std::ceil(cellLocalIntersect.top + cellLocalIntersect.height)));
+					static_cast<unsigned int>(std::ceil(cellLocalIntersect.position.x + cellLocalIntersect.size.x)),
+					static_cast<unsigned int>(std::ceil(cellLocalIntersect.position.y + cellLocalIntersect.size.y)));
 				turnOffPixels(cellStart.x, cellEnd.x, cellStart.y, cellEnd.y, image);
 			}
 		}
@@ -165,7 +172,7 @@ bool Sys_BunkerControl::nonTransparentPixels(unsigned int xStart, unsigned int x
 {
 	for (unsigned int x = xStart; x < xEnd; x++)
 		for (unsigned int y = yStart; y < yEnd; y++)
-			if (x >= 0 && x < image.getSize().x && y >= 0 && y < image.getSize().y && image.getPixel(x, y).a > 0)
+			if (x >= 0 && x < image.getSize().x && y >= 0 && y < image.getSize().y && image.getPixel({x, y}).a > 0)
 				return true;
 	return false;
 }
@@ -175,5 +182,5 @@ void Sys_BunkerControl::turnOffPixels(unsigned int xStart, unsigned int xEnd, un
 	for (unsigned int x = xStart; x < xEnd; x++)
 		for (unsigned int y = yStart; y < yEnd; y++)
 			if (x >= 0 && x < image.getSize().x && y >= 0 && y < image.getSize().y)
-				image.setPixel(x, y, sf::Color::Transparent);
+				image.setPixel({x, y}, sf::Color::Transparent);
 }

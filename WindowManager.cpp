@@ -20,17 +20,17 @@ WindowManager::~WindowManager()
 
 void WindowManager::update(float deltaTime)
 {
-	sf::Event event;
-	while (m_window.pollEvent(event))
+
+	while (const std::optional event = m_window.pollEvent())
 	{
-		if (event.type == sf::Event::Closed)
+		if (event->getIf<sf::Event::Closed>())
 			closeWindow();
-		else if (event.type == sf::Event::GainedFocus)
+		else if (event->getIf<sf::Event::FocusGained>())
 			m_isFocused = m_controller.setFocus(true);
-		else if (event.type == sf::Event::LostFocus)
+		else if (event->getIf<sf::Event::FocusLost>())
 			m_isFocused = m_controller.setFocus(false);
 		else
-			m_controller.handleEvent(event, deltaTime);
+			m_controller.handleEvent(*event, deltaTime);
 	}
 }
 
@@ -85,8 +85,8 @@ void WindowManager::toggleFullscreen()
 
 void WindowManager::createWindow()
 {
-	sf::VideoMode videoMode(m_windowSize.x, m_windowSize.y);
-	m_window.create(videoMode, m_windowTitle, m_isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
+	sf::VideoMode videoMode({m_windowSize.x, m_windowSize.y});
+	m_window.create(videoMode, m_windowTitle, sf::Style::Default, m_isFullscreen ? sf::State::Fullscreen : sf::State::Windowed);
 	m_window.setFramerateLimit(m_framerate);
 }
 

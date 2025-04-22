@@ -48,10 +48,9 @@ private:
 	bool m_movingRight;
 	float m_aiSpeed;
 	unsigned int m_invaderBulletIndex;
-	sf::Text m_bulletCountText;
 	sf::Font m_font;
+	sf::Text m_bulletCountText;
 	unsigned int m_shockwaveIndex;
-	const float m_maxTargetDistance = 50.0f;
 	ActorId m_leftInvader;
 	ActorId m_rightInvader;
 	const float m_dropDistance = 32.f;

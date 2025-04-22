@@ -8,14 +8,14 @@
 class TextureManager : public ResourceManager<TextureManager, sf::Texture>
 {
 public:
-	TextureManager() : ResourceManager("assets/profiles/textures.dat")
+	TextureManager() : ResourceManager("profiles/textures.dat")
 	{
 	}
 
 	sf::Texture* load(const std::string& path)
 	{
 		sf::Texture* texture = new sf::Texture();
-		if (!texture->loadFromFile(Utils::getWorkingDirectory() + path))
+		if (!texture->loadFromFile(Utils::getAssetsDirectory() + path))
 		{
 			delete texture;
 			texture = nullptr;

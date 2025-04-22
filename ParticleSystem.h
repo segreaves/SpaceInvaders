@@ -34,8 +34,8 @@ private:
 	float m_maxSpeed;
 	sf::Vector2f m_emitterPosition;
 	bool m_isEnabled;
-	std::mt19937 m_rng;
 	std::random_device m_rd;
+	std::mt19937 m_rng;
 	std::uniform_real_distribution<float> m_angleDist;
 	std::uniform_real_distribution<float> m_speedDist;
 };

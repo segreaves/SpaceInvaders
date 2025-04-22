@@ -4,6 +4,7 @@
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
+/.*
 
 # Prerequisites
 *.d
@@ -13,6 +14,7 @@
 *.lo
 *.o
 *.obj
+/build
 
 # Precompiled Headers
 *.gch
@@ -41,3 +43,6 @@
 /SpaceInvaders/x64/Debug
 /x64/Debug
 /assets
+/CMakeFiles
+
+

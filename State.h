@@ -15,7 +15,12 @@ public:
 		m_stateManager(stateManager),
 		m_transparent(false)
 	{
-		m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
+		bool isLoaded = m_font.openFromFile(Utils::getAssetsDirectory() + "fonts/game_over.ttf");
+
+		if (!isLoaded) {
+			// Handle the error, e.g., log an error message or throw an exception
+			std::cerr << "Failed to load font from file." << std::endl;
+		}
 	}
 
 	virtual ~State() = default;

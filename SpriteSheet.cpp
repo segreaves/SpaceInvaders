@@ -1,24 +1,38 @@
 #include "SpriteSheet.h"
 
-SpriteSheet::SpriteSheet(TextureManager* textureManager, bool sharedMemory = true) :
+SpriteSheet::SpriteSheet(TextureManager* textureManager, bool sharedMemory) :
 	m_textureManager(textureManager),
-	m_spriteScale(1.0f, 1.0f),
-	m_totalFrames(0),
-	m_frame(0),
+	m_origin(OriginType::Medium),
 	m_texture(nullptr),
-	m_sharedMemory(sharedMemory),
-	m_origin(OriginType::Medium)
+	m_textureId(""),
+	m_sprite(nullptr),
+	m_spriteSize(1, 1),
+	m_spriteScale(1.0f, 1.0f),
+	m_sheetPadding(1.0f, 1.0f),
+	m_spriteSpacing(1.0f, 1.0f),
+	m_cropRect( {0, 0}, {1, 1 }),
+	m_totalFrames(0),	
+	m_frame(0), 
+	m_sharedMemory(sharedMemory)
 {
 }
 
 SpriteSheet::~SpriteSheet()
 {
 	releaseSheet();
+	if (m_sprite)
+	{
+		delete m_sprite;
+		m_sprite = nullptr;
+	}
 }
 
 void SpriteSheet::draw(sf::RenderWindow* window)
 {
-	window->draw(m_sprite);
+	if (m_sprite)
+	{
+		window->draw(*m_sprite);
+	}
 }
 
 void SpriteSheet::frameStep()
@@ -34,12 +48,16 @@ void SpriteSheet::resetFrame()
 void SpriteSheet::cropSprite()
 {
 	m_cropRect = sf::IntRect(
-		(m_spriteSize.x * m_frame) + m_sheetPadding.x + (m_spriteSpacing.x * m_frame),
-		m_sheetPadding.y,
-		m_spriteSize.x,
-		m_spriteSize.y
+		sf::Vector2i(
+			(m_spriteSize.x * m_frame) + static_cast<int>(m_sheetPadding.x) + (static_cast<int>(m_spriteSpacing.x) * m_frame),
+			static_cast<int>(m_sheetPadding.y)
+		),
+		sf::Vector2i(m_spriteSize.x, m_spriteSize.y)
 	);
-	m_sprite.setTextureRect(m_cropRect);
+	if (m_sprite)
+	{
+		m_sprite->setTextureRect(m_cropRect);
+	}
 }
 
 int SpriteSheet::getTotalFrames() const
@@ -49,7 +67,7 @@ int SpriteSheet::getTotalFrames() const
 
 const sf::Sprite* SpriteSheet::getSprite() const
 {
-	return &m_sprite;
+	return m_sprite;
 }
 
 const sf::Texture* SpriteSheet::getTexture() const
@@ -64,39 +82,58 @@ const sf::Vector2f& SpriteSheet::getSpriteScale() const
 	return m_spriteScale;
 }
 
-const sf::Vector2f& SpriteSheet::getSpritePosition() const { return m_sprite.getPosition(); }
+sf::Vector2f SpriteSheet::getSpritePosition() const
+{
+	if (m_sprite)
+	{
+		return m_sprite->getPosition();
+	}
+	return sf::Vector2f();
+}
 
 void SpriteSheet::setSpriteSize(const sf::Vector2u& size)
 {
 	m_spriteSize = size;
-	switch (m_origin)
+	if (m_sprite)
 	{
-		case OriginType::Medium:
-			m_sprite.setOrigin(m_spriteSize.x / 2.f, m_spriteSize.y / 2.f);
-			break;
-		case OriginType::Bottom:
-			m_sprite.setOrigin(m_spriteSize.x / 2.f, m_spriteSize.y);
-			break;
-		case OriginType::Top:
-			m_sprite.setOrigin(m_spriteSize.x / 2.f, 0.f);
-			break;
+		switch (m_origin)
+		{
+			case OriginType::Medium:
+				m_sprite->setOrigin(sf::Vector2f(m_spriteSize.x / 2.f, m_spriteSize.y / 2.f));
+				break;
+			case OriginType::Bottom:
+				m_sprite->setOrigin(sf::Vector2f(m_spriteSize.x / 2.f, static_cast<float>(m_spriteSize.y)));
+				break;
+			case OriginType::Top:
+				m_sprite->setOrigin(sf::Vector2f(m_spriteSize.x / 2.f, 0.f));
+				break;
+		}
 	}
 }
 
 void SpriteSheet::setSpritePosition(const sf::Vector2f& position)
 {
-	m_sprite.setPosition(position);
+	if (m_sprite)
+	{
+		m_sprite->setPosition(position);
+	}
 }
 
 void SpriteSheet::setSpriteRotation(const float& rotation)
 {
-	m_sprite.setRotation(rotation);
+	if (m_sprite)
+	{
+		m_sprite->setRotation(sf::degrees(rotation));
+	}
 }
 
 void SpriteSheet::setSpriteScale(const sf::Vector2f& scale)
 {
 	m_spriteScale = scale;
-	m_sprite.setScale(m_spriteScale);
+	if (m_sprite)
+	{
+		m_sprite->setScale(m_spriteScale);
+	}
 }
 
 void SpriteSheet::setSheetPadding(const sf::Vector2f& padding)
@@ -116,12 +153,18 @@ void SpriteSheet::setSpriteOrigin(OriginType origin)
 
 void SpriteSheet::setSpriteColor(const sf::Color& color)
 {
-	m_sprite.setColor(color);
+	if (m_sprite)
+	{
+		m_sprite->setColor(color);
+	}
 }
 
 void SpriteSheet::setSmooth(const bool& smooth)
 {
-	m_texture->setSmooth(smooth);
+	if (m_texture)
+	{
+		m_texture->setSmooth(smooth);
+	}
 }
 
 const sf::Vector2f& SpriteSheet::getSheetPadding() const { return m_sheetPadding; }
@@ -133,17 +176,20 @@ const sf::IntRect& SpriteSheet::getCropRect() const { return m_cropRect; }
 sf::FloatRect SpriteSheet::globalRectToPixelRect(const sf::FloatRect& rect) const
 {
 	sf::FloatRect pixelRect;
-	pixelRect.left = (rect.left - m_sprite.getGlobalBounds().left) / m_spriteScale.x;
-	pixelRect.top = (rect.top - m_sprite.getGlobalBounds().top) / m_spriteScale.y;
-	pixelRect.width = rect.width / m_spriteScale.x;
-	pixelRect.height = rect.height / m_spriteScale.y;
+	if (m_sprite)
+	{
+		pixelRect.position.x = (rect.position.x - m_sprite->getGlobalBounds().position.x) / m_spriteScale.x;
+		pixelRect.position.y = (rect.position.y - m_sprite->getGlobalBounds().position.y) / m_spriteScale.y;
+		pixelRect.size.x = rect.size.x / m_spriteScale.x;
+		pixelRect.size.y = rect.size.y / m_spriteScale.y;
+	}
 	return pixelRect;
 }
 
 bool SpriteSheet::loadSheet(const std::string& filePath)
 {
 	std::ifstream file;
-	file.open(Utils::getWorkingDirectory() + filePath);
+	file.open(Utils::getAssetsDirectory() + filePath);
 	if (!file.is_open())
 	{
 		std::cerr << "SpriteSheet::loadSheet() failed to load file: " << filePath << std::endl;
@@ -179,7 +225,7 @@ bool SpriteSheet::loadSheet(const std::string& filePath)
 			else
 			{
 				// load texture directly into separate memory
-				std::string texturePath = Utils::getWorkingDirectory() + m_textureManager->getPath(m_textureId);
+				std::string texturePath = Utils::getAssetsDirectory() + m_textureManager->getPath(m_textureId);
 				m_texture = new sf::Texture();
 				if (!m_texture->loadFromFile(texturePath))
 				{
@@ -187,7 +233,11 @@ bool SpriteSheet::loadSheet(const std::string& filePath)
 					continue;
 				}
 			}
-			m_sprite.setTexture(*m_texture);
+			if (m_sprite)
+			{
+				delete m_sprite;
+			}
+			m_sprite = new sf::Sprite(*m_texture);
 		}
 		else if (type == "Frames")
 		{
@@ -201,7 +251,10 @@ bool SpriteSheet::loadSheet(const std::string& filePath)
 		else if (type == "Scale")
 		{
 			ss >> m_spriteScale.x >> m_spriteScale.y;
-			m_sprite.setScale(m_spriteScale);
+			if (m_sprite)
+			{
+				m_sprite->setScale(m_spriteScale);
+			}
 		}
 		else if (type == "Padding")
 		{

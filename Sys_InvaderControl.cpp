@@ -4,21 +4,23 @@
 #include "LevelManager.h"
 #include "SoundType.h"
 
-Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
+	Sys_InvaderControl::Sys_InvaderControl(SysManager* systemManager) :
 	Sys(systemManager),
 	m_movingRight(false),
-	m_gen(m_rd()),
-	m_unifFloat(1.f, 30.f),
-	m_unifInt(0, 1),
 	m_aiSpeed(0),
 	m_invaderBulletIndex(0),
+	m_font(),
+	m_bulletCountText(m_font),
+	m_shockwaveIndex(0),
 	m_leftInvader(-1),
 	m_rightInvader(-1),
-	m_shockwaveIndex(0),
 	m_loadTimer(1),
 	m_loadSoundTimer(0),
 	m_beatTimer(0),
-	m_beatHigh(false)
+	m_beatHigh(false),
+	m_gen(m_rd()),
+	m_unifFloat(1.f, 30.f),
+	m_unifInt(0, 1)
 {
 	onCreate();
 }
@@ -195,7 +197,14 @@ void Sys_InvaderControl::handleEvent(const ActorId& actorId, const ActorEventTyp
 		moveComp->accelerate(sf::Vector2f(0, -m_knockback * 1));
 		break;
 	}
+	case ActorEventType::Spawned:
+		break;
+	case ActorEventType::Invaded:
+		break;
+	default: 
+		break;
 	}
+
 }
 
 void Sys_InvaderControl::debugOverlay(WindowManager* windowManager)
@@ -207,13 +216,13 @@ void Sys_InvaderControl::debugOverlay(WindowManager* windowManager)
 		const auto& actor = actorManager->getActor(actorId);
 		const auto& targetComp = actor->getComponent<Comp_Target>(ComponentType::Target);
 		sf::CircleShape target(2.5f);
-		target.setOrigin(target.getRadius(), target.getRadius());
+		target.setOrigin({target.getRadius(), target.getRadius()});
 		target.setFillColor(sf::Color::Red);
 		target.setPosition(targetComp->getTarget());
 		window->draw(target);
 	}
 	sf::CircleShape aiTarget(5.f);
-	aiTarget.setOrigin(aiTarget.getRadius(), aiTarget.getRadius());
+	aiTarget.setOrigin({aiTarget.getRadius(), aiTarget.getRadius()});
 	aiTarget.setFillColor(sf::Color::Yellow);
 	aiTarget.setPosition(m_aiTarget);
 	window->draw(aiTarget);
@@ -221,7 +230,7 @@ void Sys_InvaderControl::debugOverlay(WindowManager* windowManager)
 	m_bulletCountText.setFont(m_font);
 	m_bulletCountText.setCharacterSize(70);
 	m_bulletCountText.setFillColor(sf::Color::White);
-	m_bulletCountText.setPosition(10, 90);
+	m_bulletCountText.setPosition({10, 90});
 	m_bulletCountText.setString("Bullets: " + std::to_string(m_invaderBulletIndex));
 	window->draw(m_bulletCountText);
 }
@@ -248,6 +257,15 @@ void Sys_InvaderControl::notify(const Message& msg)
 			}
 			break;
 		}
+		case ActorMessageType::Damage:
+		case ActorMessageType::Shoot:
+		case ActorMessageType::MissedShot:
+		{
+			// Handle other message types if needed or leave empty
+			break;
+		}
+		default:
+			break;
 	}
 }
 
@@ -263,7 +281,7 @@ void Sys_InvaderControl::selectTrackedInvaders()
 {
 	if (m_actorIds.empty()) return;
 	ActorManager* actorManager = m_systemManager->getActorManager();
-	float minX = m_systemManager->getLevelManager()->getViewSpace().getSize().x;
+	float minX = m_systemManager->getLevelManager()->getViewSpace().size.x;
 	float maxX = 0.f;
 	m_leftInvader = -1;
 	m_rightInvader = -1;
@@ -272,15 +290,15 @@ void Sys_InvaderControl::selectTrackedInvaders()
 		auto actor = actorManager->getActor(actorId);
 		auto posComp = actor->getComponent<Comp_Position>(ComponentType::Position);
 		auto colComp = actor->getComponent<Comp_Collision>(ComponentType::Collision);
-		if (posComp->getPosition().x - colComp->getAABB().width / 2 < minX)
+		if (posComp->getPosition().x - colComp->getAABB().size.x / 2 < minX)
 		{
 			m_leftInvader = actorId;
-			minX = posComp->getPosition().x - colComp->getAABB().width;
+			minX = posComp->getPosition().x - colComp->getAABB().size.x;
 		}
-		if (posComp->getPosition().x + colComp->getAABB().width / 2 > maxX)
+		if (posComp->getPosition().x + colComp->getAABB().size.x / 2 > maxX)
 		{
 			m_rightInvader = actorId;
-			maxX = posComp->getPosition().x + colComp->getAABB().width;
+			maxX = posComp->getPosition().x + colComp->getAABB().size.x;
 		}
 #ifdef DEBUG
 		actorManager->getActor(actorId)->getComponent<Comp_SpriteSheet>(ComponentType::SpriteSheet)->getSpriteSheet()->setSpriteColor(APP_COLOR);
@@ -321,14 +339,13 @@ void Sys_InvaderControl::updateMoveTarget(std::shared_ptr<Comp_Target> targetCom
 
 void Sys_InvaderControl::checkBounds_H(const ActorId& id, std::shared_ptr<Comp_Target> targetComp, std::shared_ptr<Comp_Collision> colComp)
 {
-	sf::FloatRect invaderAABB = colComp->getAABB();
 	bool boundsLeft = targetComp->getTarget().x < m_bounds;
-	bool boundsRight = targetComp->getTarget().x > m_systemManager->getLevelManager()->getViewSpace().getSize().x - m_bounds;
+	bool boundsRight = targetComp->getTarget().x > m_systemManager->getLevelManager()->getViewSpace().size.x - m_bounds;
 	if (boundsLeft || boundsRight)
 	{
 		// drop invaders
 		sf::Vector2f resolve(
-			boundsLeft ? (m_bounds - targetComp->getTarget().x) : (m_systemManager->getLevelManager()->getViewSpace().getSize().x - m_bounds - targetComp->getTarget().x),
+			boundsLeft ? (m_bounds - targetComp->getTarget().x) : (m_systemManager->getLevelManager()->getViewSpace().size.x - m_bounds - targetComp->getTarget().x),
 			m_dropDistance
 		);
 		// change movement direction
@@ -340,7 +357,7 @@ void Sys_InvaderControl::checkBounds_H(const ActorId& id, std::shared_ptr<Comp_T
 void Sys_InvaderControl::checkBounds_V(const ActorId& id, std::shared_ptr<Comp_Collision> colComp)
 {
 	sf::FloatRect invaderAABB = colComp->getAABB();
-	bool boundsDown = invaderAABB.top + invaderAABB.height > m_systemManager->getLevelManager()->getViewSpace().getSize().y;
+	bool boundsDown = invaderAABB.position.y + invaderAABB.size.y > m_systemManager->getLevelManager()->getViewSpace().size.y;
 	// if invaders touch the bottom of the screen, player loses
 	if (boundsDown)
 		m_systemManager->addEvent(m_systemManager->getLevelManager()->getPlayerId(), (EventId)ActorEventType::Invaded);

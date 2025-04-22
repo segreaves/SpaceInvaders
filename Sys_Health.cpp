@@ -99,6 +99,11 @@ void Sys_Health::notify(const Message& msg)
 		}
 		break;
 	}
+	case ActorMessageType::Damage:
+	case ActorMessageType::Shoot:
+	case ActorMessageType::MissedShot:
+	case ActorMessageType::Sound:
+		break;
 	}
 }
 

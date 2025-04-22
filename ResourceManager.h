@@ -105,7 +105,7 @@ private:
 	void loadPaths(const std::string& pathFile)
 	{
 		std::ifstream paths;
-		std::string fullPath = Utils::getWorkingDirectory() + pathFile;
+		std::string fullPath = Utils::getAssetsDirectory() + pathFile;
 		paths.open(fullPath);
 		if (!paths.is_open())
 		{

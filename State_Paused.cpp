@@ -3,7 +3,8 @@
 #include "Params.h"
 
 State_Paused::State_Paused(StateManager* stateManager) :
-	State(stateManager)
+	State(stateManager),
+	m_pausedText(m_font)
 {
 }
 
@@ -23,20 +24,20 @@ void State_Paused::onCreate()
 
 	// set gray panel for background
 	WindowManager* windowManager = m_stateManager->getContext()->m_windowManager;
-	m_panel.setSize(windowManager->getCurrentViewSpace().getSize());
-	m_panel.setPosition(0, 0);
+	m_panel.setSize(windowManager->getCurrentViewSpace().size);
+	m_panel.setPosition({0, 0});
 	m_panel.setFillColor(OVERLAY_COLOR);
 
 	m_pausedText.setString({ "PAUSED" });
 	m_pausedText.setFont(m_font);
 	m_pausedText.setCharacterSize(m_fontSize);
 	m_pausedText.setFillColor(APP_COLOR);
-	m_pausedText.setPosition(windowManager->getCurrentViewSpace().getSize().x / 2.0f, windowManager->getCurrentViewSpace().getSize().y / 2.0f);
-	m_pausedText.setOrigin(
-		m_pausedText.getLocalBounds().left + m_pausedText.getLocalBounds().width / 2.0f,
-		m_pausedText.getLocalBounds().top + m_pausedText.getLocalBounds().height / 2.0f
+	m_pausedText.setPosition({windowManager->getCurrentViewSpace().size.x / 2.0f, windowManager->getCurrentViewSpace().size.y / 2.0f});
+	m_pausedText.setOrigin({
+		m_pausedText.getLocalBounds().position.x + m_pausedText.getLocalBounds().size.x / 2.0f,
+		m_pausedText.getLocalBounds().position.y + m_pausedText.getLocalBounds().size.y / 2.0f}
 	);
-	m_stateManager->getContext()->m_soundManager->loadSoundProfile("assets/profiles/soundProfiles/paused_state.sound");
+	m_stateManager->getContext()->m_soundManager->loadSoundProfile("profiles/soundProfiles/paused_state.sound");
 }
 
 void State_Paused::activate()

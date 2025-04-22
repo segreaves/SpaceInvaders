@@ -66,7 +66,7 @@ void Sys_BulletControl::update(const float& deltaTime)
 		colComp->setPosition(posComp->getPosition());
 		sf::FloatRect bulletAABB = colComp->getAABB();
 		// check if bullet is out of bounds
-		if (bulletAABB.top + bulletAABB.height < 0 || bulletAABB.top > m_systemManager->getLevelManager()->getViewSpace().getSize().y)
+		if (bulletAABB.position.y + bulletAABB.size.y < 0 || bulletAABB.position.y > m_systemManager->getLevelManager()->getViewSpace().size.y)
 		{
 			// before de-spawning bullet, handle missed shot
 			handleMissedShot(bullet, id);
@@ -76,7 +76,7 @@ void Sys_BulletControl::update(const float& deltaTime)
 #ifdef DEBUG
 		sf::RectangleShape rectTip(sf::Vector2f(4.f, 4.f));
 		rectTip.setPosition(posComp->getPosition());
-		rectTip.setOrigin(rectTip.getSize().x / 2, rectTip.getSize().y / 2);
+		rectTip.setOrigin(rectTip.size.x / 2, rectTip.size.y / 2);
 		sf::Color color = sf::Color::White;
 		color.a = 100;
 		rectTip.setFillColor(color);
@@ -105,6 +105,12 @@ void Sys_BulletControl::handleEvent(const ActorId& actorId, const ActorEventType
 	}
 	case ActorEventType::Despawned:
 		m_systemManager->getActorManager()->disableActor(actorId);
+		break;
+	case ActorEventType::Invaded:
+		// No specific handling needed for Invaded event in bullet control
+		break;
+	case ActorEventType::Shoot:
+		// No specific handling needed for Shoot event in bullet control
 		break;
 	}
 }
@@ -150,7 +156,7 @@ void Sys_BulletControl::notify(const Message& msg)
 		const auto& bulletMove = bullet->getComponent<Comp_Movement>(ComponentType::Movement);
 		// set bullet just above player
 		sf::Vector2f shootDirection(0, bulletComp->getDirection());
-		sf::Vector2f bulletPosition = shooterPos->getPosition() + shootDirection * (bulletCol->getAABB().height / 2.f + shooterCol->getAABB().height / 2.f);
+		sf::Vector2f bulletPosition = shooterPos->getPosition() + shootDirection * (bulletCol->getAABB().size.y / 2.f + shooterCol->getAABB().size.y / 2.f);
 		bulletPos->setPosition(bulletPosition);
 		// set bullet velocity and direction
 		sf::Vector2f direction(0, bulletComp->getDirection());
@@ -161,6 +167,12 @@ void Sys_BulletControl::notify(const Message& msg)
 	}
 	case ActorMessageType::MissedShot:
 		m_systemManager->getLevelManager()->resetKillStreak();
+		break;
+	case ActorMessageType::Damage:
+		// No specific handling for Damage message in bullet control
+		break;
+	case ActorMessageType::Sound:
+		// No specific handling for Sound message in bullet control
 		break;
 	}
 }
@@ -176,7 +188,7 @@ void Sys_BulletControl::onBulletDestroyed(ActorId id)
 	m_systemManager->getMessageHandler()->dispatch(msg);
 }
 
-void Sys_BulletControl::handleMissedShot(const std::shared_ptr<Actor>& bullet, sf::Uint32& id)
+void Sys_BulletControl::handleMissedShot(const std::shared_ptr<Actor>& bullet, unsigned int& id)
 {
 	if (bullet->getTag() == "bullet_player")
 	{

@@ -3,18 +3,20 @@
 #include <iostream>
 #define QUAD_SIZE 4
 
-ParticleSystem::ParticleSystem()
-	: m_numParticles(100)
-	, m_particleSize(m_numParticles)
-	, m_minSpeed(0)
-	, m_maxSpeed(1)
-	, m_timer(1)
-	, m_isEnabled(false)
-	, m_emitterPosition(0, 0),
+ParticleSystem::ParticleSystem():
+	m_numParticles(100),
+	m_particleSize(m_numParticles),
+	m_timer(1),
+	m_duration(1),
+	m_minSpeed(0),
+	m_maxSpeed(1),
+	m_emitterPosition(0, 0),
+	m_isEnabled(false),
+	m_rd(),
 	m_rng(m_rd()),
 	m_angleDist(0, 360),
-	m_speedDist(0, 1),
-	m_duration(1)
+	m_speedDist(0, 1)
+
 {
 }
 
@@ -22,7 +24,7 @@ void ParticleSystem::initialize()
 {
 	m_vertices.clear();
 	m_particles.clear();
-	m_vertices.setPrimitiveType(sf::Quads);
+	m_vertices.setPrimitiveType(sf::PrimitiveType::Triangles);
 	m_vertices.resize(m_numParticles * QUAD_SIZE);
 	m_particles.resize(m_numParticles);
 

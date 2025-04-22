@@ -20,18 +20,19 @@ void State_Menu::draw()
 
 void State_Menu::onCreate()
 {
-	m_font.loadFromFile(Utils::getWorkingDirectory() + "assets/fonts/game_over.ttf");
+	m_font.openFromFile(Utils::getAssetsDirectory() + "fonts/game_over.ttf");
 	m_text.setFont(m_font);
 	m_text.setString({ "Menu" });
 	m_text.setCharacterSize(150);
 	sf::FloatRect textBounds = m_text.getLocalBounds();
-	m_text.setOrigin(
-		textBounds.left + textBounds.width / 2.0f,
-		textBounds.top + textBounds.height / 2.0f
+	m_text.setOrigin({
+		textBounds.position.x + textBounds.size.x / 2.0f,
+		textBounds.position.y + textBounds.size.y / 2.0f
+		}
 	);
 
-	sf::Vector2f windowSize = m_stateManager->getContext()->m_windowManager->getCurrentViewSpace().getSize();
-	m_text.setPosition(windowSize.x / 2.0f, windowSize.y / 2.0f);
+	sf::Vector2f windowSize = m_stateManager->getContext()->m_windowManager->getCurrentViewSpace().size;
+	m_text.setPosition({windowSize.x / 2.0f, windowSize.y / 2.0f});
 
 	m_transparent = false;
 	m_panel.setSize(sf::Vector2f(windowSize));

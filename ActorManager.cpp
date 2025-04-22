@@ -2,10 +2,10 @@
 #include "SysManager.h"
 
 ActorManager::ActorManager(SysManager* systemManager, TextureManager* textureManager, SoundManager* soundManager) :
+	m_idCounter(0),
 	m_systemManager(systemManager),
 	m_textureManager(textureManager),
-	m_soundManager(soundManager),
-	m_idCounter(0)
+	m_soundManager(soundManager)
 {
 	m_componentFactory.reserve(MAX_COMPONENTS);
 	addComponentType<Comp_Position>(ComponentType::Position);
@@ -124,7 +124,7 @@ std::shared_ptr<Actor> ActorManager::getActor(const ActorId& id)
 
 unsigned int ActorManager::loadActorProfile(const std::string actorName, const std::string tag)
 {
-	std::string fullPath = Utils::getWorkingDirectory() + "assets/profiles/" + actorName + ".dat";
+	std::string fullPath = Utils::getAssetsDirectory() + "profiles/" + actorName + ".dat";
 	std::fstream file;
 	file.open(fullPath);
 	if (!file.is_open())
