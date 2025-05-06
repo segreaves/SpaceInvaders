@@ -57,7 +57,7 @@ const sf::Texture* SpriteSheet::getTexture() const
 	return m_texture;
 }
 
-const sf::Vector2u& SpriteSheet::getSpriteSize() const { return m_spriteSize; }
+const sf::Vector2i& SpriteSheet::getSpriteSize() const { return m_spriteSize; }
 
 const sf::Vector2f& SpriteSheet::getSpriteScale() const
 {
@@ -66,19 +66,19 @@ const sf::Vector2f& SpriteSheet::getSpriteScale() const
 
 const sf::Vector2f& SpriteSheet::getSpritePosition() const { return m_sprite.getPosition(); }
 
-void SpriteSheet::setSpriteSize(const sf::Vector2u& size)
+void SpriteSheet::setSpriteSize(const sf::Vector2i& size)
 {
 	m_spriteSize = size;
 	switch (m_origin)
 	{
 		case OriginType::Medium:
-			m_sprite.setOrigin(m_spriteSize.x / 2.f, m_spriteSize.y / 2.f);
+			m_sprite.setOrigin(static_cast<float>(m_spriteSize.x) / 2.f, static_cast<float>(m_spriteSize.y) / 2.f);
 			break;
 		case OriginType::Bottom:
-			m_sprite.setOrigin(m_spriteSize.x / 2.f, m_spriteSize.y);
+			m_sprite.setOrigin(static_cast<float>(m_spriteSize.x) / 2.f, static_cast<float>(m_spriteSize.y));
 			break;
 		case OriginType::Top:
-			m_sprite.setOrigin(m_spriteSize.x / 2.f, 0.f);
+			m_sprite.setOrigin(static_cast<float>(m_spriteSize.x) / 2.f, 0.f);
 			break;
 	}
 }
@@ -99,12 +99,12 @@ void SpriteSheet::setSpriteScale(const sf::Vector2f& scale)
 	m_sprite.setScale(m_spriteScale);
 }
 
-void SpriteSheet::setSheetPadding(const sf::Vector2f& padding)
+void SpriteSheet::setSheetPadding(const sf::Vector2i& padding)
 {
 	m_sheetPadding = padding;
 }
 
-void SpriteSheet::setSpriteSpacing(const sf::Vector2f& spacing)
+void SpriteSheet::setSpriteSpacing(const sf::Vector2i& spacing)
 {
 	m_spriteSpacing = spacing;
 }
@@ -124,9 +124,9 @@ void SpriteSheet::setSmooth(const bool& smooth)
 	m_texture->setSmooth(smooth);
 }
 
-const sf::Vector2f& SpriteSheet::getSheetPadding() const { return m_sheetPadding; }
+const sf::Vector2i& SpriteSheet::getSheetPadding() const { return m_sheetPadding; }
 
-const sf::Vector2f& SpriteSheet::getSpriteSpacing() const { return m_spriteSpacing; }
+const sf::Vector2i& SpriteSheet::getSpriteSpacing() const { return m_spriteSpacing; }
 
 const sf::IntRect& SpriteSheet::getCropRect() const { return m_cropRect; }
 

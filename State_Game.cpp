@@ -68,7 +68,7 @@ void State_Game::draw()
 		window->draw(m_newScoreText);
 	// draw player lives
 	float iconWidth = m_playerIcon.getGlobalBounds().width;
-	for (unsigned int i = 0; i < m_levelManager.getPlayerLives(); ++i)
+	for (int i = 0; i < m_levelManager.getPlayerLives(); ++i)
 	{
 		m_playerIcon.setPosition(m_playerIconPosition.x + i * iconWidth - 3 * iconWidth, m_playerIconPosition.y);
 		window->draw(m_playerIcon);
@@ -153,7 +153,7 @@ void State_Game::handlePlayerPosition()
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 	// clamp mouse position to view space
 	if (mousePos.x < 0) mousePos.x = 0;
-	else if (mousePos.x > window.getSize().x) mousePos.x = window.getSize().x;
+	else if (mousePos.x > static_cast<int>(window.getSize().x)) mousePos.x = static_cast<int>(window.getSize().x);
 	sf::Mouse::setPosition(mousePos, window);
 	// calculate mouse position relative to window
 	const auto& mousePosInWindow = mousePos.x / static_cast<float>(window.getSize().x);
@@ -248,7 +248,7 @@ void State_Game::updateHUD(const float& deltaTime)
 			const float ratio = m_showNewScoreTimer / m_showNewScoreDuration;
 			m_showScoreAlpha = ratio < 0.5f ? 1.f : 1.f - ratio;
 			sf::Color color = APP_COLOR;
-			color.a = m_showScoreAlpha * 255;
+			color.a = static_cast<sf::Uint8>(m_showScoreAlpha * 255);
 			m_newScoreText.setFillColor(color);
 			const auto new_pos = pos + sf::Vector2f(0, m_newScoreOffset * ratio);
 			m_newScoreText.setPosition(new_pos);

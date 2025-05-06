@@ -119,7 +119,7 @@ void Engine::addRenderLines()
 	sf::Vector2f windowSize = sf::Vector2f(window->getSize());
 	sf::Color color = sf::Color::Black;
 	color.a = 150;
-	float thickness = 2.f;
+	int thickness{ 2 };
 	// horizontal render lines
 	for (unsigned int y = 0; y < window->getSize().y; y += thickness * 2)
 	{
@@ -130,13 +130,13 @@ void Engine::addRenderLines()
 	}
 }
 
-sf::VertexArray Engine::createRenderLine(const sf::Vector2f& start, const sf::Vector2f& end, float thickness, sf::Color color)
+sf::VertexArray Engine::createRenderLine(const sf::Vector2f& start, const sf::Vector2f& end, int thickness, sf::Color color)
 {
 	sf::VertexArray vertices(sf::Quads, 4);
 	vertices[0].position = start;
 	vertices[1].position = end;
-	vertices[2].position = end + sf::Vector2f(0, thickness);
-	vertices[3].position = start + sf::Vector2f(0, thickness);
+	vertices[2].position = end + sf::Vector2f(0, static_cast<float>(thickness));
+	vertices[3].position = start + sf::Vector2f(0, static_cast<float>(thickness));
 	for (int i = 0; i < 4; i++)
 		vertices[i].color = color;
 	return vertices;

@@ -4,13 +4,13 @@
 #define QUAD_SIZE 4
 
 ParticleSystem::ParticleSystem()
-	: m_numParticles(100)
-	, m_particleSize(m_numParticles)
-	, m_minSpeed(0)
-	, m_maxSpeed(1)
-	, m_timer(1)
-	, m_isEnabled(false)
-	, m_emitterPosition(0, 0),
+	: m_numParticles(100),
+	m_particleSize(0.f),
+	m_minSpeed(0),
+	m_maxSpeed(1),
+	m_timer(1),
+	m_isEnabled(false),
+	m_emitterPosition(0, 0),
 	m_rng(m_rd()),
 	m_angleDist(0, 360),
 	m_speedDist(0, 1),

@@ -48,7 +48,7 @@ private:
 	void load(std::stringstream& ss) override
 	{
 		std::string origin;
-		ss >> m_AABB.width >> m_AABB.height  >> origin;
+		ss >> m_AABB.width >> m_AABB.height >> origin;
 		if (origin == "Top")
 			m_origin = OriginType::Top;
 		else if (origin == "Bottom")
