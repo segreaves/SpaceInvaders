@@ -29,5 +29,25 @@ namespace Utils
 		if (getcwd(cwd, sizeof(cwd)) != nullptr) return std::string(cwd) + std::string("/");
 		return "";
 	}
+#elif defined(RUNNING_MACOS) || defined(__APPLE__)
+#include <unistd.h>
+#include <limits.h>
+#include <mach-o/dyld.h>
+	inline std::string getWorkingDirectory()
+	{
+		char path[PATH_MAX];
+		uint32_t size = sizeof(path);
+		if (_NSGetExecutablePath(path, &size) == 0) {
+			std::string fullPath(path);
+			auto pos = fullPath.find_last_of('/');
+			if (pos != std::string::npos) {
+				return fullPath.substr(0, pos + 1);
+			}
+		}
+		return "";
+	}
+	inline std::string getAssetsDirectory() {
+		return getWorkingDirectory() + "../Resources/assets/";
+	}
 #endif
 }
