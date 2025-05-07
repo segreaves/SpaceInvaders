@@ -1,12 +1,12 @@
 #pragma once
-#define RUNNING_WINDOWS
+
 #include <iostream>
 #include <string>
 #include <algorithm>
 
 namespace Utils
 {
-#ifdef RUNNING_WINDOWS
+#if defined(RUNNING_WINDOWS) || defined(_WIN32 )
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <Shlwapi.h>
@@ -21,7 +21,7 @@ namespace Utils
 		}
 		return "";
 	}
-#elif defined RUNNING_LINUX
+#elif defined(RUNNING_LINUX)
 #include <unistd.h>
 	inline std::string getWorkingDirectory()
 	{

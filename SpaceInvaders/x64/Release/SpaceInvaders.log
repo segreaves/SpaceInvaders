@@ -1,0 +1,37 @@
+﻿  ActorManager.cpp
+  Engine.cpp
+  LevelManager.cpp
+  SoundManager.cpp
+  SpaceInvaders.cpp
+  SpriteSheet.cpp
+  StateManager.cpp
+  State_Game.cpp
+  State_GameOver.cpp
+  State_Intro.cpp
+  State_Paused.cpp
+  Sys.cpp
+  SysManager.cpp
+  Sys_BulletControl.cpp
+  Sys_BunkerControl.cpp
+  Sys_Collision.cpp
+  Sys_Gravity.cpp
+  Sys_Health.cpp
+  Sys_InvaderControl.cpp
+  Sys_LevelState.cpp
+  Compiling...
+  Sys_Movement.cpp
+  Sys_PlayerControl.cpp
+  Sys_Renderer.cpp
+  Sys_Rotation.cpp
+  Sys_ShipSway.cpp
+  Sys_ShockwaveControl.cpp
+  Sys_Sound.cpp
+  Sys_Spring.cpp
+  Sys_TorqueSpring.cpp
+  Sys_UFOControl.cpp
+  Generating code
+  0 of 5877 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  SpaceInvaders.vcxproj -> C:\Users\simur\Documents\C++ Projects\SpaceInvaders\x64\Release\SpaceInvaders.exe
